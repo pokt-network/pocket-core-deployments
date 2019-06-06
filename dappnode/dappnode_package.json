@@ -1,0 +1,15 @@
+{
+  "name": "pocket-core.public.dappnode.eth",
+  "version": "0.0.1",
+  "description": "A package to run a Pocket Core Service Node",
+  "avatar": "",
+  "type": "service",
+  "image": {
+    "path": "",
+    "hash": "",
+    "size": "",
+    "restart": "always"
+  },
+  "author": "luis@pokt.network",
+  "license": "MIT"
+}
