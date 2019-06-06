@@ -1,0 +1,5 @@
+version: '3.4'
+services:
+  pocket-core.public.dappnode.eth:
+    image: 'pocket-core.public.dappnode.eth:0.0.1'
+    build: ./build
