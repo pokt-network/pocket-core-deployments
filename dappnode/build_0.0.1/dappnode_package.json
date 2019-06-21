@@ -6,11 +6,11 @@
   "type": "service",
   "image": {
     "path": "pocket-core.public.dappnode.eth_0.0.1.tar.xz",
-    "hash": "/ipfs/QmPqvsQ3xhfaLGxJa26vwnJEXZNXiAydP3QnccGQFiKQdP",
-    "size": 90783887,
+    "hash": "/ipfs/QmVsyN6fcTie13SUmKWCFUJcuX2LTt3KtvEhDXXt3LB7nm",
+    "size": 90958923,
     "restart": "always",
     "ports": [
-      "${POCKET_CORE_SERVICE_PORT}:8081"
+      "${POCKET_CORE_SERVICE_PORT:-8081}:8081"
     ],
     "environment": [
       "POCKET_CORE_SERVICE_GID=",
