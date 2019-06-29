@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: poktnetwork/nginx:dispatch
+    build: ../nginx/
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "../nginx/conf.d/10-pocket.conf:/etc/nginx/conf.d/default.conf"
+      - "../nginx/nginx.conf:/etc/nginx/nginx.conf"
+    
+    networks:
+      - pocket
+
+  tezos-mainnet:
+    image: tezos/tezos:mainnet
+    expose:
+      - '8732'
+      - '9732'
+    volumes:
+      - mainnet-node-data:/var/run/tezos/node
+      - mainnet-client-data:/var/run/tezos/client
+    
+    command: tezos-node
+    networks:
+      - pocket
+
+  tezos-alphanet:
+    image: tezos/tezos:alphanet
+    expose:
+      - '8732'
+      - '9732'
+    volumes:
+      - alphanet-node-data:/var/run/tezos/node
+      - alphanet-client-data:/var/run/tezos/client
+    
+    command: tezos-node
+    networks:
+      - pocket
+
+  pocket-service:
+    image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
+    build: ./.. 
+    ports:
+      - "8081:8081"
+    
+    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
+    environment:
+      POCKET_CORE_START_DELAY: 180 
+      POCKET_CORE_CHAINS: '[ { "blockchain": { "name": "TEZOS", "netid": "1", "version": "0" }, "url": "tezos-mainnet:8732" }, { "blockchain": { "name": "TEZOS", "netid": "2", "version": "0" }, "url": "tezos-alphanet:8732"} ]'
+    networks:
+      - pocket
+
+volumes:
+  alphanet-client-data:
+  alphanet-node-data:
+  mainnet-client-data:
+  mainnet-node-data:
+
+networks:
+  pocket:
+    driver: bridge
