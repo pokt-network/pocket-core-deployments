@@ -1,0 +1,76 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: poktnetwork/nginx:dispatch
+    build: ../nginx/
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "../nginx/conf.d/10-pocket.conf:/etc/nginx/conf.d/default.conf"
+      - "../nginx/nginx.conf:/etc/nginx/nginx.conf"
+
+    networks:
+      - pocket
+
+  POA-testnet:
+    image: ethereum/client-go:stable
+    expose:
+      - "8545"
+      - "8546"
+      - "30303"
+    volumes:
+      - POA-testnet:/.testnet
+    
+    command: "--rinkeby --networkid 77 --rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .testnet --verbosity 3"
+    networks:
+      - pocket
+
+  POA-xdai:
+    image: ethereum/client-go:stable
+    expose:
+      - "8545"
+      - "8546"
+      - "30303"
+    volumes:
+      - POA-xdai:/.mainnet
+
+    command: "--rpc --networkid 100 --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3" 
+    networks:
+      - pocket
+  
+  POA-mainnet:
+    image: ethereum/client-go:stable
+    expose:
+      - "8545"
+      - "8546"
+      - "30303"
+    volumes:
+      - POA-mainnet:/.mainnet
+    
+    command: "--rpc --networkid 99 --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3" 
+    networks:
+      - pocket
+
+  pocket-service:
+    image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
+    ports:
+      - "8081:8081" 
+
+    command: "--datadirectory datadir --disip ${POCKET_DISPATCH_IP-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0"
+    environment:
+      POCKET_CORE_START_DELAY: 10 
+      POCKET_CORE_CHAINS: '[ {"blockchain":{"name":"POA","netid":"99","version":"0"},"url":"POA-mainnet:8545"},{"blockchain":{"name":"POA","netid":"77","version":"0"},"url":"POA-testnet:8545"},{"blockchain":{"name":"POA","netid":"100","version":"0"},"url":"POA-xdai:8545"} ]'
+    networks:
+      - pocket
+
+volumes:
+  POA-mainnet:
+  POA-testnet:
+  POA-xdai:
+
+networks:
+  pocket:
+    driver: bridge
