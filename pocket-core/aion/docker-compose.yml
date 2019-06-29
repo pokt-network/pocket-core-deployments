@@ -1,0 +1,70 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: poktnetwork/nginx:dispatch
+    build: ../nginx/
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "../nginx/conf.d/10-pocket.conf:/etc/nginx/conf.d/default.conf"
+      - "../nginx/nginx.conf:/etc/nginx/nginx.conf"
+    
+    networks:
+      - pocket
+
+  aion-mainnet:
+    image: aionnetwork/aionr:Latest
+    expose:
+      - "8545"
+      - "8547"
+      - "30303"
+    volumes:
+      - aion-mainnet:/root/.aion
+
+    environment:
+      java_api_listen_address: "0.0.0.0"
+      rpc_listen_address: "0.0.0.0"
+      AION_NETWORK: "mainnet"
+    networks:
+      - pocket
+
+  aion-mastery:
+    build: ./aion-mastery/.
+    image: poktnetwork/aion:mastery 
+    expose:
+      - "8545"
+      - "8547"
+      - "30303"
+    volumes:
+      - aion-mastery:/root/.aion
+    
+    environment:
+      java_api_listen_address: "0.0.0.0"
+      rpc_listen_address: "0.0.0.0"
+      AION_NETWORK: "mastery" 
+    networks:
+      - pocket
+
+  pocket-service:
+    image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
+    build: ./.. 
+    ports:
+      - "8081:8081"
+    
+    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
+    environment:
+      POCKET_CORE_START_DELAY: 10 
+      POCKET_CORE_CHAINS: '[ { "blockchain": { "name": "AION", "netid": "32", "version": "0" }, "url": "aion-mainnet:8545" }, { "blockchain": { "name": "AION", "netid": "256", "version": "0" }, "url": "aion-mastery:8545"} ]'
+    networks:
+      - pocket
+
+volumes:
+  aion-mainnet:
+  aion-mastery:
+
+networks:
+  pocket:
+    driver: bridge
