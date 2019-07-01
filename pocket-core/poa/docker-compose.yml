@@ -16,41 +16,56 @@ services:
       - pocket
 
   POA-testnet:
-    image: ethereum/client-go:stable
+    image: poktnetwork/poa-node:sokol
+    build:
+      context: ./parity
+      dockerfile: Dockerfile
+      args:
+        chain: 'sokol'
     expose:
       - "8545"
       - "8546"
       - "30303"
     volumes:
-      - POA-testnet:/.testnet
+      - POA-testnet:/home/parity/.local/share/io.parity.ethereum/
     
-    command: "--rinkeby --networkid 77 --rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .testnet --verbosity 3"
+    command: "--chain ./poa-chain-spec/spec.json --reserved-peers ./poa-chain-spec/bootnodes.txt --port 30303 --jsonrpc-hosts=all --jsonrpc-cors=all --ipc-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-interface=all --ws-hosts=all  --ws-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-origins=all"
     networks:
       - pocket
 
   POA-xdai:
-    image: ethereum/client-go:stable
+    image: poktnetwork/poa-node:xdai
+    build:
+      context: ./parity
+      dockerfile: Dockerfile
+      args:
+        chain: 'dai'
     expose:
       - "8545"
       - "8546"
       - "30303"
     volumes:
-      - POA-xdai:/.mainnet
+      - POA-xdai:/home/parity/.local/share/io.parity.ethereum/
 
-    command: "--rpc --networkid 100 --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3" 
+    command: "--chain ./poa-chain-spec/spec.json --reserved-peers ./poa-chain-spec/bootnodes.txt --port 30303 --jsonrpc-hosts=all --jsonrpc-cors=all --ipc-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-interface=all --ws-hosts=all  --ws-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-origins=all" 
     networks:
       - pocket
   
   POA-mainnet:
-    image: ethereum/client-go:stable
+    image: poktnetwork/poa-node:core
+    build:
+      context: ./parity
+      dockerfile: Dockerfile
+      args:
+        chain: 'core'
     expose:
       - "8545"
       - "8546"
       - "30303"
     volumes:
-      - POA-mainnet:/.mainnet
+      - POA-mainnet:/home/parity/.local/share/io.parity.ethereum/
     
-    command: "--rpc --networkid 99 --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3" 
+    command: "--chain ./poa-chain-spec/spec.json --reserved-peers ./poa-chain-spec/bootnodes.txt --port 30303 --jsonrpc-hosts=all --jsonrpc-cors=all --ipc-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-interface=all --ws-hosts=all  --ws-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-origins=all" 
     networks:
       - pocket
 
@@ -59,9 +74,9 @@ services:
     ports:
       - "8081:8081" 
 
-    command: "--datadirectory datadir --disip ${POCKET_DISPATCH_IP-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0"
+    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
     environment:
-      POCKET_CORE_START_DELAY: 10 
+      POCKET_CORE_START_DELAY: 15 
       POCKET_CORE_CHAINS: '[ {"blockchain":{"name":"POA","netid":"99","version":"0"},"url":"POA-mainnet:8545"},{"blockchain":{"name":"POA","netid":"77","version":"0"},"url":"POA-testnet:8545"},{"blockchain":{"name":"POA","netid":"100","version":"0"},"url":"POA-xdai:8545"} ]'
     networks:
       - pocket
