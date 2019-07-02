@@ -27,9 +27,9 @@ services:
       - "8546"
       - "30303"
     volumes:
-      - POA-testnet:/home/parity/.local/share/io.parity.ethereum/
+      - POA-testnet:/home/parity/.ethereum
     
-    command: "--chain ./poa-chain-spec/spec.json --reserved-peers ./poa-chain-spec/bootnodes.txt --port 30303 --jsonrpc-hosts=all --jsonrpc-cors=all --ipc-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-interface=all --ws-hosts=all  --ws-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-origins=all"
+    command: "--base-path .ethereum --chain ./poa-chain-spec/spec.json --reserved-peers ./poa-chain-spec/bootnodes.txt --port 30303 --jsonrpc-hosts=all --jsonrpc-cors=all --ipc-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-interface=all --ws-hosts=all  --ws-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-origins=all"
     networks:
       - pocket
 
@@ -45,9 +45,9 @@ services:
       - "8546"
       - "30303"
     volumes:
-      - POA-xdai:/home/parity/.local/share/io.parity.ethereum/
+      - POA-xdai:/home/parity/.ethereum
 
-    command: "--chain ./poa-chain-spec/spec.json --reserved-peers ./poa-chain-spec/bootnodes.txt --port 30303 --jsonrpc-hosts=all --jsonrpc-cors=all --ipc-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-interface=all --ws-hosts=all  --ws-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-origins=all" 
+    command: "--base-path .ethereum  --chain ./poa-chain-spec/spec.json --reserved-peers ./poa-chain-spec/bootnodes.txt --port 30303 --jsonrpc-hosts=all --jsonrpc-cors=all --ipc-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-interface=all --ws-hosts=all  --ws-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-origins=all" 
     networks:
       - pocket
   
@@ -63,9 +63,9 @@ services:
       - "8546"
       - "30303"
     volumes:
-      - POA-mainnet:/home/parity/.local/share/io.parity.ethereum/
+      - POA-mainnet:/home/parity/.ethereum
     
-    command: "--chain ./poa-chain-spec/spec.json --reserved-peers ./poa-chain-spec/bootnodes.txt --port 30303 --jsonrpc-hosts=all --jsonrpc-cors=all --ipc-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-interface=all --ws-hosts=all  --ws-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-origins=all" 
+    command: "--base-path .ethereum --chain ./poa-chain-spec/spec.json --reserved-peers ./poa-chain-spec/bootnodes.txt --port 30303 --jsonrpc-hosts=all --jsonrpc-cors=all --ipc-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-interface=all --ws-hosts=all  --ws-apis=web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-origins=all" 
     networks:
       - pocket
 
