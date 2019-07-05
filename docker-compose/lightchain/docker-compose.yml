@@ -1,0 +1,70 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: poktnetwork/nginx:dispatch
+    build: ../nginx/
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "../nginx/conf.d/10-pocket.conf:/etc/nginx/conf.d/default.conf"
+      - "../nginx/nginx.conf:/etc/nginx/nginx.conf"
+
+    networks:
+      - pocket
+
+  lightchain-sirius:
+    build:
+      context: ./lightchain
+      dockerfile: Dockerfile
+    image: poktnetwork/lightchain-node:latest
+    command: run --datadir /srv/lightchain  --rpc --rpcaddr=0.0.0.0 --rpcport=8545 --rpcapi=eth,net,web3,personal,debug
+
+    environment:
+      NETWORK: "sirius" 
+    expose:
+      - "8545"
+      - "26657"
+      - "26656"
+
+    networks:
+      - pocket
+
+  lightchain-mainnet:
+    build:
+      context: ./lightchain/
+      dockerfile: Dockerfile
+    image: poktnetwork/lightchain-node:latest
+    command: run --datadir /srv/lightchain --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpcapi eth,net,web3,personal,debug
+
+    environment:
+      NETWORK: "mainnet" 
+    expose:
+      - "8545"
+      - "26657"
+      - "26656"
+    
+    networks:
+      - pocket
+
+  pocket-service:
+    image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
+    ports:
+      - "8081:8081"
+    
+    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
+    environment:
+      POCKET_CORE_START_DELAY: 10 
+      POCKET_CORE_CHAINS: '[ { "blockchain": { "name": "LIGHTCHAIN", "netid": "MAINNET", "version": "0" }, "url": "lightchain-mainnet:8545" }, { "blockchain": { "name": "LIGHTCHAIN", "netid": "SIRIUS", "version": "0" }, "url": "lightchain-sirius:8545"} ]'
+    networks:
+      - pocket
+
+volumes:
+  lightchain-mainnet:
+  lightchain-sirius:
+
+networks:
+  pocket:
+    driver: bridge
