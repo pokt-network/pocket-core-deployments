@@ -1,25 +1,27 @@
 {
   "name": "pocket-core.public.dappnode.eth",
-  "version": "0.0.3",
-  "description": "A package to run a Pocket Core Service Node (Currently MVP-1.7)",
-  "avatar": "/ipfs/Qmbquj4rdzwXHQX8zZLA75xZNW6DN9NF5FSCqgFZE1TQnJ",
+  "version": "0.0.4",
+  "upstreamVersion": "mvp-1.7",
+  "shortDescription": "A package to run a Pocket Core Service Node",
+  "description": "A package to run a Pocket Core Service Node",
+  "avatar": "/ipfs/QmPkJxCXN7joLVGzw1UfUwRAiCCCVSebQZKU5i17je8mZo",
   "type": "service",
   "image": {
-    "path": "pocket-core.public.dappnode.eth_0.0.3.tar.xz",
-    "hash": "/ipfs/QmZjzBjuBaP287REoeaNBendkE5hGx3CYeLz71SiiYq229",
-    "size": 90958923,
+    "path": "pocket-core.public.dappnode.eth_0.0.4.tar.xz",
+    "hash": "/ipfs/QmabG6YZZPwvpiFsEbi34Yw6JUCtpwaD3KetTWZtHfTw8k",
+    "size": 8884376,
     "restart": "always",
     "ports": [
-      "${POCKET_CORE_SERVICE_PORT:-8081}:8081"
+      "38081:8081"
     ],
     "environment": [
       "POCKET_CORE_SERVICE_GID=",
-      "POCKET_CORE_REQUEST_TIMEOUT=",
+      "POCKET_CORE_REQUEST_TIMEOUT=0",
       "POCKET_CORE_SERVICE_IP=",
-      "POCKET_CORE_SERVICE_PORT="
+      "POCKET_CORE_SERVICE_PORT=38081"
     ],
     "volumes": [
-      "datadir:/go/src/github.com/pokt-network/pocket-core/datadir"
+      "datadir:/usr/src/app/data"
     ]
   },
   "author": "Luis C. de Leon <luis@pokt.network>",
@@ -34,7 +36,8 @@
     "relay"
   ],
   "homepage": {
-    "homepage": "https://pokt.network"
+    "homepage": "https://pokt.network",
+    "documentation": "https://docs.pokt.network/docs"
   },
   "repository": {
     "type": "git",
