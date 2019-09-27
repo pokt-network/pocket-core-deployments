@@ -1,16 +1,16 @@
 version: '3.4'
 services:
   pocket-core.public.dappnode.eth:
-    image: 'pocket-core.public.dappnode.eth:0.0.3'
+    image: 'pocket-core.public.dappnode.eth:0.0.4'
     build: ./build
     volumes:
-      - 'datadir:/go/src/github.com/pokt-network/pocket-core/datadir'
+      - 'data:/usr/src/app/'
     ports:
-      - '${POCKET_CORE_SERVICE_PORT:-8081}:8081'
+      - '38081:8081'
     environment:
-      POCKET_CORE_SERVICE_GID: MY_GID
-      POCKET_CORE_REQUEST_TIMEOUT: 0
-      POCKET_CORE_SERVICE_IP: 127.0.0.1
-      POCKET_CORE_SERVICE_PORT: 8081
+      - POCKET_CORE_SERVICE_GID=
+      - POCKET_CORE_REQUEST_TIMEOUT=0
+      - POCKET_CORE_SERVICE_IP=
+      - POCKET_CORE_SERVICE_PORT=38081
 volumes:
-  datadir: {}
+  data: {}
