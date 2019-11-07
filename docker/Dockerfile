@@ -2,13 +2,10 @@
 # The result of this Dockerfile will put the pocket-core executable in the $GOBIN/bin, which in turn
 # is part of the $PATH
 
-# Base image
-FROM golang:1.11-alpine
+# First build step to build the app binary
+FROM golang:1.12-alpine AS builder
 
-# Environment and system dependencies setup
-ENV POCKET_PATH=/go/src/github.com/pokt-network/pocket-core/
-RUN mkdir -p ${POCKET_PATH}
-COPY . $POCKET_PATH
+# Install dependencies
 RUN apk -v --update --no-cache add \
 	curl \
 	git \
@@ -17,7 +14,6 @@ RUN apk -v --update --no-cache add \
 	groff \
 	less \
 	mailcap \
-	dep \
 	gcc \
 	libc-dev \
 	bash && \
@@ -25,20 +21,38 @@ RUN apk -v --update --no-cache add \
 	apk -v --purge del py-pip && \
 	rm /var/cache/apk/* || true
 
-# Install project dependencies and builds the binary
-RUN cd ${POCKET_PATH} && dep ensure && go build -o ${GOBIN}/bin/pocket-core ./cmd/pocket_core/main.go
+# Environment and system dependencies setup
+ENV POCKET_PATH=/go/src/github.com/pokt-network/pocket-core/
+ENV GO111MODULE="on"
+
+# Create node root directory
+RUN mkdir -p ${POCKET_PATH}
+WORKDIR $POCKET_PATH
+
+#Install node dependencies
+RUN git clone "https://github.com/pokt-network/pocket-core.git" ${POCKET_PATH}
+RUN chmod +x deps.sh 
+RUN ./deps.sh
+
+# Install rest of source code
+COPY . .
 
 # Run tests
-RUN cd ${POCKET_PATH} && go test ./tests/...
+RUN go test ./tests/...
+
+# Install project dependencies and builds the binary
+RUN go build -o ${GOBIN}/bin/pocket-core ./cmd/pocket_core/main.go
+
+# Second build step: reduce image size to only use app binary
+FROM alpine:3.10
+
+COPY --from=builder /bin/pocket-core /bin/pocket-core
 
 # Create app user and add permissions
 RUN addgroup -S app \
 	&& adduser -S -G app app
-RUN chown -R app /go
+RUN chown -R app /bin/pocket-core
+USER app
 
 # Setup the WORKDIR with app user
-USER app
-WORKDIR $POCKET_PATH
-
-# Entrypoint
 ENTRYPOINT ["pocket-core"]
