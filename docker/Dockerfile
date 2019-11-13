@@ -29,10 +29,18 @@ ENV GO111MODULE="on"
 RUN mkdir -p ${POCKET_PATH}
 WORKDIR $POCKET_PATH
 
+# Creating the BRANCH_NAME and TAG_NAME variables
+ARG BRANCH_NAME=""
+ARG TAG_NAME=""
+
+# Copying init and deps sh to tmp folder
+COPY init.sh deps.sh /tmp/
+
+#Run the init script, so it fetch from the TAG_NAME OR BRANCH_NAME var
+RUN chmod +x /tmp/init.sh && sh /tmp/init.sh 
+
 #Install node dependencies
-RUN git clone "https://github.com/pokt-network/pocket-core.git" ${POCKET_PATH}
-RUN chmod +x deps.sh 
-RUN ./deps.sh
+RUN chmod +x /tmp/deps.sh && sh /tmp/deps.sh
 
 # Install rest of source code
 COPY . .
