@@ -15,8 +15,6 @@ else
         if [ -n "$BRANCH_NAME" ]
         then
             git clone -b $BRANCH_NAME "https://github.com/pokt-network/pocket-core.git" $POCKET_PATH
-        else  
-            print_usage
         fi
     fi
 fi
