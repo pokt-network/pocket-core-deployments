@@ -9,4 +9,4 @@ jobs:
                         - checkout
                         - setup_remote_docker
                 #Build the image                         
-                        - run: sudo docker build --build-arg BRANCH_NAME=staging -t test:test -f docker/Dockerfile docker/.
+                        - run: sudo docker build --build-arg BRANCH_NAME=${BRANCH_NAME} -t pocket-core:${CIRCLE_JOB} -f docker/Dockerfile docker/.
