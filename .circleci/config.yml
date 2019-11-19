@@ -1,4 +1,7 @@
-version: 2.0
+version: 2.1
+
+orbs:
+  anchore: anchore/anchore-engine@1.6.0
 
 jobs:
         build:
@@ -8,5 +11,21 @@ jobs:
                 steps:
                         - checkout
                         - setup_remote_docker
-                #Build the image                         
+                        #Build the image                         
                         - run: sudo docker build --build-arg BRANCH_NAME=${BRANCH_NAME} -t pocket-core:${CIRCLE_JOB} -f docker/Dockerfile docker/.
+        local_image_scan:
+                executor: anchore/anchore_engine
+                working_directory: /go/src/github.com/pokt-network/pocket-core-deployments
+                steps:
+                        - setup_remote_docker
+                        - checkout
+                        - run:
+                            command: 'docker build -t "pocket-core:${CIRCLE_JOB}" -f docker/Dockerfile docker/. '
+                            name: build container
+                        - anchore/analyze_local_image:
+                            dockerfile_path:  docker/Dockerfile
+                            image_name: 'pocket-core:${CIRCLE_JOB}'
+                            timeout: '600'
+                        - anchore/parse_reports
+                        - store_artifacts:
+                            path: anchore-reports
