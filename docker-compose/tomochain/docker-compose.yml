@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: poktnetwork/nginx:dispatch
+    build: ../nginx/
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "../nginx/conf.d/10-pocket.conf:/etc/nginx/conf.d/default.conf"
+      - "../nginx/nginx.conf:/etc/nginx/nginx.conf"
+    networks:
+      - pocket
+  
+  # https://docs.tomochain.com/get-started/run-node/
+  # https://docs.tomochain.com/masternode/docker/
+  tomochain-mainnet:
+    image: tomochain/node:stable
+    command: --syncmode "full" --networkid 89 --rpc --ws --rpccorsdomain "0.0.0.0" --rpcvhosts "*" 
+    environment:
+      IDENTITY: $MASTERNODE_NAME
+      PRIVATE_KEY: $MASTERNODE_PK
+      BOOTNODES: $BOOTNODES
+      NETSTATS_HOST: stats.tomochain.com
+      NETSTATS_PORT: 443
+      WS_SECRET: $STATS_WS_SECRET
+    ports:
+      - 30303:30303
+      - 30303:30303/udp
+      - 8545:8545
+      - 8545:8545/udp
+
+    volumes:
+      - tomochain-mainnet:/root/.tomo
+    networks:
+      - pocket
+  
+  pocket-service:
+    image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
+    ports:
+      - "8081:8081"
+    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP:-dispatch.staging.pokt.network} --gid ${POCKET_SERVICE_GID:-GID2} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
+    restart: always
+    environment:
+      POCKET_CORE_START_DELAY: 10 
+      POCKET_CORE_CHAINS: '[ { "blockchain": { "name": "ETH", "netid": "88", "version": "0" }, "url": "tomochain-mainnet:8545" } ]'
+    networks:
+      - pocket
+
+volumes:
+  tomochain-mainnet:
+
+networks:
+  pocket:
+    driver: bridge
