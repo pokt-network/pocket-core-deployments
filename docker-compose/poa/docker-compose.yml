@@ -18,7 +18,7 @@ services:
   POA-testnet:
     image: poktnetwork/poa-node:sokol
     build:
-      context: ./parity
+      context: .
       dockerfile: Dockerfile
       args:
         chain: 'sokol'
@@ -32,6 +32,25 @@ services:
     command: --base-path .ethereum --chain ./poa-chain-spec/spec.json --reserved-peers ./poa-chain-spec/bootnodes.txt --port 30303 --jsonrpc-hosts all --jsonrpc-cors all --jsonrpc-interface all --ipc-apis web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-interface all --ws-hosts all --ws-origins all --ws-apis web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub --interface all
     networks:
       - pocket
+
+  POA-kovan:
+    image: poktnetwork/poa-node:kovan
+    build:
+      context: ./parity
+      dockerfile: Dockerfile
+      args:
+        chain: 'kovan'
+    expose:
+      - "8545"
+      - "8546"
+      - "30303"
+    volumes:
+      - POA-testnet:/home/parity/.ethereum
+    
+    command: --base-path .ethereum --chain ./poa-chain-spec/spec.json --reserved-peers ./poa-chain-spec/bootnodes.txt --port 30303 --jsonrpc-hosts all --jsonrpc-cors all --jsonrpc-interface all --ipc-apis web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-interface all --ws-hosts all --ws-origins all --ws-apis web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub --interface all
+    networks:
+      - pocket
+
 
   POA-xdai:
     image: poktnetwork/poa-node:xdai
@@ -54,7 +73,7 @@ services:
   POA-mainnet:
     image: poktnetwork/poa-node:core
     build:
-      context: ./parity
+      context: .
       dockerfile: Dockerfile
       args:
         chain: 'core'

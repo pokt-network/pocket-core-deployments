@@ -1,5 +1,4 @@
 # REF https://github.com/poanetwork/wiki/wiki/POA-Installation
-
 FROM parity/parity:stable
 
 USER root
