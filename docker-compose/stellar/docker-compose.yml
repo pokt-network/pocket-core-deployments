@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: poktnetwork/nginx:dispatch
+    build: ../nginx/
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "../nginx/conf.d/10-pocket.conf:/etc/nginx/conf.d/default.conf"
+      - "../nginx/nginx.conf:/etc/nginx/nginx.conf"
+
+    networks:
+      - pocket
+  
+  # https://hub.docker.com/r/stellar/quickstart/ 
+  # https://www.stellar.org/developers/stellar-core/software/admin.html#instance-setup
+  # https://github.com/stellar/docker-stellar-core-horizon
+  # https://www.stellar.org/developers/guides/hardware.html
+  stellar-mainnet:
+    image: stellar/quickstart 
+    command: --pubnet 
+    volumes:
+      - stellar-mainnet:/opt/stellar
+    expose:
+      - "8000"
+      - "11626"
+      - "11625"
+    networks:
+      - pocket
+
+  pocket-service:
+    image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
+    ports:
+      - "8081:8081"
+    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP:-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
+    environment:
+      POCKET_CORE_START_DELAY: 10 
+      POCKET_CORE_CHAINS: '[ { "blockchain": { "name": "STELLAR", "netid": "MAINNET", "version": "0" }, "url": "stellar-mainnet:8000" }]'
+    networks:
+      - pocket
+
+volumes:
+  stellar-mainnet:
+  stellar-testnet:
+
+networks:
+  pocket:
+    driver: bridge
