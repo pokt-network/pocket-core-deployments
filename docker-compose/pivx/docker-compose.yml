@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: poktnetwork/nginx:dispatch
+    build: ../nginx/
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "../nginx/conf.d/10-pocket.conf:/etc/nginx/conf.d/default.conf"
+      - "../nginx/nginx.conf:/etc/nginx/nginx.conf"
+
+    networks:
+      - pocket
+  
+  pivx-mainnet:
+    image: poktnetwork/pivx
+    build:
+      context: .
+      args:
+        VERSION: 3.4.0
+      dockerfile: Dockerfile
+    command: -server -rest -smsg -printtoconsole -logtimestamps -logips -rpccorsdomain="*" -rpcbind="0.0.0.0" -rpcallowip="0.0.0.0/0" 
+    volumes:
+      - pivx-mainnet:/root/.pivx
+    expose:
+      - "51473"
+    networks:
+      - pocket
+  
+  pivx-testnet:
+    image: poktnetwork/pivx
+    build:
+      context: .
+      args:
+        VERSION: 3.4.0
+      dockerfile: Dockerfile
+    command: -testnet -server -rest -smsg -printtoconsole -logtimestamps -logips -rpccorsdomain="*" -rpcbind="0.0.0.0" -rpcallowip="0.0.0.0/0" 
+    volumes:
+      - pivx-testnet:/root/.pivx
+    expose:
+      - "51475"
+    networks:
+      - pocket
+
+  pocket-service:
+    image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
+    ports:
+      - "8081:8081"
+    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP:-dispatch.staging.pokt.network} --gid ${POCKET_SERVICE_GID:-GID2} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
+    restart: always
+    environment:
+      POCKET_CORE_START_DELAY: 10 
+      POCKET_CORE_CHAINS: '[ { "blockchain": { "name": "PIVX", "netid": "MAINNET", "version": "0" }, "url": "pivx-mainnet:51473" }, { "blockchain": { "name": "PIVX", "netid": "TESTNET", "version": "0" }, "url": "pivx-testnet:51475" } ]'
+    networks:
+      - pocket
+
+volumes:
+  pivx-mainnet:
+  pivx-testnet:
+
+networks:
+  pocket:
+    driver: bridge
