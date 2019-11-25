@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  nginx:
+    image: poktnetwork/nginx:dispatch
+    build: ../nginx/
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "../nginx/conf.d/10-pocket.conf:/etc/nginx/conf.d/default.conf"
+      - "../nginx/nginx.conf:/etc/nginx/nginx.conf"
+    networks:
+      - pocket
+
+  # https://docs.tomochain.com/get-started/run-node/
+  particl-mainnet:
+    image: poktnetwork/particl
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: -server -rest -smsg -rpccorsdomain="*" -rpcbind="0.0.0.0" -rpcallowip="0.0.0.0/0" 
+    volumes:
+      - particl-mainnet:/root/.particl
+    expose:
+      - "51735"
+    networks:
+      - pocket
+
+  pocket-service:
+    image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
+    ports:
+      - "8081:8081"
+    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP:-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
+    restart: always
+    environment:
+      POCKET_CORE_START_DELAY: 10 
+      POCKET_CORE_CHAINS: '[ { "blockchain": { "name": "ETH", "netid": "88", "version": "0" }, "url": "particl-mainnet:51735" } ]'
+    networks:
+      - pocket
+
+volumes:
+  particl-mainnet:
+
+networks:
+  pocket:
+    driver: bridge
