@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: poktnetwork/nginx:dispatch
+    build: ../nginx/
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "../nginx/conf.d/10-pocket.conf:/etc/nginx/conf.d/default.conf"
+      - "../nginx/nginx.conf:/etc/nginx/nginx.conf"
+
+    networks:
+      - pocket
+
+  # https://docs.wavesplatform.com/en/waves-node/how-to-install-a-node/how-to-install-a-node.html 
+  waves-mainnet:
+    image: wavesplatform/wavesnode 
+    environment:
+        WAVES_NETWORK: "MAINNET"
+        WAVES_HEAP_SIZE: "2g"
+        WAVES_LOG_LEVEL: "INFO"
+        WAVES_WALLET_PASSWORD: "MVP_GCP_ANY_PASSWORD"
+        JAVA_OPTS: "-Dwaves.network.declared-address=0.0.0.0:6868 -Dwaves.rest-api.port=6870 -Dwaves.rest-api.bind-address=0.0.0.0 -Dwaves.rest-api.enable=yes"
+
+    volumes:
+      - waves-mainnet:/var/lib/waves
+    expose:
+      - "6869"
+      - "6868"
+    networks:
+      - pocket
+
+  pocket-service:
+    image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
+    ports:
+      - "8081:8081"
+    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP:-dispatch.staging.pokt.network} --gid ${POCKET_SERVICE_GID:-GID2} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
+    environment:
+      POCKET_CORE_START_DELAY: 40 
+      POCKET_CORE_CHAINS: '[ { "blockchain": { "name": "WAVES", "netid": "MAINNET", "version": "0" }, "url": "waves-mainnet:6870" } ]'
+    restart: always
+    networks:
+      - pocket
+
+volumes:
+  waves-mainnet:
+
+networks:
+  pocket:
+    driver: bridge
