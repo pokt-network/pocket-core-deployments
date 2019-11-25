@@ -93,7 +93,7 @@ services:
     ports:
       - "8081:8081" 
 
-    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
+    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP:-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
     environment:
       POCKET_CORE_START_DELAY: 15 
       POCKET_CORE_CHAINS: '[ {"blockchain":{"name":"POA","netid":"99","version":"0"},"url":"POA-mainnet:8545"},{"blockchain":{"name":"POA","netid":"77","version":"0"},"url":"POA-testnet:8545"},{"blockchain":{"name":"POA","netid":"100","version":"0"},"url":"POA-xdai:8545"} ]'
