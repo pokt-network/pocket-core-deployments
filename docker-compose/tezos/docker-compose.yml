@@ -29,7 +29,7 @@ services:
       - pocket
 
   tezos-alphanet:
-    image: tezos/tezos:alphanet
+    image: tezos/tezos:babylonnet
     expose:
       - '8732'
       - '9732'
@@ -43,11 +43,9 @@ services:
 
   pocket-service:
     image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
-    build: ./.. 
     ports:
       - "8081:8081"
-    
-    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
+    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP:-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
     environment:
       POCKET_CORE_START_DELAY: 180 
       POCKET_CORE_CHAINS: '[ { "blockchain": { "name": "TEZOS", "netid": "1", "version": "0" }, "url": "tezos-mainnet:8732" }, { "blockchain": { "name": "TEZOS", "netid": "2", "version": "0" }, "url": "tezos-alphanet:8732"} ]'
