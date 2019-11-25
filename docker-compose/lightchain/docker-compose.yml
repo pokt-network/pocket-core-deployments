@@ -17,10 +17,10 @@ services:
 
   lightchain-sirius:
     build:
-      context: ./lightchain
+      context: .
       dockerfile: Dockerfile
     image: poktnetwork/lightchain-node:latest
-    command: run --datadir /srv/lightchain  --rpc --rpcaddr=0.0.0.0 --rpcport=8545 --rpcapi=eth,net,web3,personal,debug
+    command: ["run", "--datadir", "/srv/lightchain", "--ws", "--wsaddr", "0.0.0.0", "--rpc", "--rpcaddr", "0.0.0.0", "--rpcvhosts=*", "--rpcport", "8545", "--rpcapi", "eth,net,web3,personal,debug"] 
 
     environment:
       NETWORK: "sirius" 
@@ -34,11 +34,10 @@ services:
 
   lightchain-mainnet:
     build:
-      context: ./lightchain/
+      context: .
       dockerfile: Dockerfile
     image: poktnetwork/lightchain-node:latest
     command: run --datadir /srv/lightchain --rpc --rpcaddr 0.0.0.0 --rpcport 8545 --rpcapi eth,net,web3,personal,debug
-
     environment:
       NETWORK: "mainnet" 
     expose:
@@ -53,8 +52,7 @@ services:
     image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
     ports:
       - "8081:8081"
-    
-    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
+    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP:-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
     environment:
       POCKET_CORE_START_DELAY: 10 
       POCKET_CORE_CHAINS: '[ { "blockchain": { "name": "LIGHTCHAIN", "netid": "MAINNET", "version": "0" }, "url": "lightchain-mainnet:8545" }, { "blockchain": { "name": "LIGHTCHAIN", "netid": "SIRIUS", "version": "0" }, "url": "lightchain-sirius:8545"} ]'
