@@ -24,7 +24,34 @@ services:
     volumes:
       - geth-rinkeby:/.rinkeby
 
-    command: "--rinkeby --rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .testnet --verbosity 3"
+    command: "--rinkeby --rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .rinkeby --verbosity 3"
+    networks:
+      - pocket
+
+  geth-ropsten:
+    image: ethereum/client-go:stable
+    expose:
+      - "8545"
+      - "8546"
+      - "30303"
+    volumes:
+      - geth-ropsten:/.ropsten
+
+    command: '--testnet --rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode full --datadir .ropsten --verbosity 3 '
+    
+    networks:
+      - pocket
+
+  geth-goerli:
+    image: ethereum/client-go:stable
+    expose:
+      - "8545"
+      - "8546"
+      - "30303"
+    volumes:
+      - geth-goerli:/.goerli
+
+    command: '--goerli --rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode full --datadir .goerli --verbosity 3 '
     networks:
       - pocket
 
@@ -36,27 +63,26 @@ services:
       - "30303"
     volumes:
       - geth-mainnet:/.mainnet
-
     command: "--rpc  --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3" 
     networks:
       - pocket
 
   pocket-service:
     image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
-    build: ./.. 
     ports:
       - "8081:8081"
-    
-    command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
+    command: --disip ${POCKET_DISPATCH_IP:-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0 --datadirectory datadir
     environment:
-      POCKET_CORE_START_DELAY: 10 
-      POCKET_CORE_CHAINS: '[ { "blockchain": { "name": "GETH", "netid": "1", "version": "0" }, "url": "geth-mainnet:8545" }, { "blockchain": { "name": "GETH", "netid": "4", "version": "0" }, "url": "geth-rinkeby:8545"} ]'
+      POCKET_CORE_START_DELAY: 30 
+      POCKET_CORE_CHAINS: '[{ "blockchain": { "name": "ETH", "netid": "1", "version": "0" }, "url": "geth-mainnet:8545" }, { "blockchain": { "name": "ETH", "netid": "4", "version": "0" }, "url": "geth-rinkeby:8545"}, { "blockchain": { "name": "ETH", "netid": "5", "version": "0" }, "url": "geth-goerli:8545"}, { "blockchain": { "name": "ETH", "netid": "3", "version": "0" }, "url": "geth-ropsten:8545"} ]'
     networks:
       - pocket
 
 volumes:
   geth-mainnet:
   geth-rinkeby:
+  geth-ropsten:
+  geth-goerli:
 
 networks:
   pocket:
