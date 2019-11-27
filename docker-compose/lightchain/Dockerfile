@@ -1,6 +1,6 @@
 FROM golang:1.10-stretch
 
-MAINTAINER Gabriel Garrido
+LABEL maintainer="lowell@pokt.network"
 
 RUN apt update
 RUN apt install git rsync wget -y && \
