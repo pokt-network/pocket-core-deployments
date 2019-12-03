@@ -16,13 +16,13 @@ services:
       - pocket
 
   aion-mainnet:
-    image: poktnetwork/aionr:mainnet 
+    image: poktnetwork/aion:mainnet-1.0.1 
+    command: "./mainnet.sh"
     build: 
       context: .
       dockerfile: Dockerfile
       args:
         AION_NETWORK: "mainnet" 
-    command: "./mainnet.sh"
     expose:
       - "8545"
       - "8547"
@@ -37,8 +37,7 @@ services:
       - pocket
 
   aion-mastery:
-    build: . 
-    image: poktnetwork/aionr:mastery 
+    image: poktnetwork/aion:mastery-1.0.1 
     build: 
       context: .
       dockerfile: Dockerfile
