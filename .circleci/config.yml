@@ -1,5 +1,9 @@
 version: 2.1
 
+parameters:
+        branch-name:
+                type: string
+                default: "mvp-staging"
 orbs:
   anchore: anchore/anchore-engine@1.6.0
 
@@ -12,7 +16,7 @@ jobs:
                         - checkout
                         - setup_remote_docker
                         #Build the image                         
-                        - run: docker build --build-arg BRANCH_NAME=${BRANCH_NAME} -t pocket-core:${CIRCLE_JOB} -f docker/Dockerfile docker/.
+                        - run: docker build --build-arg BRANCH_NAME=<< pipeline.parameters.branch-name >> -t pocket-core:${CIRCLE_JOB} -f docker/Dockerfile docker/.
         local_image_scan:
                 executor: anchore/anchore_engine
                 working_directory: /go/src/github.com/pokt-network/pocket-core-deployments
