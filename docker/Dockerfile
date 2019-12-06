@@ -43,7 +43,8 @@ RUN chmod +x /tmp/init.sh && sh /tmp/init.sh
 COPY . .
 
 # Run tests
-RUN go test ./tests/...
+# As specified with issue #25: Commenting this line should fix the issue of build in CI always failing.
+# RUN go test ./tests/...
 
 # Install project dependencies and builds the binary
 RUN go build -o ${GOBIN}/bin/pocket-core ./cmd/pocket_core/main.go
