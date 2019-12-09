@@ -16,7 +16,7 @@ services:
       - pocket
 
   geth-rinkeby:
-    image: ethereum/client-go:stable
+    image: ethereum/client-go:v1.9.9
     expose:
       - "8545"
       - "8546"
@@ -29,7 +29,7 @@ services:
       - pocket
 
   geth-ropsten:
-    image: ethereum/client-go:stable
+    image: ethereum/client-go:v1.9.9
     expose:
       - "8545"
       - "8546"
@@ -43,7 +43,7 @@ services:
       - pocket
 
   geth-goerli:
-    image: ethereum/client-go:stable
+    image: ethereum/client-go:v1.9.9
     expose:
       - "8545"
       - "8546"
@@ -56,7 +56,7 @@ services:
       - pocket
 
   geth-mainnet:
-    image: ethereum/client-go:stable
+    image: ethereum/client-go:v1.9.9
     expose:
       - "8545"
       - "8546"
