@@ -43,8 +43,9 @@ RUN chmod +x /tmp/init.sh && sh /tmp/init.sh
 COPY . .
 
 # Run tests
-# Commented this line for future use.
-# RUN go test ./tests/...
+# As the tests were removed recently for the fact that most of them were broken, I commented this line,
+# It should be uncommented as soon as the new tests are available.
+#RUN go test ./tests/...
 
 # Install project dependencies and builds the binary
 RUN go build -o ${GOBIN}/bin/pocket-core ./cmd/pocket_core/main.go
