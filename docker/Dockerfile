@@ -37,13 +37,14 @@ ARG TAG_NAME=""
 COPY init.sh deps.sh /tmp/
 
 #Run the init script, so it fetch from the TAG_NAME OR BRANCH_NAME var
-RUN chmod +x /tmp/init.sh && sh /tmp/init.sh 
+RUN chmod +x /tmp/init.sh && sh /tmp/init.sh
 
 # Install rest of source code
 COPY . .
 
 # Run tests
-RUN go test ./tests/...
+# Commented this line for future use.
+# RUN go test ./tests/...
 
 # Install project dependencies and builds the binary
 RUN go build -o ${GOBIN}/bin/pocket-core ./cmd/pocket_core/main.go
