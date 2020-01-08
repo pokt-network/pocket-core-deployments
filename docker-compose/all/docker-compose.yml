@@ -37,7 +37,7 @@ services:
     volumes:
       - geth-mainnet:/.mainnet
 
-    command: "--rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3" 
+    command: "--rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3"
     networks:
       - pocket
 
@@ -59,7 +59,7 @@ services:
 
   aion-mastery:
     build: ../aion/aion-mastery/.
-    image: poktnetwork/aion:mastery 
+    image: poktnetwork/aion:mastery
     expose:
       - "8545"
       - "8547"
@@ -75,14 +75,14 @@ services:
       - pocket
 
   tezos-mainnet:
-    image: tezos/tezos:mainnet 
+    image: tezos/tezos:mainnet
     expose:
       - '8732'
       - '9732'
     volumes:
       - mainnet-node-data:/var/run/tezos/node
       - mainnet-client-data:/var/run/tezos/client
-    
+
     command: tezos-node
     networks:
       - pocket
@@ -95,20 +95,20 @@ services:
     volumes:
       - alphanet-node-data:/var/run/tezos/node
       - alphanet-client-data:/var/run/tezos/client
-    
+
     command: tezos-node
     networks:
       - pocket
 
   pocket-service:
     image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
-    build: ./.. 
+    build: ./..
     ports:
       - "8081:8081"
-    
+
     command: --datadirectory datadir --disip ${POCKET_DISPATCH_IP-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0
     environment:
-      POCKET_CORE_START_DELAY: 180 
+      POCKET_CORE_START_DELAY: 180
       POCKET_CORE_CHAINS: '[{"blockchain":{"name":"AION","netid":"256","version":"0"},"url":"aion-mainnet:8545"},{"blockchain":{"name":"AION","netid":"32","version":"0"},"url":"aion-mastery:8545"},{"blockchain":{"name":"ETH","netid":"1","version":"0"},"url":"geth-mainnet:8545"},{"blockchain":{"name":"ETH","netid":"4","version":"0"},"url":"geth-rinkeby:8545"},{"blockchain":{"name":"TEZOS","netid":"MAINNET","version":"0"},"url":"tezos-mainnet:8732"},{"blockchain":{"name":"TEZOS","netid":"ALPHANET","version":"0"},"url":"tezos-alphanet:8732"},{"blockchain":{"name":"POA","netid":"99","version":"0"},"url":"POA-mainnet:8545"},{"blockchain":{"name":"POA","netid":"77","version":"0"},"url":"POA-testnet:8545"},{"blockchain":{"name":"POA","netid":"100","version":"0"},"url":"POA-xdai:8545"}]'
     networks:
       - pocket
@@ -135,10 +135,10 @@ services:
     volumes:
       - POA-xdai:/.mainnet
 
-    command: "--rpc --networkid 100 --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3" 
+    command: "--rpc --networkid 100 --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3"
     networks:
       - pocket
-  
+
   POA-mainnet:
     image: ethereum/client-go:stable
     expose:
@@ -148,7 +148,7 @@ services:
     volumes:
       - POA-mainnet:/.mainnet
 
-    command: "--rpc --networkid 99 --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3" 
+    command: "--rpc --networkid 99 --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3"
     networks:
       - pocket
 
