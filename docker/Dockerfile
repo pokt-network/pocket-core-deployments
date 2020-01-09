@@ -39,7 +39,7 @@ ARG BRANCH_NAME="staging"
 COPY deps.sh /tmp/
 
 # Clone the repository
-RUN git clone --branch ${BRANCH_NAME} https://github.com/pokt-network/pocket-core.git
+RUN git clone --branch ${BRANCH_NAME} https://github.com/pokt-network/pocket-core.git ${POCKET_PATH}
 
 # Install rest of source code
 COPY . .

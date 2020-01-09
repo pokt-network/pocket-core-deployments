@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -eo pipefail
 
 # Set error conditions
 # Exit script if you try to use an uninitialized variable.
@@ -7,13 +7,11 @@ set -o nounset
 # Exit script if a statement returns a non-true return value.
 set -o errexit
 
-# Use the error status of the first failure, rather than that of the last item in a pipeline.
-set -o pipefail
-
 # Variable declaration
 GOLANG_VERSION="$1"
 BRANCH_NAME="$2"
-DOCKER_TAG="$3"
+DOCKER_IMAGE_NAME="$3"
+DOCKER_TAG="$4"
 
 # Parse parameters
 if [ ! -n "$GOLANG_VERSION" ]
@@ -25,6 +23,12 @@ if [ ! -n "$BRANCH_NAME" ]
 then
     GOLANG_VERSION="staging"
 fi
+
+if [ ! -n "$DOCKER_IMAGE_NAME" ]
+then
+    DOCKER_IMAGE_NAME="poktnetwork/pocket-core"
+fi
+
 
 if [ ! -n "$DOCKER_TAG" ]
 then
@@ -50,5 +54,13 @@ then
     exit 1
 fi
 
+# Echo all the params!
+echo "Golang version: $GOLANG_VERSION"
+echo "Branch name: $BRANCH_NAME"
+echo "Docker image name: $DOCKER_IMAGE_NAME"
+echo "Docker tag: $DOCKER_TAG"
+
+COMMAND="docker build --build-arg GOLANG_IMAGE_VERSION=golang:$GOLANG_VERSION-alpine --build-arg BRANCH_NAME=$BRANCH_NAME -t $DOCKER_IMAGE_NAME:$DOCKER_TAG -f docker/Dockerfile docker/."
+
 # Run docker build!
-exec docker build --build-arg GOLANG_IMAGE_VERSION=golang:"$GOLANG_VERSION"-alpine --build-arg BRANCH_NAME="$BRANCH_NAME" -t pocket-core:"$DOCKER_TAG" -f docker/Dockerfile docker/.
+eval $COMMAND 
