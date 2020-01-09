@@ -2,8 +2,11 @@
 # The result of this Dockerfile will put the pocket-core executable in the $GOBIN/bin, which in turn
 # is part of the $PATH
 
+# Dynamically pull Go-lang version for the image
+ARG GOLANG_IMAGE_VERSION=golang:1.13-alpine
+
 # First build step to build the app binary
-FROM golang:1.12-alpine AS builder
+FROM ${GOLANG_IMAGE_VERSION} AS builder
 
 # Install dependencies
 RUN apk -v --update --no-cache add \
@@ -29,15 +32,14 @@ ENV GO111MODULE="on"
 RUN mkdir -p ${POCKET_PATH}
 WORKDIR $POCKET_PATH
 
-# Creating the BRANCH_NAME and TAG_NAME variables
-ARG BRANCH_NAME=""
-ARG TAG_NAME=""
+# Creating the BRANCH_NAME variable
+ARG BRANCH_NAME="staging"
 
-# Copying init and deps sh to tmp folder
-COPY init.sh deps.sh /tmp/
+# Copying deps sh to tmp folder
+COPY deps.sh /tmp/
 
-#Run the init script, so it fetch from the TAG_NAME OR BRANCH_NAME var
-RUN chmod +x /tmp/init.sh && sh /tmp/init.sh
+# Clone the repository
+RUN git clone --branch ${BRANCH_NAME} https://github.com/pokt-network/pocket-core.git
 
 # Install rest of source code
 COPY . .
@@ -48,7 +50,7 @@ COPY . .
 #RUN go test ./tests/...
 
 # Install project dependencies and builds the binary
-RUN go build -o ${GOBIN}/bin/pocket-core ./cmd/pocket_core/main.go
+RUN go build -o ${GOBIN}/bin/pocket-core ./app/cmd/pocket_core/main.go
 
 # Second build step: reduce image size to only use app binary
 FROM alpine:3.10
