@@ -1,30 +1,42 @@
 version: 2.1
 
-parameters:
-        branch-name:
-                type: string
-                default: "mvp-staging"
+# CI configuration for Pocket Core deployment artifacts
+
+# Orb definitions
 orbs:
   anchore: anchore/anchore-engine@1.6.0
 
+# Parameters definition for triggers
+parameters:
+        branch-name:
+                type: string
+                default: "staging"
+        golang-version:
+                type: string
+                default: "1.13"
+# Global jobs
 jobs:
-        build:
+        # Build docker image from pocket core branch
+        build_docker_image:
                 docker:
-                        - image: circleci/golang:1.12
+                        - image: circleci/golang:<< pipeline.parameters.golang-version >>
                 working_directory: /go/src/github.com/pokt-network/pocket-core-deployments
                 steps:
+                        # Checkout the deployment artifacts code
                         - checkout
+                        # Setup the Docker daemon for this job
                         - setup_remote_docker
-                        #Build the image
-                        - run: docker build --build-arg BRANCH_NAME=<< pipeline.parameters.branch-name >> -t pocket-core:${CIRCLE_JOB} -f docker/Dockerfile docker/.
-        local_image_scan:
+                        # Build the local docker image using the parameters from the pipeline
+                        - run: sh docker/build.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
+        # Job to scan the image for vulnerabilities using Anchore with an image build from a pocket core branch
+        docker_image_anchore_scan:
                 executor: anchore/anchore_engine
                 working_directory: /go/src/github.com/pokt-network/pocket-core-deployments
                 steps:
                         - setup_remote_docker
                         - checkout
                         - run:
-                            command: 'docker build -t "pocket-core:${CIRCLE_JOB}" -f docker/Dockerfile docker/. '
+                            command: 'sh docker/build.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> pocket-core ${CIRCLE_JOB}'
                             name: build container
                         - anchore/analyze_local_image:
                             dockerfile_path:  docker/Dockerfile
@@ -33,3 +45,34 @@ jobs:
                         - anchore/parse_reports
                         - store_artifacts:
                             path: anchore-reports
+        # Job to push the docker image to the repository
+        push_docker_image:
+                docker:
+                        - image: circleci/golang:<< pipeline.parameters.golang-version >>
+                working_directory: /go/src/github.com/pokt-network/pocket-core-deployments
+                steps:
+                        - setup_remote_docker
+                        - checkout
+                        # Login to Docker HUB
+                        - run: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
+                        # Push the image!
+                        - run: sh docker/push.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
+workflows:
+        version: 2
+        # Workflow that builds, tests and pushes docker images based on parameters
+        build-test-push-docker:
+                jobs:
+                        # Builds the docker image from a branch
+                        - build_docker_image
+                        # Tests the docker image from a branch
+                        - docker_image_anchore_scan:
+                                requires:
+                                        - build_docker_image
+                        # Pushes the docker image from a branch
+                        - push_docker_image:
+                                requires:
+                                        - docker_image_anchore_scan
+
+                        
+
+        
