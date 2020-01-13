@@ -12,6 +12,8 @@ GOLANG_VERSION="$1"
 BRANCH_NAME="$2"
 DOCKER_IMAGE_NAME="$3"
 DOCKER_TAG="$4"
+STAGING_BRANCH="staging"
+MASTER_BRANCH="master"
 
 # Parse parameters
 if [ ! -n "$GOLANG_VERSION" ]
@@ -21,7 +23,7 @@ fi
 
 if [ ! -n "$BRANCH_NAME" ]
 then
-    GOLANG_VERSION="staging"
+    BRANCH_NAME="staging"
 fi
 
 if [ ! -n "$DOCKER_IMAGE_NAME" ]
@@ -32,16 +34,17 @@ fi
 if [ ! -n "$DOCKER_TAG" ]
 then
     # Resolve DOCKER_TAG using the branch name
-    if [ "$BRANCH_NAME" == "staging" ]
-    then
+    if [ "$BRANCH_NAME" = "$STAGING_BRANCH" ]; then 
         # Handle staging branch
+        echo "It's staging!"
         DOCKER_TAG="staging-latest"
-    elif [ "$BRANCH_NAME" == "master" ]
-    then
+    elif [ "$BRANCH_NAME" = "$MASTER_BRANCH" ]; then
         # Handle master branch
+        echo "It's staging!"
         DOCKER_TAG="latest"
     else
         # It's a tag!
+        echo "It's a tag!"
         DOCKER_TAG="$BRANCH_NAME"
     fi
 fi
