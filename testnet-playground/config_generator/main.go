@@ -1,4 +1,4 @@
-package config_generator
+package main
 
 import (
 	"encoding/hex"
