@@ -238,3 +238,9 @@ dist
 
 # PROJECT GITIGNORE
 dappnode/.*
+
+# GOLAND IDE
+.idea/*
+
+# PLAYGROUND VENDOR
+testnet-playground/config_generator/vendor/*
