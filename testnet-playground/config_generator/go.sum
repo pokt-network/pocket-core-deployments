@@ -134,6 +134,7 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/pokt-network/pocket-core v0.0.0-20200113174952-49e4934d255f h1:SAmClbsxtufOeyQ28eOqS2ADa8UCGpVK74LbmxoQQyQ=
 github.com/pokt-network/pocket-core v0.0.0-20200113174952-49e4934d255f/go.mod h1:yo2f+rtTtxw65T/W9mYWv5yDiBqvnaBcLkKwdrKDIWA=
+github.com/pokt-network/pocket-core-deployments v0.0.0-20200108183903-4d05bef10b5c h1:2GV4uKkiF8qgdlXusHVcUxzIsYxhOPrVKwsZNF5i8jI=
 github.com/pokt-network/posmint v0.0.0-20200112230032-9e81da703ade h1:vK/BJY+iG/5FbTKneIo7R0QCpxlOnyVAG71fmiFPtck=
 github.com/pokt-network/posmint v0.0.0-20200112230032-9e81da703ade/go.mod h1:na2H0hbT/5y06rngzI259rmXavNqR8p7XdKj8HQNN5g=
 github.com/prometheus/client_golang v0.9.1/go.mod h1:7SWBe2y4D6OKWSNQJUaRYU/AaXPKyh/dDVn+NZz0KFw=

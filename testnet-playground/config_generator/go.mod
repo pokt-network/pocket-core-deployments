@@ -1,4 +1,4 @@
-module github.com/andrewnguyen22/key_generator
+module github.com/pocket-core-deployments/testnet-playground/config_generator
 
 go 1.13
 
