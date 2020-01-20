@@ -22,10 +22,11 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        VERSION: 1.0.3
+        MAJOR_VERSION: 1.0.5
+        SPECIFIC_VERSION: 1.0.5.7
     command: -listen -rest -server -printtoconsole -logtimestamps -logips -rpccorsdomain="*" -rpcbind="0.0.0.0" -rpcallowip="0.0.0.0/0"  
     volumes:
-      - daps-mainnet:/root/.dapscoin
+      - daps-mainnet:/home/DAPS_user/.dapscoin
     expose:
       - "53573"
     networks:
