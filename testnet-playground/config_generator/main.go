@@ -15,7 +15,6 @@ import (
 	"github.com/pokt-network/posmint/x/bank"
 	"github.com/pokt-network/posmint/x/params"
 	"github.com/pokt-network/posmint/x/supply"
-	"github.com/tendermint/tendermint/crypto/ed25519"
 	tmTypes "github.com/tendermint/tendermint/types"
 	"io/ioutil"
 	"os"
@@ -45,11 +44,11 @@ type JSONKeys struct {
 func keys(n int) []JSONKeys {
 	var res []JSONKeys
 	for i := 0; i < n; i++ {
-		pk := ed25519.GenPrivKey()
+		pk := crypto.GenerateEd25519PrivKey()
 		res = append(res, JSONKeys{
-			Priv: crypto.PrivateKey(pk).String(),
-			Pub:  hex.EncodeToString(pk.PubKey().Bytes()),
-			Addr: pk.PubKey().Address().String(),
+			Priv: pk.RawString(),
+			Pub:  pk.PublicKey().RawString(),
+			Addr: pk.PublicKey().Address().String(),
 		})
 	}
 	bz, _ := json.MarshalIndent(res, "", "  ")
@@ -135,7 +134,7 @@ func newDefaultGenesisState(keys []JSONKeys) []byte {
 		}
 		posGenesisState.Validators = append(posGenesisState.Validators,
 			nodesTypes.Validator{Address: addr,
-				ConsPubKey:   ed25519.PubKeyEd25519(pk),
+				PublicKey:    pk,
 				Status:       sdk.Bonded,
 				Chains:       []string{ethereum, bitcoin},
 				ServiceURL:   serviceURLPrefix + strconv.Itoa(i) + ":8081",
