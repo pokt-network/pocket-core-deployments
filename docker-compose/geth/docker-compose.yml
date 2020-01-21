@@ -1,4 +1,4 @@
-version: '3'
+version: '2.1'
 
 services:
 
@@ -23,35 +23,7 @@ services:
       - "30303"
     volumes:
       - geth-rinkeby:/.rinkeby
-
     command: "--rinkeby --rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .rinkeby --verbosity 3"
-    networks:
-      - pocket
-
-  geth-ropsten:
-    image: ethereum/client-go:v1.9.9
-    expose:
-      - "8545"
-      - "8546"
-      - "30303"
-    volumes:
-      - geth-ropsten:/.ropsten
-
-    command: '--testnet --rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode full --datadir .ropsten --verbosity 3 '
-    
-    networks:
-      - pocket
-
-  geth-goerli:
-    image: ethereum/client-go:v1.9.9
-    expose:
-      - "8545"
-      - "8546"
-      - "30303"
-    volumes:
-      - geth-goerli:/.goerli
-
-    command: '--goerli --rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode full --datadir .goerli --verbosity 3 '
     networks:
       - pocket
 
@@ -67,22 +39,50 @@ services:
     networks:
       - pocket
 
-  pocket-service:
-    image: poktnetwork/pocket-core:${ENV:-mvp-staging-latest}
-    ports:
-      - "8081:8081"
-    command: --disip ${POCKET_DISPATCH_IP:-dispatch.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 80 --port 8081 --requestTimeout 0 --datadirectory datadir
+  pocket-core-testnet:
+    image: poktnetwork/pocket-core:${ENV:-staging-latest}
+    privileged: true
+    command: "expect /home/app/command.sh" 
+    build: ../../docker
+    expose:
+      - "8081"
+      - "46656"
     environment:
-      POCKET_CORE_START_DELAY: 30 
-      POCKET_CORE_CHAINS: '[{ "blockchain": { "name": "ETH", "netid": "1", "version": "0" }, "url": "geth-mainnet:8545" }, { "blockchain": { "name": "ETH", "netid": "4", "version": "0" }, "url": "geth-rinkeby:8545"}, { "blockchain": { "name": "ETH", "netid": "5", "version": "0" }, "url": "geth-goerli:8545"}, { "blockchain": { "name": "ETH", "netid": "3", "version": "0" }, "url": "geth-ropsten:8545"} ]'
+      POCKET_CORE_KEY: "b8a56dead392e2b57eaba988068d0cedc0a11b9a16ca9610b094ec31a9cbc06650220553e5ccf56a863eaed88ebf1487e1dcb20e7fffbe0fb841cab1bb76af4d" 
+      POCKET_CORE_PERSISTENT_PEERS: "3C4CE33E68A726BCA3801E99E24F80C10EAF343C@pocket-core-testnet2:46656,  4BCB7B0E9C3FC3343905260BF36D40979BE524CD@pocket-core-testnet3:46656, E1EC5FBE826BB6DD3CEB04B33BBF221E611C601E@pocket-core-testnet4:46656, 8ED7A41B06EA855FF4BA3EE630688B73499626AE@pocket-core-testnet5:46656"
     networks:
       - pocket
+    volumes:
+        - "./chains.json:/home/app/.pocket/chains.json"
+        - "./genesis.json:/home/app/.pocket/genesis.json"
+
+  pocket-core-testnet2:
+    extends: pocket-core-testnet
+    environment:
+      POCKET_CORE_KEY: "a49ff628a250c2d8e9a8e6dff2c86c075a5f0b22c489ac5d8a0b47392b02052bff1e6080925587cd76974710b14d1c2229aed4442921ccd67b7c97fece399ebe"
+      POCKET_CORE_PERSISTENT_PEERS: "3DC42932FF52F9F506DCE1D75B634DDAD654E22E@pocket-core-testnet:46656,  4BCB7B0E9C3FC3343905260BF36D40979BE524CD@pocket-core-testnet3:46656, E1EC5FBE826BB6DD3CEB04B33BBF221E611C601E@pocket-core-testnet4:46656, 8ED7A41B06EA855FF4BA3EE630688B73499626AE@pocket-core-testnet5:46656"
+
+  pocket-core-testnet3:
+    extends: pocket-core-testnet
+    environment:
+      POCKET_CORE_KEY: "44cb0f6fcaac7bb3199bcb3c8548dbebeeef9746441449db1515a3f890ccfcf24f26a1d836d8d421007bcb20a67b4afc70511cac6a0975347e430140d80741ee"
+      POCKET_CORE_PERSISTENT_PEERS: "3DC42932FF52F9F506DCE1D75B634DDAD654E22E@pocket-core-testnet:46656,  3C4CE33E68A726BCA3801E99E24F80C10EAF343C@pocket-core-testnet2:46656, E1EC5FBE826BB6DD3CEB04B33BBF221E611C601E@pocket-core-testnet4:46656, 8ED7A41B06EA855FF4BA3EE630688B73499626AE@pocket-core-testnet5:46656"
+
+  pocket-core-testnet4:
+    extends: pocket-core-testnet
+    environment:
+      POCKET_CORE_KEY: "11c1eb0da2fd2bc6aef9ab45cb2576807cd00e4147ea8388900860a2eed236078ab9c7a3b341bc071ad2f11e84c695812fe5c2771524b89ae1131cae48d93c8f"
+      POCKET_CORE_PERSISTENT_PEERS: "3DC42932FF52F9F506DCE1D75B634DDAD654E22E@pocket-core-testnet:46656,  3C4CE33E68A726BCA3801E99E24F80C10EAF343C@pocket-core-testnet2:46656, 4BCB7B0E9C3FC3343905260BF36D40979BE524CD@pocket-core-testnet3:46656, 8ED7A41B06EA855FF4BA3EE630688B73499626AE@pocket-core-testnet5:46656"
+
+  pocket-core-testnet5:
+    extends: pocket-core-testnet
+    environment:
+      POCKET_CORE_KEY: "b7f2d96ef6f3b7b7e54fdf9dba81e3912c7d45d43785138c3be47c885009d3e09b1be29dd2c546244f13d9cb3abf9202707494286bf8d440f3e75f6dba30c57a"
+      POCKET_CORE_PERSISTENT_PEERS: "3DC42932FF52F9F506DCE1D75B634DDAD654E22E@pocket-core-testnet:46656,  3C4CE33E68A726BCA3801E99E24F80C10EAF343C@pocket-core-testnet2:46656, 4BCB7B0E9C3FC3343905260BF36D40979BE524CD@pocket-core-testnet3:46656, E1EC5FBE826BB6DD3CEB04B33BBF221E611C601E@pocket-core-testnet4:46656"
 
 volumes:
   geth-mainnet:
   geth-rinkeby:
-  geth-ropsten:
-  geth-goerli:
 
 networks:
   pocket:
