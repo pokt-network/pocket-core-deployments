@@ -2,19 +2,6 @@ version: '2.1'
 
 services:
 
-  nginx:
-    image: poktnetwork/nginx:dispatch
-    build: ../nginx/
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - "../nginx/conf.d/10-pocket.conf:/etc/nginx/conf.d/default.conf"
-      - "../nginx/nginx.conf:/etc/nginx/nginx.conf"
-
-    networks:
-      - pocket
-
   geth-rinkeby:
     image: ethereum/client-go:v1.9.9
     expose:
