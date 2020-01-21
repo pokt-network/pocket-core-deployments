@@ -42,7 +42,7 @@ services:
   pocket-core-testnet:
     image: poktnetwork/pocket-core:${ENV:-staging-latest}
     privileged: true
-    command: "expect /home/app/command.sh" 
+    command: "/usr/bin/expect /home/app/command.sh" 
     build: ../../docker
     expose:
       - "8081"
