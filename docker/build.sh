@@ -34,7 +34,7 @@ fi
 if [ ! -n "$DOCKER_TAG" ]
 then
     # Resolve DOCKER_TAG using the branch name
-    if [ "$BRANCH_NAME" = "$STAGING_BRANCH" ]; then 
+    if [ "$BRANCH_NAME" = "$STAGING_BRANCH" ]; then
         # Handle staging branch
         echo "It's staging!"
         DOCKER_TAG="staging-latest"
@@ -65,4 +65,4 @@ echo "Docker tag: $DOCKER_TAG"
 COMMAND="docker build --build-arg GOLANG_IMAGE_VERSION=golang:$GOLANG_VERSION-alpine --build-arg BRANCH_NAME=$BRANCH_NAME -t $DOCKER_IMAGE_NAME:$DOCKER_TAG -f docker/Dockerfile docker/."
 
 # Run docker build!
-eval $COMMAND 
+eval $COMMAND

@@ -34,7 +34,7 @@ fi
 if [ ! -n "$DOCKER_TAG" ]
 then
     # Resolve DOCKER_TAG using the branch name
-    if [ "$BRANCH_NAME" = "$STAGING_BRANCH" ]; then 
+    if [ "$BRANCH_NAME" = "$STAGING_BRANCH" ]; then
         # Handle staging branch
         echo "It's staging!"
         DOCKER_TAG="staging-latest"
