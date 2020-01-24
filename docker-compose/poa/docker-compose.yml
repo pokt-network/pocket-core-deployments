@@ -36,7 +36,7 @@ services:
   POA-kovan:
     image: poktnetwork/poa-node:kovan
     build:
-      context: ./parity
+      context: .
       dockerfile: Dockerfile
       args:
         chain: 'kovan'
@@ -55,7 +55,7 @@ services:
   POA-xdai:
     image: poktnetwork/poa-node:xdai
     build:
-      context: ./parity
+      context: .
       dockerfile: Dockerfile
       args:
         chain: 'dai'
