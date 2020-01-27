@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	apps "github.com/pokt-network/pocket-core/x/apps"
+	appsTypes "github.com/pokt-network/pocket-core/x/apps/types"
 	"github.com/pokt-network/pocket-core/x/nodes"
 	nodesTypes "github.com/pokt-network/pocket-core/x/nodes/types"
 	pocket "github.com/pokt-network/pocket-core/x/pocketcore"
@@ -138,14 +140,41 @@ func newDefaultGenesisState(keys []JSONKeys) []byte {
 				Status:       sdk.Bonded,
 				Chains:       []string{ethereum, bitcoin},
 				ServiceURL:   serviceURLPrefix + strconv.Itoa(i) + ":8081",
-				StakedTokens: sdk.NewInt(10000000)})
+				StakedTokens: sdk.NewInt(1000000000000)})
 	}
 	res := types.ModuleCdc.MustMarshalJSON(posGenesisState)
 	defaultGenesis[nodesTypes.ModuleName] = res
+	// setup a single application
+	var appsGenesisState appsTypes.GenesisState
+	rawApps := defaultGenesis[appsTypes.ModuleName]
+	types.ModuleCdc.MustUnmarshalJSON(rawApps, &appsGenesisState)
+	coinBase := posGenesisState.Validators[0]
+	appsGenesisState.Applications = append(appsGenesisState.Applications, appsTypes.Application{
+		Address:      coinBase.Address,
+		PublicKey:    coinBase.PublicKey,
+		Jailed:       false,
+		Status:       sdk.Bonded,
+		Chains:       []string{ethereum, bitcoin},
+		StakedTokens: sdk.NewInt(1000000000000000),
+	})
+	res = appsTypes.ModuleCdc.MustMarshalJSON(appsGenesisState)
+	defaultGenesis[appsTypes.ModuleName] = res
+	// setup a single account
+	var accsGenesisState auth.GenesisState
+	rawAccs := defaultGenesis[auth.ModuleName]
+	types.ModuleCdc.MustUnmarshalJSON(rawAccs, &accsGenesisState)
+	accsGenesisState.Accounts = append(accsGenesisState.Accounts, &auth.BaseAccount{
+		Address: coinBase.Address,
+		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(10000000000000))),
+		PubKey:  coinBase.PublicKey,
+	})
+	res = auth.ModuleCdc.MustMarshalJSON(accsGenesisState)
+	defaultGenesis[auth.ModuleName] = res
 	j, er := types.ModuleCdc.MarshalJSONIndent(defaultGenesis, "", "    ")
 	if er != nil {
 		panic(er)
 	}
+	fmt.Println(coinBase)
 	return j
 }
 
