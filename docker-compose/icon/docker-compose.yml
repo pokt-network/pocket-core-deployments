@@ -1,0 +1,78 @@
+version: '2.1'
+
+services:
+
+  icon-testnet:
+    image: 'iconloop/prep-node:2001091813x7eba36-dev'
+    restart: "always"
+    environment:
+      LOOPCHAIN_LOG_LEVEL: "DEBUG"
+      ICON_LOG_LEVEL: "DEBUG"
+      NETWORK_ENV: "testnet"
+      DEFAULT_PATH: "/data/loopchain"
+      LOG_OUTPUT_TYPE: "file"
+      PRIVATE_PATH: "/cert/key"
+      PRIVATE_PASSWORD: "qwer1234!"
+      CERT_PATH: "/cert"
+      SERVICE: "zicon"
+      FASTEST_START: "yes"
+    cap_add:
+      - SYS_TIME
+    volumes:
+      - icon-testnet-data:/data
+      - icon-testnet-cert:/cert:ro
+      - ./cert/key:/cert/key
+    ports:
+      - 9000:9000
+      - 7100:7100
+    networks:
+      - pocket
+
+  pocket-core-testnet:
+    image: poktnetwork/pocket-core:${ENV:-staging-latest}
+    privileged: true
+    command: "/usr/bin/expect /home/app/command.sh"
+    build: ../../docker
+    expose:
+      - "8081"
+      - "46656"
+    environment:
+      POCKET_CORE_KEY: "b8a56dead392e2b57eaba988068d0cedc0a11b9a16ca9610b094ec31a9cbc06650220553e5ccf56a863eaed88ebf1487e1dcb20e7fffbe0fb841cab1bb76af4d"
+      POCKET_CORE_PERSISTENT_PEERS: "3C4CE33E68A726BCA3801E99E24F80C10EAF343C@pocket-core-testnet2:46656,  4BCB7B0E9C3FC3343905260BF36D40979BE524CD@pocket-core-testnet3:46656, E1EC5FBE826BB6DD3CEB04B33BBF221E611C601E@pocket-core-testnet4:46656, 8ED7A41B06EA855FF4BA3EE630688B73499626AE@pocket-core-testnet5:46656"
+    networks:
+      - pocket
+    volumes:
+        - "./chains.json:/home/app/.pocket/chains.json"
+        - "./genesis.json:/home/app/.pocket/genesis.json"
+
+  pocket-core-testnet2:
+    extends: pocket-core-testnet
+    environment:
+      POCKET_CORE_KEY: "a49ff628a250c2d8e9a8e6dff2c86c075a5f0b22c489ac5d8a0b47392b02052bff1e6080925587cd76974710b14d1c2229aed4442921ccd67b7c97fece399ebe"
+      POCKET_CORE_PERSISTENT_PEERS: "3DC42932FF52F9F506DCE1D75B634DDAD654E22E@pocket-core-testnet:46656,  4BCB7B0E9C3FC3343905260BF36D40979BE524CD@pocket-core-testnet3:46656, E1EC5FBE826BB6DD3CEB04B33BBF221E611C601E@pocket-core-testnet4:46656, 8ED7A41B06EA855FF4BA3EE630688B73499626AE@pocket-core-testnet5:46656"
+
+  pocket-core-testnet3:
+    extends: pocket-core-testnet
+    environment:
+      POCKET_CORE_KEY: "44cb0f6fcaac7bb3199bcb3c8548dbebeeef9746441449db1515a3f890ccfcf24f26a1d836d8d421007bcb20a67b4afc70511cac6a0975347e430140d80741ee"
+      POCKET_CORE_PERSISTENT_PEERS: "3DC42932FF52F9F506DCE1D75B634DDAD654E22E@pocket-core-testnet:46656,  3C4CE33E68A726BCA3801E99E24F80C10EAF343C@pocket-core-testnet2:46656, E1EC5FBE826BB6DD3CEB04B33BBF221E611C601E@pocket-core-testnet4:46656, 8ED7A41B06EA855FF4BA3EE630688B73499626AE@pocket-core-testnet5:46656"
+
+  pocket-core-testnet4:
+    extends: pocket-core-testnet
+    environment:
+      POCKET_CORE_KEY: "11c1eb0da2fd2bc6aef9ab45cb2576807cd00e4147ea8388900860a2eed236078ab9c7a3b341bc071ad2f11e84c695812fe5c2771524b89ae1131cae48d93c8f"
+      POCKET_CORE_PERSISTENT_PEERS: "3DC42932FF52F9F506DCE1D75B634DDAD654E22E@pocket-core-testnet:46656,  3C4CE33E68A726BCA3801E99E24F80C10EAF343C@pocket-core-testnet2:46656, 4BCB7B0E9C3FC3343905260BF36D40979BE524CD@pocket-core-testnet3:46656, 8ED7A41B06EA855FF4BA3EE630688B73499626AE@pocket-core-testnet5:46656"
+
+  pocket-core-testnet5:
+    extends: pocket-core-testnet
+    environment:
+      POCKET_CORE_KEY: "b7f2d96ef6f3b7b7e54fdf9dba81e3912c7d45d43785138c3be47c885009d3e09b1be29dd2c546244f13d9cb3abf9202707494286bf8d440f3e75f6dba30c57a"
+      POCKET_CORE_PERSISTENT_PEERS: "3DC42932FF52F9F506DCE1D75B634DDAD654E22E@pocket-core-testnet:46656,  3C4CE33E68A726BCA3801E99E24F80C10EAF343C@pocket-core-testnet2:46656, 4BCB7B0E9C3FC3343905260BF36D40979BE524CD@pocket-core-testnet3:46656, E1EC5FBE826BB6DD3CEB04B33BBF221E611C601E@pocket-core-testnet4:46656"
+
+volumes:
+  icon-testnet-data:
+  icon-testnet-cert:
+
+networks:
+  pocket:
+    driver: bridge
