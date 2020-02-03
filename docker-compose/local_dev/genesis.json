@@ -1,5 +1,5 @@
 {
-  "genesis_time": "0001-01-01T00:00:00Z",
+  "genesis_time": "2020-02-03T18:45:00Z",
   "chain_id": "pocket-test",
   "consensus_params": {
     "block": {
@@ -42,7 +42,7 @@
           "public_key": "50220553e5ccf56a863eaed88ebf1487e1dcb20e7fffbe0fb841cab1bb76af4d",
           "jailed": false,
           "status": 2,
-          "tokens": "10000000",
+          "tokens": "100000000",
           "service_url": "http://www.pocket-core-testnet0:8081",
           "chains": [
             "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",
@@ -55,7 +55,7 @@
           "public_key": "ff1e6080925587cd76974710b14d1c2229aed4442921ccd67b7c97fece399ebe",
           "jailed": false,
           "status": 2,
-          "tokens": "10000000",
+          "tokens": "110000000",
           "service_url": "http://www.pocket-core-testnet1:8081",
           "chains": [
             "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",
@@ -94,7 +94,7 @@
           "public_key": "9b1be29dd2c546244f13d9cb3abf9202707494286bf8d440f3e75f6dba30c57a",
           "jailed": false,
           "status": 2,
-          "tokens": "10000000",
+          "tokens": "10005000",
           "service_url": "http://www.pocket-core-testnet4:8081",
           "chains": [
             "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",

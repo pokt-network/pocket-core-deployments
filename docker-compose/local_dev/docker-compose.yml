@@ -8,6 +8,7 @@ services:
     build: ../../docker
     ports:
       - "8081:8081"
+      - "26657:26657"
     expose:
       - "8081"  #  POKT RPC
       - "26657" #  Tendermint RPC
@@ -15,14 +16,13 @@ services:
       - "46656" #  Tendermint Peers
     environment:
       POCKET_CORE_KEY: "b8a56dead392e2b57eaba988068d0cedc0a11b9a16ca9610b094ec31a9cbc06650220553e5ccf56a863eaed88ebf1487e1dcb20e7fffbe0fb841cab1bb76af4d"
-      POCKET_CORE_PERSISTENT_PEERS: "3c4ce33e68a726bca3801e99e24f80c10eaf343c@pocket-core-testnet2:26656,  4bcb7b0e9c3fc3343905260bf36d40979be524cd@pocket-core-testnet3:26656, e1ec5fbe826bb6dd3ceb04b33bbf221e611c601e@pocket-core-testnet4:26656, 8ed7a41b06ea855ff4ba3ee630688b73499626ae@pocket-core-testnet5:26656"
       POCKET_CORE_SEEDS: "3c4ce33e68a726bca3801e99e24f80c10eaf343c@pocket-core-testnet2:26656,  4bcb7b0e9c3fc3343905260bf36d40979be524cd@pocket-core-testnet3:26656, e1ec5fbe826bb6dd3ceb04b33bbf221e611c601e@pocket-core-testnet4:26656, 8ed7a41b06ea855ff4ba3ee630688b73499626ae@pocket-core-testnet5:26656"
     networks:
       - pocket
     volumes:
         - "./local_command.sh:/home/app/.pocket/local_command.sh"
-        - "./chains.json:/home/app/.pocket/chains.json"
-        - "./genesis.json:/home/app/.pocket/genesis.json"
+        - "./chains.json:/home/app/.pocket/config/chains.json"
+        - "./genesis.json:/home/app/.pocket/config/genesis.json"
 
   pocket-core-testnet2:
     image: poktnetwork/pocket-core:${ENV:-staging-latest}
@@ -36,14 +36,13 @@ services:
       - "46656" #  Tendermint Peers
     environment:
       POCKET_CORE_KEY: "a49ff628a250c2d8e9a8e6dff2c86c075a5f0b22c489ac5d8a0b47392b02052bff1e6080925587cd76974710b14d1c2229aed4442921ccd67b7c97fece399ebe"
-      POCKET_CORE_PERSISTENT_PEERS: "3dc42932ff52f9f506dce1d75b634ddad654e22e@pocket-core-testnet:26656,  4bcb7b0e9c3fc3343905260bf36d40979be524cd@pocket-core-testnet3:26656, e1ec5fbe826bb6dd3ceb04b33bbf221e611c601e@pocket-core-testnet4:26656, 8ed7a41b06ea855ff4ba3ee630688b73499626ae@pocket-core-testnet5:26656"
       POCKET_CORE_SEEDS: "3dc42932ff52f9f506dce1d75b634ddad654e22e@pocket-core-testnet:26656,  4bcb7b0e9c3fc3343905260bf36d40979be524cd@pocket-core-testnet3:26656, e1ec5fbe826bb6dd3ceb04b33bbf221e611c601e@pocket-core-testnet4:26656, 8ed7a41b06ea855ff4ba3ee630688b73499626ae@pocket-core-testnet5:26656"
     networks:
       - pocket
     volumes:
         - "./local_command.sh:/home/app/.pocket/local_command.sh"
-        - "./chains.json:/home/app/.pocket/chains.json"
-        - "./genesis.json:/home/app/.pocket/genesis.json"
+        - "./chains.json:/home/app/.pocket/config/chains.json"
+        - "./genesis.json:/home/app/.pocket/config/genesis.json"
 
   pocket-core-testnet3:
     image: poktnetwork/pocket-core:${ENV:-staging-latest}
@@ -57,14 +56,13 @@ services:
       - "46656" #  Tendermint Peers
     environment:
       POCKET_CORE_KEY: "44cb0f6fcaac7bb3199bcb3c8548dbebeeef9746441449db1515a3f890ccfcf24f26a1d836d8d421007bcb20a67b4afc70511cac6a0975347e430140d80741ee"
-      POCKET_CORE_PERSISTENT_PEERS: "3dc42932ff52f9f506dce1d75b634ddad654e22e@pocket-core-testnet:26656,  3c4ce33e68a726bca3801e99e24f80c10eaf343c@pocket-core-testnet2:26656, e1ec5fbe826bb6dd3ceb04b33bbf221e611c601e@pocket-core-testnet4:26656, 8ed7a41b06ea855ff4ba3ee630688b73499626ae@pocket-core-testnet5:26656"
       POCKET_CORE_SEEDS: "3dc42932ff52f9f506dce1d75b634ddad654e22e@pocket-core-testnet:26656,  3c4ce33e68a726bca3801e99e24f80c10eaf343c@pocket-core-testnet2:26656, e1ec5fbe826bb6dd3ceb04b33bbf221e611c601e@pocket-core-testnet4:26656, 8ed7a41b06ea855ff4ba3ee630688b73499626ae@pocket-core-testnet5:26656"
     networks:
       - pocket
     volumes:
         - "./local_command.sh:/home/app/.pocket/local_command.sh"
-        - "./chains.json:/home/app/.pocket/chains.json"
-        - "./genesis.json:/home/app/.pocket/genesis.json"
+        - "./chains.json:/home/app/.pocket/config/chains.json"
+        - "./genesis.json:/home/app/.pocket/config/genesis.json"
 
   pocket-core-testnet4:
     image: poktnetwork/pocket-core:${ENV:-staging-latest}
@@ -78,14 +76,13 @@ services:
       - "46656" #  Tendermint Peers
     environment:
       POCKET_CORE_KEY: "11c1eb0da2fd2bc6aef9ab45cb2576807cd00e4147ea8388900860a2eed236078ab9c7a3b341bc071ad2f11e84c695812fe5c2771524b89ae1131cae48d93c8f"
-      POCKET_CORE_PERSISTENT_PEERS: "3dc42932ff52f9f506dce1d75b634ddad654e22e@pocket-core-testnet:26656,  3c4ce33e68a726bca3801e99e24f80c10eaf343c@pocket-core-testnet2:26656, 4bcb7b0e9c3fc3343905260bf36d40979be524cd@pocket-core-testnet3:46656, 8ed7a41b06ea855ff4ba3ee630688b73499626ae@pocket-core-testnet5:46656"
       POCKET_CORE_SEEDS: "3dc42932ff52f9f506dce1d75b634ddad654e22e@pocket-core-testnet:26656,  3c4ce33e68a726bca3801e99e24f80c10eaf343c@pocket-core-testnet2:26656, 4bcb7b0e9c3fc3343905260bf36d40979be524cd@pocket-core-testnet3:26656, 8ed7a41b06ea855ff4ba3ee630688b73499626ae@pocket-core-testnet5:26656"
     networks:
       - pocket
     volumes:
         - "./local_command.sh:/home/app/.pocket/local_command.sh"
-        - "./chains.json:/home/app/.pocket/chains.json"
-        - "./genesis.json:/home/app/.pocket/genesis.json"
+        - "./chains.json:/home/app/.pocket/config/chains.json"
+        - "./genesis.json:/home/app/.pocket/config/genesis.json"
 
   pocket-core-testnet5:
     image: poktnetwork/pocket-core:${ENV:-staging-latest}
@@ -99,14 +96,13 @@ services:
       - "46656" #  Tendermint Peers
     environment:
       POCKET_CORE_KEY: "b7f2d96ef6f3b7b7e54fdf9dba81e3912c7d45d43785138c3be47c885009d3e09b1be29dd2c546244f13d9cb3abf9202707494286bf8d440f3e75f6dba30c57a"
-      POCKET_CORE_PERSISTENT_PEERS: "3dc42932ff52f9f506dce1d75b634ddad654e22e@pocket-core-testnet:26656,  3c4ce33e68a726bca3801e99e24f80c10eaf343c@pocket-core-testnet2:26656, 4bcb7b0e9c3fc3343905260bf36d40979be524cd@pocket-core-testnet3:26656, e1ec5fbe826bb6dd3ceb04b33bbf221e611c601e@pocket-core-testnet4:26656"
       POCKET_CORE_SEEDS: "3dc42932ff52f9f506dce1d75b634ddad654e22e@pocket-core-testnet:26656,  3c4ce33e68a726bca3801e99e24f80c10eaf343c@pocket-core-testnet2:26656, 4bcb7b0e9c3fc3343905260bf36d40979be524cd@pocket-core-testnet3:26656, e1ec5fbe826bb6dd3ceb04b33bbf221e611c601e@pocket-core-testnet4:26656"
     networks:
       - pocket
     volumes:
         - "./local_command.sh:/home/app/.pocket/local_command.sh"
-        - "./chains.json:/home/app/.pocket/chains.json"
-        - "./genesis.json:/home/app/.pocket/genesis.json"
+        - "./chains.json:/home/app/.pocket/config/chains.json"
+        - "./genesis.json:/home/app/.pocket/config/genesis.json"
 
 networks:
   pocket:

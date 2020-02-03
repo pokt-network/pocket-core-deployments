@@ -9,7 +9,7 @@ if { $env(POCKET_CORE_KEY) eq "" }  {
     sleep 1
     send -- "yo\n"
     expect eof
-    spawn pocket-core start --persistent_peers $env(POCKET_CORE_PERSISTENT_PEERS) --seeds $env(POCKET_CORE_SEEDS)
+    spawn pocket-core start --seeds $env(POCKET_CORE_SEEDS)
 }
 
 sleep 1
