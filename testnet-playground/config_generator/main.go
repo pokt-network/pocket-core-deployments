@@ -63,7 +63,7 @@ func keys(n int) []JSONKeys {
 
 func genesis(keys []JSONKeys) {
 	j, er := types.ModuleCdc.MarshalJSONIndent(tmTypes.GenesisDoc{
-		GenesisTime: time.Time{},
+		GenesisTime: time.Now(),
 		ChainID:     "pocket-test",
 		ConsensusParams: &tmTypes.ConsensusParams{
 			Block: tmTypes.BlockParams{
