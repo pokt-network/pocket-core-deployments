@@ -1,5 +1,5 @@
 {
-  "genesis_time": "0001-01-01T00:00:00Z",
+  "genesis_time": "2020-02-03T18:45:00Z",
   "chain_id": "pocket-test",
   "consensus_params": {
     "block": {
