@@ -8,10 +8,6 @@
 
 A simple tool to generate chains.json, keys.json, and a corresponding genesis.json
 
-### Example usage
-
-Args <number of nodes> <url for external blockchain 1> <url for external blockchain 2>
-
 `./config_generator 20 http://foo.com http://bar.com`
 
 ### Installation
