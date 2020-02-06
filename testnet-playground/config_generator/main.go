@@ -1,220 +1,108 @@
 package main
 
 import (
-	"encoding/hex"
-	"encoding/json"
+	"bufio"
+	"errors"
 	"fmt"
-	apps "github.com/pokt-network/pocket-core/x/apps"
-	appsTypes "github.com/pokt-network/pocket-core/x/apps/types"
-	"github.com/pokt-network/pocket-core/x/nodes"
-	nodesTypes "github.com/pokt-network/pocket-core/x/nodes/types"
-	pocket "github.com/pokt-network/pocket-core/x/pocketcore"
-	"github.com/pokt-network/pocket-core/x/pocketcore/types"
-	"github.com/pokt-network/posmint/crypto"
-	sdk "github.com/pokt-network/posmint/types"
-	"github.com/pokt-network/posmint/types/module"
-	"github.com/pokt-network/posmint/x/auth"
-	"github.com/pokt-network/posmint/x/bank"
-	"github.com/pokt-network/posmint/x/params"
-	"github.com/pokt-network/posmint/x/supply"
-	tmTypes "github.com/tendermint/tendermint/types"
-	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 )
 
+const (
+	WelcomMessage = `
+Welcome to the testnet playground generator!
+
+Befofe I can generate your testnet, I need to ask you a few questions...`
+	NumberOfNodesPrompt = `
+How many Nodes (validators) would you like pre-staked in this network?`
+	NumberOfAppsPrompt = `
+How many Applications (DApps) would you like pre-staked in this network?`
+	NumberOfAccountsPrompt = `
+How many accounts (unstaked actors) would you like in this network?
+NOTE: all nodes and apps are already given an amount of unstaked coins too!`
+	URLForEthereumNodePrompt = `
+For testing purposes, we need you to point us to an ethereum node!
+NOTE: if you don't have an ethereum node, just put an arbitrary url! 
+Be sure to not do any relay requests to ethereum then!'`
+	URLForBitcoinNodePrompt = `
+For testing purposes, we need you to point us to a bitcoin node!
+NOTE: if you don't have a bitcoin node, just put an arbitrary url! 
+Be sure to not do any relay requests to bitcoin then!'`
+	MinutesTillGenesisPrompt = `
+And finally, how many minutes until genesis starts?
+NOTE: this is important! Nodes will start mining blocks at this exact time!
+If all genesis validators are not up, the network will never start`
+)
+
+var (
+	ReadInError            = errors.New(`Uh oh, an error occurred reading in the information: `)
+	DirectoryCreationError = errors.New("Uh oh, unfortunately we were unable to create a directory needed for this tool! ")
+	fs                     = string(filepath.Separator)
+)
+
 func main() {
-	var urls []string
-	numberOfNodes, err := strconv.Atoi(os.Args[1])
-	urls = append(urls, os.Args[2])
-	urls = append(urls, os.Args[3])
-	if err != nil {
-		panic(err)
-	}
-	k := keys(numberOfNodes)
-	genesis(k)
-	chains(urls)
+	setup(gatherParameters())
 }
 
-type JSONKeys struct {
-	Priv string `json:"private_key"`
-	Pub  string `json:"public_key"`
-	Addr string `json:"address"`
+func setup(numberOfNodes, numberOfApps, numberOfAccounts, minutesTillGenesisStart int, ethereumURL, bitcoinURL string) {
+	home := generateTestnetHome()
+	keys := generateKeys(home, numberOfNodes, numberOfApps, numberOfAccounts)
+	generateGenesis(home, keys, minutesTillGenesisStart)
+	generateChains(home, ethereumURL, bitcoinURL)
+	generateDockerComposeFile(home, keys)
+	writeLocalCmd(home)
 }
 
-func keys(n int) []JSONKeys {
-	var res []JSONKeys
-	for i := 0; i < n; i++ {
-		pk := crypto.GenerateEd25519PrivKey()
-		res = append(res, JSONKeys{
-			Priv: pk.RawString(),
-			Pub:  pk.PublicKey().RawString(),
-			Addr: pk.PublicKey().Address().String(),
-		})
-	}
-	bz, _ := json.MarshalIndent(res, "", "  ")
-	err := ioutil.WriteFile("keys.json", bz, 0644)
+func gatherParameters() (numberOfNodes, numberOfApps, numberOfAccounts, minutesTillGenesisStart int, ethereumURL, bitcoinURL string) {
+	fmt.Println(WelcomMessage)
+	fmt.Println(NumberOfNodesPrompt)
+	_, err := fmt.Scanf("%d", &numberOfNodes)
 	if err != nil {
-		panic(err)
+		fmt.Println(ReadInError.Error() + err.Error())
+		os.Exit(1)
 	}
-	return res
+	fmt.Println(NumberOfAppsPrompt)
+	_, err = fmt.Scanf("%d", &numberOfApps)
+	if err != nil {
+		fmt.Println(ReadInError.Error() + err.Error())
+		os.Exit(1)
+	}
+	fmt.Println(NumberOfAccountsPrompt)
+	_, err = fmt.Scanf("%d", &numberOfAccounts)
+	if err != nil {
+		fmt.Println(ReadInError.Error() + err.Error())
+		os.Exit(1)
+	}
+	fmt.Println(URLForEthereumNodePrompt)
+	reader := bufio.NewReader(os.Stdin)
+	ethereumURL, err = reader.ReadString('\n')
+	if err != nil {
+		fmt.Println(ReadInError.Error() + err.Error())
+		os.Exit(1)
+	}
+	fmt.Println(URLForBitcoinNodePrompt)
+	bitcoinURL, err = reader.ReadString('\n')
+	if err != nil {
+		fmt.Println(ReadInError.Error() + err.Error())
+		os.Exit(1)
+	}
+	fmt.Println(MinutesTillGenesisPrompt)
+	_, err = fmt.Scanf("%d", &minutesTillGenesisStart)
+	if err != nil {
+		fmt.Println(ReadInError.Error() + err.Error())
+		os.Exit(1)
+	}
+	return
 }
 
-func genesis(keys []JSONKeys) {
-	j, er := types.ModuleCdc.MarshalJSONIndent(tmTypes.GenesisDoc{
-		GenesisTime: time.Now(),
-		ChainID:     "pocket-test",
-		ConsensusParams: &tmTypes.ConsensusParams{
-			Block: tmTypes.BlockParams{
-				MaxBytes:   15000,
-				MaxGas:     -1,
-				TimeIotaMs: 1,
-			},
-			Evidence: tmTypes.EvidenceParams{
-				MaxAge: 1000000,
-			},
-			Validator: tmTypes.ValidatorParams{
-				PubKeyTypes: []string{"ed25519"},
-			},
-		},
-		Validators: nil,
-		AppHash:    nil,
-		AppState:   newDefaultGenesisState(keys),
-	}, "", "  ")
-	if er != nil {
-		panic(er)
-	}
-	er = ioutil.WriteFile("genesis.json", j, 0644)
-	if er != nil {
-		panic(er)
-	}
-}
-
-func newDefaultGenesisState(keys []JSONKeys) []byte {
-	defaultGenesis := module.NewBasicManager(
-		apps.AppModuleBasic{},
-		auth.AppModuleBasic{},
-		bank.AppModuleBasic{},
-		params.AppModuleBasic{},
-		nodes.AppModuleBasic{},
-		supply.AppModuleBasic{},
-		pocket.AppModuleBasic{},
-	).DefaultGenesis()
-	ethereum, err := types.NonNativeChain{
-		Ticker:  "eth",
-		Netid:   "4",
-		Version: "v1.9.9",
-		Client:  "",
-		Inter:   "",
-	}.HashString()
+func generateTestnetHome() (directoryName string) {
+	directoryName = "docker-compose"+fs+"testnet-playground_" + strconv.Itoa(time.Now().Nanosecond())
+	err := os.Mkdir(directoryName, os.ModePerm)
 	if err != nil {
-		panic(err)
+		fmt.Println(DirectoryCreationError.Error() + err.Error())
+		os.Exit(1)
 	}
-	bitcoin, err := types.NonNativeChain{
-		Ticker:  "btc",
-		Netid:   "1",
-		Version: "0.19.0.1",
-		Client:  "",
-		Inter:   "",
-	}.HashString()
-	if err != nil {
-		panic(err)
-	}
-	serviceURLPrefix := "http://www.pocket-core-testnet"
-	rawPOS := defaultGenesis[nodesTypes.ModuleName]
-	var posGenesisState nodesTypes.GenesisState
-	types.ModuleCdc.MustUnmarshalJSON(rawPOS, &posGenesisState)
-	for i, jk := range keys {
-		addr, err := hex.DecodeString(jk.Addr)
-		if err != nil {
-			panic(err)
-		}
-		pk, err := crypto.NewPublicKey(jk.Pub)
-		if err != nil {
-			panic(err)
-		}
-		posGenesisState.Validators = append(posGenesisState.Validators,
-			nodesTypes.Validator{Address: addr,
-				PublicKey:    pk,
-				Status:       sdk.Bonded,
-				Chains:       []string{ethereum, bitcoin},
-				ServiceURL:   serviceURLPrefix + strconv.Itoa(i) + ":8081",
-				StakedTokens: sdk.NewInt(1000000000000)})
-	}
-	res := types.ModuleCdc.MustMarshalJSON(posGenesisState)
-	defaultGenesis[nodesTypes.ModuleName] = res
-	// setup a single application
-	var appsGenesisState appsTypes.GenesisState
-	rawApps := defaultGenesis[appsTypes.ModuleName]
-	types.ModuleCdc.MustUnmarshalJSON(rawApps, &appsGenesisState)
-	coinBase := posGenesisState.Validators[0]
-	appsGenesisState.Applications = append(appsGenesisState.Applications, appsTypes.Application{
-		Address:      coinBase.Address,
-		PublicKey:    coinBase.PublicKey,
-		Jailed:       false,
-		Status:       sdk.Bonded,
-		Chains:       []string{ethereum, bitcoin},
-		StakedTokens: sdk.NewInt(1000000000000000),
-	})
-	res = appsTypes.ModuleCdc.MustMarshalJSON(appsGenesisState)
-	defaultGenesis[appsTypes.ModuleName] = res
-	// setup a single account
-	var accsGenesisState auth.GenesisState
-	rawAccs := defaultGenesis[auth.ModuleName]
-	types.ModuleCdc.MustUnmarshalJSON(rawAccs, &accsGenesisState)
-	accsGenesisState.Accounts = append(accsGenesisState.Accounts, &auth.BaseAccount{
-		Address: coinBase.Address,
-		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(10000000000000))),
-		PubKey:  coinBase.PublicKey,
-	})
-	res = auth.ModuleCdc.MustMarshalJSON(accsGenesisState)
-	defaultGenesis[auth.ModuleName] = res
-	j, er := types.ModuleCdc.MarshalJSONIndent(defaultGenesis, "", "    ")
-	if er != nil {
-		panic(er)
-	}
-	fmt.Println(coinBase)
-	return j
-}
-
-func chains(urls []string) {
-	ethereum, err := types.NonNativeChain{
-		Ticker:  "eth",
-		Netid:   "4",
-		Version: "v1.9.9",
-		Client:  "",
-		Inter:   "",
-	}.HashString()
-	if err != nil {
-		panic(err)
-	}
-	bitcoin, err := types.NonNativeChain{
-		Ticker:  "btc",
-		Netid:   "1",
-		Version: "0.19.0.1",
-		Client:  "",
-		Inter:   "",
-	}.HashString()
-	if err != nil {
-		panic(err)
-	}
-	hbs := types.HostedBlockchains{M: map[string]types.HostedBlockchain{
-		ethereum: {
-			Hash: ethereum,
-			URL:  urls[0],
-		},
-		bitcoin: {
-			Hash: bitcoin,
-			URL:  urls[1],
-		},
-	}}
-	j, er := types.ModuleCdc.MarshalJSONIndent(hbs.M, "", "    ")
-	if er != nil {
-		panic(er)
-	}
-	er = ioutil.WriteFile("chains.json", j, 0644)
-	if er != nil {
-		panic(er)
-	}
+	return
 }
