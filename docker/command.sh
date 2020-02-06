@@ -7,9 +7,9 @@ if { $env(POCKET_CORE_KEY) eq "" }  {
 } else {
     spawn pocket-core accounts import-raw $env(POCKET_CORE_KEY)
     sleep 1
-    send -- "yo\n"
+    send -- "$env(POCKET_CORE_PASSPHRASE)\n"
     expect eof
-    spawn pocket-core start --seeds $env(POCKET_CORE_SEEDS)
+    spawn pocket-core start --seeds "$env(POCKET_CORE_SEEDS)"
 }
 
 sleep 1
