@@ -53,6 +53,7 @@ func setup(numberOfNodes, numberOfApps, numberOfAccounts, minutesTillGenesisStar
 	app.GenChains(home, ethereumURL, bitcoinURL)
 	app.GenDockerConfig(home, keys)
 	app.WriteLocalCmd(home)
+	app.GenFinishedMessages(keys)
 }
 
 func gatherParameters() (numberOfNodes, numberOfApps, numberOfAccounts, minutesTillGenesisStart int, ethereumURL, bitcoinURL string) {
