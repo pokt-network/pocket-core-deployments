@@ -14,6 +14,14 @@ A simple tool to generate chains.json, keys.json, and a corresponding genesis.js
 
 Clone the repository and run `go build pokt-network/pocket-core-deployments/config_generator/main.go`
 
+Then look for your new instance in docker-compose ex `testnet-playground_419577000`
+
+Run docker-compose build
+
+Then docker-compose up
+
+Your network will now be running locally!
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on contributions and the process of submitting pull requests.
