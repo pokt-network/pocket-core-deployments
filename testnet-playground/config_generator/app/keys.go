@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"encoding/json"
@@ -20,7 +20,7 @@ type KeysFile struct {
 	AccKeys  []JSONKeys `json:"accs"`
 }
 
-func generateKeys(directoryName string, numberOfNodes, numberOfApps, numberOfAccounts int) KeysFile {
+func GenKeys(directoryName string, numberOfNodes, numberOfApps, numberOfAccounts int) KeysFile {
 	res := KeysFile{
 		NodeKeys: make([]JSONKeys, 0),
 		AppKeys:  make([]JSONKeys, 0),

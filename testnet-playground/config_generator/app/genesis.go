@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"encoding/hex"
@@ -51,7 +51,7 @@ func init() {
 	}
 }
 
-func generateGenesis(homeDir string, keys KeysFile, minutesTillGenesisStart int) {
+func GenGenesis(homeDir string, keys KeysFile, minutesTillGenesisStart int) {
 	j, er := pocketTypes.ModuleCdc.MarshalJSONIndent(tmTypes.GenesisDoc{
 		GenesisTime: time.Now().Add(time.Minute * time.Duration(minutesTillGenesisStart)),
 		ChainID:     "pocket-testet-playground",

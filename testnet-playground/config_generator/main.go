@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"github.com/pokt-network/pocket-core-deployments/testnet-playground/config_generator/app"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -38,7 +39,6 @@ If all genesis validators are not up, the network will never start`
 
 var (
 	ReadInError            = errors.New(`Uh oh, an error occurred reading in the information: `)
-	DirectoryCreationError = errors.New("Uh oh, unfortunately we were unable to create a directory needed for this tool! ")
 	fs                     = string(filepath.Separator)
 )
 
@@ -48,11 +48,11 @@ func main() {
 
 func setup(numberOfNodes, numberOfApps, numberOfAccounts, minutesTillGenesisStart int, ethereumURL, bitcoinURL string) {
 	home := generateTestnetHome()
-	keys := generateKeys(home, numberOfNodes, numberOfApps, numberOfAccounts)
-	generateGenesis(home, keys, minutesTillGenesisStart)
-	generateChains(home, ethereumURL, bitcoinURL)
-	generateDockerComposeFile(home, keys)
-	writeLocalCmd(home)
+	keys := app.GenKeys(home, numberOfNodes, numberOfApps, numberOfAccounts)
+	app.GenGenesis(home, keys, minutesTillGenesisStart)
+	app.GenChains(home, ethereumURL, bitcoinURL)
+	app.GenDockerConfig(home, keys)
+	app.WriteLocalCmd(home)
 }
 
 func gatherParameters() (numberOfNodes, numberOfApps, numberOfAccounts, minutesTillGenesisStart int, ethereumURL, bitcoinURL string) {
@@ -98,10 +98,10 @@ func gatherParameters() (numberOfNodes, numberOfApps, numberOfAccounts, minutesT
 }
 
 func generateTestnetHome() (directoryName string) {
-	directoryName = "docker-compose"+fs+"testnet-playground_" + strconv.Itoa(time.Now().Nanosecond())
+	directoryName = "docker-compose" + fs + "testnet-playground_" + strconv.Itoa(time.Now().Nanosecond())
 	err := os.Mkdir(directoryName, os.ModePerm)
 	if err != nil {
-		fmt.Println(DirectoryCreationError.Error() + err.Error())
+		fmt.Println(app.DirectoryCreationError.Error() + err.Error())
 		os.Exit(1)
 	}
 	return

@@ -1,11 +1,16 @@
-package main
+package app
 
 import (
 	"github.com/pokt-network/pocket-core/x/pocketcore/types"
 	"io/ioutil"
+	"path/filepath"
 )
 
-func generateChains(homeDir, ethereumURL, bitcoinURL string) {
+var (
+	fs = string(filepath.Separator)
+)
+
+func GenChains(homeDir, ethereumURL, bitcoinURL string) {
 	hbs := types.HostedBlockchains{M: map[string]types.HostedBlockchain{
 		ethereum: {
 			Hash: ethereum,
