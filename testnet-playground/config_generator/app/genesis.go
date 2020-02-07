@@ -93,6 +93,7 @@ func newAppState(keys KeysFile) []byte {
 	setupNodeGenesis(defaultGenesis, keys)
 	setupAppGenesis(defaultGenesis, keys)
 	setupAccGenesis(defaultGenesis, keys)
+	setupPocketGenesis(defaultGenesis)
 	genesisJSON, er := pocketTypes.ModuleCdc.MarshalJSONIndent(defaultGenesis, "", "    ")
 	if er != nil {
 		panic(er)
@@ -205,4 +206,15 @@ func setupNodeGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) 
 	}
 	res := pocketTypes.ModuleCdc.MustMarshalJSON(nodesGenesisObj)
 	defaultGenesis[nodesTypes.ModuleName] = res
+}
+
+func setupPocketGenesis(defaultGenesis map[string]json.RawMessage) {
+	// setup the service url prefix
+	rawPocketGenesis := defaultGenesis[pocketTypes.ModuleName]
+	var pocketGenesisObj pocketTypes.GenesisState
+	pocketTypes.ModuleCdc.MustUnmarshalJSON(rawPocketGenesis, &pocketGenesisObj)
+	pocketGenesisObj.Params.SupportedBlockchains = append(pocketGenesisObj.Params.SupportedBlockchains, ethereum)
+	pocketGenesisObj.Params.SupportedBlockchains = append(pocketGenesisObj.Params.SupportedBlockchains, bitcoin)
+	res := pocketTypes.ModuleCdc.MustMarshalJSON(pocketGenesisObj)
+	defaultGenesis[pocketTypes.ModuleName] = res
 }
