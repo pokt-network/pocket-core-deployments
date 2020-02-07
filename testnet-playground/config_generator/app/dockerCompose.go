@@ -1,6 +1,7 @@
-package main
+package app
 
 import (
+	"errors"
 	"fmt"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
@@ -38,6 +39,7 @@ var (
 		TendermintPeersPort,
 		TendermintPeersPortLegacy,
 	}
+	DirectoryCreationError = errors.New("Uh oh, unfortunately we were unable to create a directory needed for this tool! ")
 )
 
 type DockerComposeFile struct {
@@ -76,7 +78,7 @@ type KeyAndSeeds struct {
 	Seeds string `yaml:"POCKET_CORE_SEEDS"`
 }
 
-func generateDockerComposeFile(homeDir string, keys KeysFile) {
+func GenDockerConfig(homeDir string, keys KeysFile) {
 	dockerComposeFile := DockerComposeFile{
 		Version:  DockerVersion,
 		Services: make(map[string]Testnet, 0),

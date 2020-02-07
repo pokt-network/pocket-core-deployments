@@ -1,6 +1,8 @@
-package main
+package app
 
-import "io/ioutil"
+import (
+	"io/ioutil"
+)
 
 const (
 	fileContents = `#!/usr/bin/expect
@@ -26,7 +28,7 @@ expect eof
 exit`
 )
 
-func writeLocalCmd(homeDir string) {
+func WriteLocalCmd(homeDir string) {
 	er := ioutil.WriteFile(homeDir+fs+"local_command.sh", []byte(fileContents), 0644)
 	if er != nil {
 		panic(er)
