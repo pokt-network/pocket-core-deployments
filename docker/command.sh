@@ -1,20 +1,22 @@
 #!/usr/bin/expect
 
+set command $argv; # Grab the first command line parameter
 set timeout -1
 
 if { $env(POCKET_CORE_KEY) eq "" }  {
-    spawn pocket-core start
+    spawn sh -c "$command"
+
 } else {
     spawn pocket-core accounts import-raw $env(POCKET_CORE_KEY)
     sleep 1
     send -- "$env(POCKET_CORE_PASSPHRASE)\n"
     expect eof
-    spawn pocket-core start --seeds "$env(POCKET_CORE_SEEDS)"
+    spawn sh -c "$command"
 }
 
 sleep 1
 
-send -- "yo\n"
+send -- "$env(POCKET_CORE_PASSPHRASE)\n"
 
 expect eof
 
