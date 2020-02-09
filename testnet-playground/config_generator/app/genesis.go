@@ -136,7 +136,7 @@ func setupAccGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) {
 			PubKey:  pk,
 		})
 	}
-	for _, app := range keys.AccKeys {
+	for i, app := range keys.AccKeys {
 		addr, err := hex.DecodeString(app.Addr)
 		if err != nil {
 			panic(err)
@@ -146,9 +146,10 @@ func setupAccGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) {
 			panic(err)
 		}
 		accGenesisObj.Accounts = append(accGenesisObj.Accounts, &auth.BaseAccount{
-			Address: addr,
-			Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultStakeDenom, sdk.NewInt(1000000000))),
-			PubKey:  pk,
+			Address:       addr,
+			Coins:         sdk.NewCoins(sdk.NewCoin(sdk.DefaultStakeDenom, sdk.NewInt(1000000000))),
+			PubKey:        pk,
+			AccountNumber: uint64(i),
 		})
 	}
 	res := auth.ModuleCdc.MustMarshalJSON(accGenesisObj)
