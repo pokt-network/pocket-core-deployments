@@ -58,7 +58,7 @@ FROM alpine:3.10
 COPY --from=builder /bin/pocket-core /bin/pocket-core
 COPY entrypoint.sh /tmp/
 COPY command.sh /tmp/
-RUN apk add --update --no-cache expect
+RUN apk add --update --no-cache expect bash
 # Create app user and add permissions
 RUN addgroup -S app \
 	&& adduser -S -G app app
