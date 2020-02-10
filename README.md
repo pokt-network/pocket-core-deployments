@@ -1,7 +1,7 @@
 
 <div align="center">
   <a href="https://www.pokt.network">
-    <img src="https://pokt.network/wp-content/uploads/2018/12/Logo-488x228-px.png" alt="Pocket Network logo" width="340"/>
+    <img src="https://user-images.githubusercontent.com/16605170/74199287-94f17680-4c18-11ea-9de2-b094fab91431.png" alt="Pocket Network logo" width="340"/>
   </a>
 </div>
 
@@ -17,7 +17,7 @@ Dockerfiles and Compose YAMLs to orchestrate development and production-level en
 
 The docker-compose folder contains all the different blockchains for running together with the Pocket Core service.
 
-Every `docker-compose.yml` for every setup contains an additional `nginx` image optimized optimized with brotli and volumes for `persitent data` for the blockchains.
+Every `docker-compose.yml` for every setup contains an additional `nginx` image optimized optimized with brotli and volumes for `persistent data` for the blockchains.
 
 Every `docker-compose.yml` also contains the value `POCKET_CORE_START_DELAY` on the `pocket-service` container which is a variable that puts a delay while starting the pocket-service giving more time for the blockchains to start before receiving an erroneous response from them.
 
