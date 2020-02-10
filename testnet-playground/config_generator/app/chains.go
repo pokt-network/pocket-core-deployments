@@ -4,6 +4,7 @@ import (
 	"github.com/pokt-network/pocket-core/x/pocketcore/types"
 	"io/ioutil"
 	"path/filepath"
+	"strings"
 )
 
 var (
@@ -14,11 +15,11 @@ func GenChains(homeDir, ethereumURL, bitcoinURL string) {
 	hbs := types.HostedBlockchains{M: map[string]types.HostedBlockchain{
 		ethereum: {
 			Hash: ethereum,
-			URL:  ethereumURL,
+			URL:  strings.TrimSuffix(ethereumURL, "\n"),
 		},
 		bitcoin: {
 			Hash: bitcoin,
-			URL:  bitcoinURL,
+			URL:  strings.TrimSuffix(bitcoinURL, "\n"),
 		},
 	}}
 	chainsJSON, er := types.ModuleCdc.MarshalJSONIndent(hbs.M, "", "    ")
