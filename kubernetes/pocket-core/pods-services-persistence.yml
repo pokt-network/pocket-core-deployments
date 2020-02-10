@@ -1,0 +1,1104 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet
+      app: pocket-core-testnet
+    name: pocket-core-testnet
+  spec:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: peers
+      protocol: TCP
+      port: 46656 
+      targetPort: 46656
+    - name: tendermint
+      protocol: TCP
+      port: 26657 
+      targetPort: 26657
+    - name: tendermint-peers
+      protocol: TCP
+      port: 26656
+      targetPort: 26656
+    type: LoadBalancer 
+    selector:
+      io.kompose.service: pocket-core-testnet
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet
+      app: pocket-core-testnet
+    name: pocket-core-testnet
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: pocket-core-testnet 
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: pocket-core-testnet
+          app: pocket-core-testnet 
+      spec:
+        securityContext:
+          fsGroup: 100
+        containers:
+        - name: pocket-core-testnet
+          args: ["pocket-core start","--seeds", "$(POCKET_CORE_SEEDS)","--blockTime=1"]
+          image: poktnetwork/pocket-core:staging-latest
+          imagePullPolicy: Always
+          env:
+          - name: POCKET_CORE_CHAINS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_chains
+          - name: POCKET_CORE_PASSPHRASE
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_passphrase
+          - name: POCKET_CORE_GENESIS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_genesis
+          - name: POCKET_CORE_KEY 
+            value: "CUSTOM_POCKET_CORE_KEY_1"          
+          - name: POCKET_CORE_SEEDS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_seeds   
+          ports:
+          - containerPort: 8081
+          - containerPort: 46656
+          - containerPort: 26657
+          - containerPort: 26656
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+            requests:
+              cpu: "250m"
+              memory: "300Mi"
+          volumeMounts:
+            - mountPath: /home/app/.pocket
+              name: pocket-core-data 
+        restartPolicy: Always       
+        volumes:
+        - name: pocket-core-data
+          persistentVolumeClaim:
+            claimName: pocket-core-data 
+        terminationGracePeriodSeconds: 90
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet2
+      app: pocket-core-testnet2
+    name: pocket-core-testnet2
+  spec:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: peers
+      protocol: TCP
+      port: 46656 
+      targetPort: 46656
+    - name: tendermint
+      protocol: TCP
+      port: 26657 
+      targetPort: 26657
+    - name: tendermint-peers
+      protocol: TCP
+      port: 26656
+      targetPort: 26656
+    type: LoadBalancer 
+    selector:
+      io.kompose.service: pocket-core-testnet2
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet2
+      app: pocket-core-testnet2
+    name: pocket-core-testnet2
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: pocket-core-testnet2 
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: pocket-core-testnet2
+          app: pocket-core-testnet2 
+      spec:
+        securityContext:
+          fsGroup: 100
+        containers:
+        - name: pocket-core-testnet2
+          args: ["pocket-core start","--seeds"," $(POCKET_CORE_SEEDS)","--blockTime=1"]
+          image: poktnetwork/pocket-core:staging-latest 
+          imagePullPolicy: Always
+          env:
+          - name: POCKET_CORE_CHAINS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_chains
+          - name: POCKET_CORE_GENESIS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_genesis
+          - name: POCKET_CORE_PASSPHRASE
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_passphrase
+          - name: POCKET_CORE_KEY 
+            value: "CUSTOM_POCKET_CORE_KEY_2"
+          - name: POCKET_CORE_SEEDS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_seeds   
+          ports:
+          - containerPort: 8081
+          - containerPort: 46656
+          - containerPort: 26657         
+          - containerPort: 26656 
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+            requests:
+              cpu: "250m"
+              memory: "300Mi"
+          volumeMounts:
+            - mountPath: /home/app/.pocket
+              name: pocket-core-data2
+        restartPolicy: Always       
+        volumes:
+        - name: pocket-core-data2
+          persistentVolumeClaim:
+            claimName: pocket-core-data2  
+        terminationGracePeriodSeconds: 90
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet3
+      app: pocket-core-testnet3
+    name: pocket-core-testnet3
+  spec:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: peers
+      protocol: TCP
+      port: 46656 
+      targetPort: 46656
+    - name: tendermint
+      protocol: TCP
+      port: 26657 
+      targetPort: 26657
+    - name: tendermint-peers
+      protocol: TCP
+      port: 26656
+      targetPort: 26656
+    type: LoadBalancer 
+    selector:
+      io.kompose.service: pocket-core-testnet3
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet3
+      app: pocket-core-testnet3
+    name: pocket-core-testnet3
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: pocket-core-testnet3 
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: pocket-core-testnet3
+          app: pocket-core-testnet3 
+      spec:
+        securityContext:
+          fsGroup: 100      
+        containers:
+        - name: pocket-core-testnet3
+          args: ["pocket-core start","--seeds"," $(POCKET_CORE_SEEDS)","--blockTime=1"]
+          image: poktnetwork/pocket-core:staging-latest 
+          imagePullPolicy: Always
+          env:
+          - name: POCKET_CORE_CHAINS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_chains
+          - name: POCKET_CORE_PASSPHRASE
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_passphrase
+          - name: POCKET_CORE_GENESIS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_genesis
+          - name: POCKET_CORE_KEY 
+            value: "CUSTOM_POCKET_CORE_KEY_3"
+          - name: POCKET_CORE_SEEDS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_seeds    
+          ports:
+          - containerPort: 8081
+          - containerPort: 46656
+          - containerPort: 26657
+          - containerPort: 26656
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+            requests:
+              cpu: "250m"
+              memory: "300Mi"
+          volumeMounts:
+            - mountPath: /home/app/.pocket
+              name: pocket-core-data3
+        restartPolicy: Always       
+        volumes:
+        - name: pocket-core-data3
+          persistentVolumeClaim:
+            claimName: pocket-core-data3 
+        terminationGracePeriodSeconds: 90
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet4
+      app: pocket-core-testnet4
+    name: pocket-core-testnet4
+  spec:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: peers
+      protocol: TCP
+      port: 46656 
+      targetPort: 46656
+    - name: tendermint
+      protocol: TCP
+      port: 26657 
+      targetPort: 26657
+    - name: tendermint-peers
+      protocol: TCP
+      port: 26656
+      targetPort: 26656
+    type: LoadBalancer 
+    selector:
+      io.kompose.service: pocket-core-testnet4
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet4
+      app: pocket-core-testnet4
+    name: pocket-core-testnet4
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: pocket-core-testnet4 
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: pocket-core-testnet4
+          app: pocket-core-testnet4 
+      spec:
+        securityContext:
+          fsGroup: 100      
+        containers:
+        - name: pocket-core-testnet4
+          args: ["pocket-core start","--seeds"," $(POCKET_CORE_SEEDS)","--blockTime=1"]
+          image: poktnetwork/pocket-core:staging-latest 
+          imagePullPolicy: Always
+          env:
+          - name: POCKET_CORE_CHAINS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_chains
+          - name: POCKET_CORE_GENESIS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_genesis
+          - name: POCKET_CORE_PASSPHRASE
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_passphrase
+          - name: POCKET_CORE_KEY 
+            value: "CUSTOM_POCKET_CORE_KEY_4"
+          - name: POCKET_CORE_SEEDS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_seeds    
+          ports:
+          - containerPort: 8081
+          - containerPort: 46656
+          - containerPort: 26657
+          - containerPort: 26656
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+            requests:
+              cpu: "250m"
+              memory: "300Mi"
+          volumeMounts:
+            - mountPath: /home/app/.pocket
+              name: pocket-core-data4 
+        restartPolicy: Always       
+        volumes:
+        - name: pocket-core-data4
+          persistentVolumeClaim:
+            claimName: pocket-core-data4
+        terminationGracePeriodSeconds: 90
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet5
+      app: pocket-core-testnet5
+    name: pocket-core-testnet5
+  spec:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: peers
+      protocol: TCP
+      port: 46656 
+      targetPort: 46656
+    - name: tendermint
+      protocol: TCP
+      port: 26657 
+      targetPort: 26657
+    - name: tendermint-peers
+      protocol: TCP
+      port: 26656
+      targetPort: 26656
+    type: LoadBalancer 
+    selector:
+      io.kompose.service: pocket-core-testnet5
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet5
+      app: pocket-core-testnet5
+    name: pocket-core-testnet5
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: pocket-core-testnet5 
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: pocket-core-testnet5
+          app: pocket-core-testnet5 
+      spec:
+        securityContext:
+          fsGroup: 100      
+        containers:
+        - name: pocket-core-testnet5
+          args: ["pocket-core start","--seeds"," $(POCKET_CORE_SEEDS)","--blockTime=1"]
+          image: poktnetwork/pocket-core:staging-latest
+          imagePullPolicy: Always
+          env:
+          - name: POCKET_CORE_CHAINS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_chains
+          - name: POCKET_CORE_GENESIS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_genesis
+          - name: POCKET_CORE_PASSPHRASE
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_passphrase
+          - name: POCKET_CORE_KEY 
+            value: "CUSTOM_POCKET_CORE_KEY_5"
+          - name: POCKET_CORE_SEEDS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_seeds   
+          ports:
+          - containerPort: 8081
+          - containerPort: 46656
+          - containerPort: 26657
+          - containerPort: 26656
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+            requests:
+              cpu: "250m"
+              memory: "300Mi"
+          volumeMounts:
+            - mountPath: /home/app/.pocket
+              name: pocket-core-data5 
+        restartPolicy: Always       
+        volumes:
+        - name: pocket-core-data5
+          persistentVolumeClaim:
+            claimName: pocket-core-data5
+        terminationGracePeriodSeconds: 90
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet6
+      app: pocket-core-testnet6
+    name: pocket-core-testnet6
+  spec:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: peers
+      protocol: TCP
+      port: 46656 
+      targetPort: 46656
+    - name: tendermint
+      protocol: TCP
+      port: 26657 
+      targetPort: 26657
+    - name: tendermint-peers
+      protocol: TCP
+      port: 26656
+      targetPort: 26656
+    type: LoadBalancer 
+    selector:
+      io.kompose.service: pocket-core-testnet6
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet6
+      app: pocket-core-testnet6
+    name: pocket-core-testnet6
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: pocket-core-testnet6 
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: pocket-core-testnet6
+          app: pocket-core-testnet6 
+      spec:
+        securityContext:
+          fsGroup: 100       
+        containers:
+        - name: pocket-core-testnet6
+          args: ["pocket-core start","--seeds"," $(POCKET_CORE_SEEDS)","--blockTime=1"]
+          image: poktnetwork/pocket-core:staging-latest
+          imagePullPolicy: Always
+          env:
+          - name: POCKET_CORE_CHAINS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_chains
+          - name: POCKET_CORE_PASSPHRASE
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_passphrase
+          - name: POCKET_CORE_GENESIS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_genesis
+          - name: POCKET_CORE_KEY 
+            value: "CUSTOM_POCKET_CORE_KEY_6"
+          - name: POCKET_CORE_SEEDS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_seeds   
+          ports:
+          - containerPort: 8081
+          - containerPort: 46656
+          - containerPort: 26657
+          - containerPort: 26656
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+            requests:
+              cpu: "250m"
+              memory: "300Mi"
+          volumeMounts:
+            - mountPath: /home/app/.pocket
+              name: pocket-core-data6 
+        restartPolicy: Always       
+        volumes:
+        - name: pocket-core-data6
+          persistentVolumeClaim:
+            claimName: pocket-core-data6 
+        terminationGracePeriodSeconds: 90
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet7
+      app: pocket-core-testnet7
+    name: pocket-core-testnet7
+  spec:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: peers
+      protocol: TCP
+      port: 46656 
+      targetPort: 46656
+    - name: tendermint
+      protocol: TCP
+      port: 26657 
+      targetPort: 26657
+    - name: tendermint-peers
+      protocol: TCP
+      port: 26656
+      targetPort: 26656
+    type: LoadBalancer 
+    selector:
+      io.kompose.service: pocket-core-testnet7
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet7
+      app: pocket-core-testnet7
+    name: pocket-core-testnet7
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: pocket-core-testnet7 
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: pocket-core-testnet7
+          app: pocket-core-testnet7 
+      spec:
+        securityContext:
+          fsGroup: 100
+        containers:
+        - name: pocket-core-testnet7
+          args: ["pocket-core start","--seeds"," $(POCKET_CORE_SEEDS)","--blockTime=1"]
+          image: poktnetwork/pocket-core:staging-latest
+          imagePullPolicy: Always
+          env:
+          - name: POCKET_CORE_CHAINS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_chains
+          - name: POCKET_CORE_GENESIS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_genesis
+          - name: POCKET_CORE_PASSPHRASE
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_passphrase
+          - name: POCKET_CORE_KEY 
+            value: "CUSTOM_POCKET_CORE_KEY_7"
+          - name: POCKET_CORE_SEEDS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_seeds  
+          ports:
+          - containerPort: 8081
+          - containerPort: 46656
+          - containerPort: 26657
+          - containerPort: 26656
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+            requests:
+              cpu: "250m"
+              memory: "300Mi"
+          volumeMounts:
+            - mountPath: /home/app/.pocket
+              name: pocket-core-data7 
+        restartPolicy: Always       
+        volumes:
+        - name: pocket-core-data7
+          persistentVolumeClaim:
+            claimName: pocket-core-data7 
+        terminationGracePeriodSeconds: 90
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet8
+      app: pocket-core-testnet8
+    name: pocket-core-testnet8
+  spec:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: peers
+      protocol: TCP
+      port: 46656 
+      targetPort: 46656
+    - name: tendermint
+      protocol: TCP
+      port: 26657 
+      targetPort: 26657
+    - name: tendermint-peers
+      protocol: TCP
+      port: 26656
+      targetPort: 26656
+    type: LoadBalancer 
+    selector:
+      io.kompose.service: pocket-core-testnet8
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet8
+      app: pocket-core-testnet8
+    name: pocket-core-testnet8
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: pocket-core-testnet8 
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: pocket-core-testnet8
+          app: pocket-core-testnet8 
+      spec:
+        securityContext:
+          fsGroup: 100
+        containers:
+        - name: pocket-core-testnet8
+          args: ["pocket-core start","--seeds"," $(POCKET_CORE_SEEDS)","--blockTime=1"]
+          image: poktnetwork/pocket-core:staging-latest
+          imagePullPolicy: Always
+          env:
+          - name: POCKET_CORE_CHAINS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_chains
+          - name: POCKET_CORE_GENESIS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_genesis
+          - name: POCKET_CORE_PASSPHRASE
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_passphrase
+          - name: POCKET_CORE_KEY 
+            value: "CUSTOM_POCKET_CORE_KEY_8"
+          - name: POCKET_CORE_SEEDS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_seeds 
+          ports:
+          - containerPort: 8081
+          - containerPort: 46656
+          - containerPort: 26657
+          - containerPort: 26656
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+            requests:
+              cpu: "250m"
+              memory: "300Mi"
+          volumeMounts:
+            - mountPath: /home/app/.pocket
+              name: pocket-core-data8 
+        restartPolicy: Always       
+        volumes:
+        - name: pocket-core-data8
+          persistentVolumeClaim:
+            claimName: pocket-core-data8
+        terminationGracePeriodSeconds: 90
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet9
+      app: pocket-core-testnet9
+    name: pocket-core-testnet9
+  spec:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: peers
+      protocol: TCP
+      port: 46656 
+      targetPort: 46656
+    - name: tendermint
+      protocol: TCP
+      port: 26657 
+      targetPort: 26657
+    - name: tendermint-peers
+      protocol: TCP
+      port: 26656
+      targetPort: 26656
+    type: LoadBalancer 
+    selector:
+      io.kompose.service: pocket-core-testnet9
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet9
+      app: pocket-core-testnet9
+    name: pocket-core-testnet9
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: pocket-core-testnet9 
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: pocket-core-testnet9
+          app: pocket-core-testnet9 
+      spec:
+        securityContext:
+          fsGroup: 100
+        containers:
+        - name: pocket-core-testnet9
+          args: ["pocket-core start","--seeds"," $(POCKET_CORE_SEEDS)","--blockTime=1"]
+          image: poktnetwork/pocket-core:staging-latest
+          imagePullPolicy: Always
+          env:
+          - name: POCKET_CORE_CHAINS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_chains
+          - name: POCKET_CORE_GENESIS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_genesis
+          - name: POCKET_CORE_PASSPHRASE
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_passphrase
+          - name: POCKET_CORE_KEY 
+            value: "CUSTOM_POCKET_CORE_KEY_9"
+          - name: POCKET_CORE_SEEDS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_seeds
+          ports:
+          - containerPort: 8081
+          - containerPort: 46656
+          - containerPort: 26657
+          - containerPort: 26656
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+            requests:
+              cpu: "250m"
+              memory: "300Mi"
+          volumeMounts:
+            - mountPath: /home/app/.pocket
+              name: pocket-core-data9
+        restartPolicy: Always       
+        volumes:
+        - name: pocket-core-data9
+          persistentVolumeClaim:
+            claimName: pocket-core-data9 
+        terminationGracePeriodSeconds: 90
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet10
+      app: pocket-core-testnet10
+    name: pocket-core-testnet10
+  spec:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: peers
+      protocol: TCP
+      port: 46656 
+      targetPort: 46656
+    - name: tendermint
+      protocol: TCP
+      port: 26657 
+      targetPort: 26657
+    - name: tendermint-peers
+      protocol: TCP
+      port: 26656
+      targetPort: 26656
+    type: LoadBalancer 
+    selector:
+      io.kompose.service: pocket-core-testnet10
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1 
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+      kompose.version: 1.18.0 (06a2e56)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pocket-core-testnet10
+      app: pocket-core-testnet10
+    name: pocket-core-testnet10
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: pocket-core-testnet10 
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: pocket-core-testnet10
+          app: pocket-core-testnet10 
+      spec:
+        securityContext:
+          fsGroup: 100
+        containers:
+        - name: pocket-core-testnet10
+          args: ["pocket-core start","--seeds"," $(POCKET_CORE_SEEDS)","--blockTime=1"]
+          image: poktnetwork/pocket-core:staging-latest
+          imagePullPolicy: Always
+          env:
+          - name: POCKET_CORE_CHAINS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_chains
+          - name: POCKET_CORE_PASSPHRASE
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_passphrase
+          - name: POCKET_CORE_GENESIS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_genesis
+          - name: POCKET_CORE_KEY 
+            value: "CUSTOM_POCKET_CORE_KEY_10"
+          - name: POCKET_CORE_SEEDS
+            valueFrom:
+              configMapKeyRef:
+                name: pocket-core-testnet
+                key: pocket_core_seeds
+          ports:
+          - containerPort: 8081
+          - containerPort: 46656
+          - containerPort: 26657
+          - containerPort: 26656
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+            requests:
+              cpu: "250m"
+              memory: "300Mi"
+          volumeMounts:
+            - mountPath: /home/app/.pocket
+              name: pocket-core-data10
+        restartPolicy: Always       
+        volumes:
+        - name: pocket-core-data10
+          persistentVolumeClaim:
+            claimName: pocket-core-data10 
+        terminationGracePeriodSeconds: 90
+kind: List
+metadata: {}

@@ -1,0 +1,214 @@
+apiVersion: v1
+items:
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: pocket-core-data
+  provisioner: kubernetes.io/gce-pd
+  parameters:
+    type: pd-ssd
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name:  pocket-core-data 
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: pocket-core-data 
+    resources:
+      requests:
+        storage: 30Gi
+    accessModes:
+      - ReadWriteOnce
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: pocket-core-data2
+  provisioner: kubernetes.io/gce-pd
+  parameters:
+    type: pd-ssd
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name:  pocket-core-data2 
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: pocket-core-data2 
+    resources:
+      requests:
+        storage: 30Gi
+    accessModes:
+      - ReadWriteOnce
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: pocket-core-data3
+  provisioner: kubernetes.io/gce-pd
+  parameters:
+    type: pd-ssd
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name:  pocket-core-data3 
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: pocket-core-data3 
+    resources:
+      requests:
+        storage: 30Gi
+    accessModes:
+      - ReadWriteOnce
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: pocket-core-data4
+  provisioner: kubernetes.io/gce-pd
+  parameters:
+    type: pd-ssd
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name:  pocket-core-data4 
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: pocket-core-data4 
+    resources:
+      requests:
+        storage: 30Gi
+    accessModes:
+      - ReadWriteOnce
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: pocket-core-data5
+  provisioner: kubernetes.io/gce-pd
+  parameters:
+    type: pd-ssd
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name:  pocket-core-data5 
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: pocket-core-data5 
+    resources:
+      requests:
+        storage: 30Gi
+    accessModes:
+      - ReadWriteOnce
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: pocket-core-data6
+  provisioner: kubernetes.io/gce-pd
+  parameters:
+    type: pd-ssd
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name:  pocket-core-data6 
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: pocket-core-data6 
+    resources:
+      requests:
+        storage: 30Gi
+    accessModes:
+      - ReadWriteOnce
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: pocket-core-data7
+  provisioner: kubernetes.io/gce-pd
+  parameters:
+    type: pd-ssd
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name:  pocket-core-data7 
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: pocket-core-data7 
+    resources:
+      requests:
+        storage: 30Gi
+    accessModes:
+      - ReadWriteOnce
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: pocket-core-data8
+  provisioner: kubernetes.io/gce-pd
+  parameters:
+    type: pd-ssd
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name:  pocket-core-data8 
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: pocket-core-data8 
+    resources:
+      requests:
+        storage: 30Gi
+    accessModes:
+      - ReadWriteOnce
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: pocket-core-data9
+  provisioner: kubernetes.io/gce-pd
+  parameters:
+    type: pd-ssd
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name:  pocket-core-data9 
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: pocket-core-data9 
+    resources:
+      requests:
+        storage: 30Gi
+    accessModes:
+      - ReadWriteOnce
+  status: {}
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    name: pocket-core-data10
+  provisioner: kubernetes.io/gce-pd
+  parameters:
+    type: pd-ssd
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name:  pocket-core-data10 
+    labels:
+      failure-domain.beta.kubernetes.io/zone: us-east1-b
+  spec:
+    storageClassName: pocket-core-data10 
+    resources:
+      requests:
+        storage: 30Gi
+    accessModes:
+      - ReadWriteOnce
+  status: {}
+kind: List
+metadata: {}
