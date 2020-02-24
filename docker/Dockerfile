@@ -9,17 +9,8 @@ ARG GOLANG_IMAGE_VERSION=golang:1.13-alpine
 FROM ${GOLANG_IMAGE_VERSION} AS builder
 
 # Install dependencies
-RUN apk -v --update --no-cache add \
-	curl \
-	git \
-	python \
-	py-pip \
-	groff \
-	less \
-	mailcap \
-	gcc \
-	libc-dev \
-	bash && \
+RUN apk -v --update --no-cache add curl git python py-pip groff \
+	less mailcap gcc libc-dev bash && \
 	pip install --upgrade --no-cache awscli s3cmd python-magic && \
 	apk -v --purge del py-pip && \
 	rm /var/cache/apk/* || true
@@ -27,6 +18,7 @@ RUN apk -v --update --no-cache add \
 # Environment and system dependencies setup
 ENV POCKET_PATH=/go/src/github.com/pokt-network/pocket-core/
 ENV GO111MODULE="on"
+
 
 # Create node root directory
 RUN mkdir -p ${POCKET_PATH}
@@ -54,6 +46,9 @@ RUN go build -o ${GOBIN}/bin/pocket-core ./app/cmd/pocket_core/main.go
 
 # Second build step: reduce image size to only use app binary
 FROM alpine:3.10
+EXPOSE 8081
+EXPOSE 26657 
+EXPOSE 46656
 
 COPY --from=builder /bin/pocket-core /bin/pocket-core
 COPY entrypoint.sh /tmp/
@@ -62,7 +57,10 @@ RUN apk add --update --no-cache expect bash
 # Create app user and add permissions
 RUN addgroup -S app \
 	&& adduser -S -G app app
-RUN mv /tmp/entrypoint.sh /home/app/ && mv /tmp/command.sh /home/app/command.sh && chown -R app /bin/pocket-core  && mkdir -p /home/app/.pocket/config && chown -R app /home/app/.pocket
+RUN mv /tmp/entrypoint.sh /home/app/ \
+	&& mv /tmp/command.sh /home/app/command.sh \
+	&& chown -R app /bin/pocket-core \
+	&& mkdir -p /home/app/.pocket/config && chown -R app /home/app/.pocket
 USER app
 
 # Setup the WORKDIR with app user
