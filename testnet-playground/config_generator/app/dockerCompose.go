@@ -16,6 +16,7 @@ const (
 	TendermintRPCPort         = "26657"
 	TendermintPeersPort       = "26656"
 	TendermintPeersPortLegacy = "46656"
+	PocketCorePassphrase      = "yo"
 	DockerVersion             = "2.1"
 	Driver                    = "bridge"
 	Image                     = `poktnetwork/pocket-core:${ENV:-staging-latest}`
@@ -56,11 +57,6 @@ type PocketNetwork struct {
 	Driver string `yaml:"driver"`
 }
 
-//
-//type TestnetService struct {
-//	Testnet `yaml:"pocket-core-testnet"`
-//}
-
 type Testnet struct {
 	Image       string      `yaml:"image"`
 	Privileged  bool        `yaml:"privileged"`
@@ -68,14 +64,15 @@ type Testnet struct {
 	Build       string      `yaml:"build"`
 	Ports       []string    `yaml:"ports"`
 	Expose      []string    `yaml:"expose"`
-	Environment KeyAndSeeds `yaml:"environment"`
+	Environment Environment `yaml:"environment"`
 	Networks    []string    `yaml:"networks"`
 	Volumes     []string    `yaml:"volumes"`
 }
 
-type KeyAndSeeds struct {
-	Key   string `yaml:"POCKET_CORE_KEY"`
-	Seeds string `yaml:"POCKET_CORE_SEEDS"`
+type Environment struct {
+	Key        string `yaml:"POCKET_CORE_KEY"`
+	Seeds      string `yaml:"POCKET_CORE_SEEDS"`
+	Passphrase string `yaml:"POCKET_CORE_PASSPHRASE"`
 }
 
 func GenDockerConfig(homeDir string, keys KeysFile) {
@@ -109,11 +106,12 @@ func GenDockerConfig(homeDir string, keys KeysFile) {
 			if nk.Addr == nodeKey.Addr {
 				continue
 			}
-			seedString = seedString + strings.ToLower(nk.Addr) + fmt.Sprintf("@pocket-core-testnet%d", j) + ":" + TendermintPeersPort+" , "
+			seedString = seedString + strings.ToLower(nk.Addr) + fmt.Sprintf("@pocket-core-testnet%d", j) + ":" + TendermintPeersPort + " , "
 		}
-		ks := KeyAndSeeds{
-			Key:   nodeKey.Priv,
-			Seeds: seedString,
+		ks := Environment{
+			Key:        nodeKey.Priv,
+			Seeds:      seedString,
+			Passphrase: PocketCorePassphrase,
 		}
 		tn.Environment = ks
 		dockerComposeFile.Services[fmt.Sprintf("pocket-core-testnet%d", i)] = tn

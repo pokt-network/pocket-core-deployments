@@ -51,8 +51,8 @@ func init() {
 	}
 }
 
-func GenGenesis(homeDir string, keys KeysFile, minutesTillGenesisStart int) {
-	j, er := pocketTypes.ModuleCdc.MarshalJSONIndent(tmTypes.GenesisDoc{
+func GenGenesis(homeDir string, keys KeysFile, minutesTillGenesisStart int) string {
+	genesisJSON, er := pocketTypes.ModuleCdc.MarshalJSONIndent(tmTypes.GenesisDoc{
 		GenesisTime: time.Now().Add(time.Minute * time.Duration(minutesTillGenesisStart)),
 		ChainID:     "pocket-testet-playground",
 		ConsensusParams: &tmTypes.ConsensusParams{
@@ -73,10 +73,11 @@ func GenGenesis(homeDir string, keys KeysFile, minutesTillGenesisStart int) {
 	if er != nil {
 		panic(er)
 	}
-	er = ioutil.WriteFile(homeDir+fs+"genesis.json", j, 0644)
+	er = ioutil.WriteFile(homeDir+fs+"genesis.json", genesisJSON, 0644)
 	if er != nil {
 		panic(er)
 	}
+	return string(genesisJSON)
 }
 
 func newAppState(keys KeysFile) []byte {
@@ -136,7 +137,7 @@ func setupAccGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) {
 			PubKey:  pk,
 		})
 	}
-	for i, app := range keys.AccKeys {
+	for _, app := range keys.AccKeys {
 		addr, err := hex.DecodeString(app.Addr)
 		if err != nil {
 			panic(err)
@@ -146,10 +147,9 @@ func setupAccGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) {
 			panic(err)
 		}
 		accGenesisObj.Accounts = append(accGenesisObj.Accounts, &auth.BaseAccount{
-			Address:       addr,
-			Coins:         sdk.NewCoins(sdk.NewCoin(sdk.DefaultStakeDenom, sdk.NewInt(1000000000))),
-			PubKey:        pk,
-			AccountNumber: uint64(i),
+			Address: addr,
+			Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultStakeDenom, sdk.NewInt(1000000000))),
+			PubKey:  pk,
 		})
 	}
 	res := auth.ModuleCdc.MustMarshalJSON(accGenesisObj)

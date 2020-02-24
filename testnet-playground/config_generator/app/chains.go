@@ -11,7 +11,7 @@ var (
 	fs = string(filepath.Separator)
 )
 
-func GenChains(homeDir, ethereumURL, bitcoinURL string) {
+func GenChains(homeDir, ethereumURL, bitcoinURL string) string {
 	hbs := types.HostedBlockchains{M: map[string]types.HostedBlockchain{
 		ethereum: {
 			Hash: ethereum,
@@ -30,4 +30,5 @@ func GenChains(homeDir, ethereumURL, bitcoinURL string) {
 	if er != nil {
 		panic(er)
 	}
+	return string(chainsJSON)
 }

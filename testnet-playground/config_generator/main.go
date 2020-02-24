@@ -49,10 +49,11 @@ func main() {
 func setup(numberOfNodes, numberOfApps, numberOfAccounts, minutesTillGenesisStart int, ethereumURL, bitcoinURL string) {
 	home := generateTestnetHome()
 	keys := app.GenKeys(home, numberOfNodes, numberOfApps, numberOfAccounts)
-	app.GenGenesis(home, keys, minutesTillGenesisStart)
-	app.GenChains(home, ethereumURL, bitcoinURL)
+	genesis:= app.GenGenesis(home, keys, minutesTillGenesisStart)
+	chains := app.GenChains(home, ethereumURL, bitcoinURL)
 	app.GenDockerConfig(home, keys)
 	app.WriteLocalCmd(home)
+	app.NewKubenetesFile(home, keys, chains, genesis)
 	app.GenFinishedMessages(keys)
 }
 
