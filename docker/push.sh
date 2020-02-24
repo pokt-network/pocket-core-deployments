@@ -64,12 +64,10 @@ echo "Docker image name: $DOCKER_IMAGE_NAME"
 
 # Run docker build!
 BUILD_COMMAND="docker build --no-cache --build-arg GOLANG_IMAGE_VERSION=golang:$GOLANG_VERSION-alpine --build-arg BRANCH_NAME=$BRANCH_NAME -t pocket-core-$DOCKER_TAG -f docker/Dockerfile docker/."
-echo "$BUILD_COMMAND"
 eval $BUILD_COMMAND
 
 # Tagging or image!
 TAG_COMMAND="docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$DOCKER_TAG"
-
 
 # Push the image
 PUSH_COMMAND="docker push $DOCKER_IMAGE_NAME:$DOCKER_TAG"
