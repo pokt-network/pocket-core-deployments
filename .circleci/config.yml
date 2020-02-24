@@ -41,7 +41,7 @@ jobs:
                             name: build container
                         - anchore/analyze_local_image:
                             dockerfile_path:  docker/Dockerfile
-                            image_name: 'pocket-core:${CIRCLE_JOB}'
+                            image_name: 'pocket-core:analysis'
                             timeout: '600'
                         - anchore/parse_reports
                         - store_artifacts:
