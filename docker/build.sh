@@ -62,7 +62,7 @@ echo "Branch name: $BRANCH_NAME"
 echo "Docker image name: $DOCKER_IMAGE_NAME"
 echo "Docker tag: $DOCKER_TAG"
 
-COMMAND="docker build --build-arg GOLANG_IMAGE_VERSION=golang:$GOLANG_VERSION-alpine --build-arg BRANCH_NAME=$BRANCH_NAME -t $DOCKER_IMAGE_NAME:$DOCKER_TAG -f docker/Dockerfile docker/."
+COMMAND="docker build --no-cache --build-arg GOLANG_IMAGE_VERSION=golang:$GOLANG_VERSION-alpine --build-arg BRANCH_NAME=$BRANCH_NAME -t pocket-core-$DOCKER_TAG -f docker/Dockerfile docker/."
 
 # Run docker build!
 eval $COMMAND
