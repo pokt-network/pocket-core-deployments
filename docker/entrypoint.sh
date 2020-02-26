@@ -1,55 +1,66 @@
 #!/usr/bin/expect
-# parse arguments to get --passphrase flag
-set passphrase_idx [lsearch -nocase -exact $argv "--passphrase"]
-if { $passphrase_idx > 0} {
-    set passphrase [lindex $argv [expr {$passphrase_idx +1}]]
-    set user_command [lrange $argv 0 [expr {$passphrase_idx -1}]]
-} elseif {$passphrase_idx <= 0} {
-    set user_command $argv 
+
+proc parseargs {argc argv} {
+    global OPTS
+    foreach {key val} $argv {
+        switch -exact -- $key {
+            "-c"   { set OPTS(command)   $val }
+            "-p"   { set OPTS(pass)   $val }
+            "-h"   { set OPTS(help) $val}
+        }
+    }
+}
+
+parseargs $argc $argv
+
+# Print to console script help
+if { [info exists OPTS(help)] } {
+    send_user " -c\t command\t (must be between quotes) \"<command here>\" \n -p\t passphrase \n -h\t this help \n"
+    exit
 }
 
 # Checks if POCKET_CORE_KEY environment variable is set or empty
-if { [info exists env(POCKET_CORE_KEY2)] && $env(POCKET_CORE_KEY2) ne "" }  {
+if { [info exists env(POCKET_CORE_KEY)] && $env(POCKET_CORE_KEY) ne "" }  {
     log_user 0
     spawn sh -c "pocket-core accounts import-raw $env(POCKET_CORE_KEY)"
     log_user 1
     sleep 1
 
 # Checks if the passphrase was passed
-    if { [info exists passphrase] } { 
-        send -- "$passphrase\n"
+    if { [info exists OPTS(pass)] } { 
+        send -- "$OPTS(pass)\n"
     } else { 
-        send_user "Please use the --passphrase flag to set the passphrase\n"
+        send_user "Please use the -p flag to set the passphrase\n"
         exit
     }
 
     expect eof
     
 # Checks if a command was passed or if it is empty
-    if { [info exist user_command] && $user_command ne ""} { 
+    if { [info exist OPTS(command)] && $OPTS(command) ne ""} { 
         log_user 0
-        spawn sh -c $user_command;
+        spawn sh -c $OPTS(command);
         log_user 1
     } else { 
-        send_user "\nPlease enter a command\n"
+        send_user "\n\nPlease use the -c flag to enter your commands (between quotes) \"<command here>\"\n"
         exit
     }
 
 } else {
-    if { [info exist user_command] && $user_command ne ""} { 
+    if { [info exist OPTS(command)] && $OPTS(command) ne ""} { 
         log_user 0
-        spawn sh -c $user_command;
+        spawn sh -c $OPTS(command);
         log_user 1
     } else { 
-        send_user "\nPlease enter a command\n"
+        send_user "\n\nPlease use the -c flag to enter your commands (between quotes) \"<command here>\"\n"
         exit
     }
 }
 
 sleep 1
 
-if {[info exist passphrase]} { 
-    send -- "$passphrase\n"
+if {[info exist OPTS(pass)]} { 
+    send -- "$OPTS(pass)\n"
 }
 
 expect eof
