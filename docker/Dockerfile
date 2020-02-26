@@ -52,11 +52,13 @@ EXPOSE 46656
 
 COPY --from=builder /bin/pocket-core /bin/pocket-core
 COPY entrypoint.sh /tmp/
+COPY command.sh /tmp/
 RUN apk add --update --no-cache expect bash
 # Create app user and add permissions
 RUN addgroup -S app \
 	&& adduser -S -G app app
 RUN mv /tmp/entrypoint.sh /home/app/ \
+	&& mv /tmp/command.sh /home/app/command.sh \
 	&& chown -R app /bin/pocket-core \
 	&& mkdir -p /home/app/.pocket/config && chown -R app /home/app/.pocket
 USER app
