@@ -1,4 +1,5 @@
 #!/usr/bin/expect
+log_user 0
 # parse arguments to get --passphrase flag
 set passphrase_idx [lsearch -nocase -exact $argv "--passphrase"]
 if { $passphrase_idx > 0} {
@@ -8,8 +9,24 @@ if { $passphrase_idx > 0} {
     set user_command $argv 
 }
 
+
+# check if genesis.json, chains.json or passphrase are set through env var
+if { [info exists env(POCKET_CORE_GENESIS)] }  {
+    spawn sh -c "echo '${env(POCKET_CORE_GENESIS)}' > /home/app/.pocket/config/genesis.json"
+}
+
+if { [info exists env(POCKET_CORE_CHAINS)] }  {
+    spawn sh -c "echo '${env(POCKET_CORE_CHAINS)}' > /home/app/.pocket/config/chains.json"
+}
+
+if { [info exists env(POCKET_CORE_PASSPHRASE)] }  {
+    set passphrase $env(POCKET_CORE_PASSPHRASE)
+}
+    log_user 1
+
+
 # Checks if POCKET_CORE_KEY environment variable is set or empty
-if { [info exists env(POCKET_CORE_KEY2)] && $env(POCKET_CORE_KEY2) ne "" }  {
+if { [info exists env(POCKET_CORE_KEY)] && $env(POCKET_CORE_KEY) ne "" }  {
     log_user 0
     spawn sh -c "pocket-core accounts import-raw $env(POCKET_CORE_KEY)"
     log_user 1
