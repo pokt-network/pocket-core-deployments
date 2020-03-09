@@ -6,6 +6,7 @@ import (
 	"github.com/pokt-network/posmint/crypto"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 )
 
 type JSONKeys struct {
@@ -57,4 +58,21 @@ func GenKeys(directoryName string, numberOfNodes, numberOfApps, numberOfAccounts
 		os.Exit(0)
 	}
 	return res
+}
+
+func GetKeyFromFile() (keysfile KeysFile) {
+	path, err := filepath.Abs("testnet-playground/config_generator/keys.json")
+	fmt.Println(path, err)
+	jsonFile, err := os.Open(path)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer jsonFile.Close()
+	b, _ := ioutil.ReadAll(jsonFile)
+	if err := json.Unmarshal(b, &keysfile); err != nil {
+		fmt.Println(err)
+		return KeysFile{}
+	}
+	return
 }

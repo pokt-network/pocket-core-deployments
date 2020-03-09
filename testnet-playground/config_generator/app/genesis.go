@@ -1,7 +1,6 @@
 package app
 
 import (
-	"encoding/hex"
 	"encoding/json"
 	apps "github.com/pokt-network/pocket-core/x/apps"
 	appsTypes "github.com/pokt-network/pocket-core/x/apps/types"
@@ -51,9 +50,9 @@ func init() {
 	}
 }
 
-func GenGenesis(homeDir string, keys KeysFile, minutesTillGenesisStart int) string {
+func GenGenesis(homeDir string, keys KeysFile, chains pocketTypes.HostedBlockchains) string {
 	genesisJSON, er := pocketTypes.ModuleCdc.MarshalJSONIndent(tmTypes.GenesisDoc{
-		GenesisTime: time.Now().Add(time.Minute * time.Duration(minutesTillGenesisStart)),
+		GenesisTime: time.Now(),
 		ChainID:     "pocket-testet-playground",
 		ConsensusParams: &tmTypes.ConsensusParams{
 			Block: tmTypes.BlockParams{
@@ -68,7 +67,7 @@ func GenGenesis(homeDir string, keys KeysFile, minutesTillGenesisStart int) stri
 				PubKeyTypes: []string{"ed25519"},
 			},
 		},
-		AppState: newAppState(keys),
+		AppState: newAppState(keys, chains),
 	}, "", "  ")
 	if er != nil {
 		panic(er)
@@ -80,7 +79,7 @@ func GenGenesis(homeDir string, keys KeysFile, minutesTillGenesisStart int) stri
 	return string(genesisJSON)
 }
 
-func newAppState(keys KeysFile) []byte {
+func newAppState(keys KeysFile, chains pocketTypes.HostedBlockchains) []byte {
 	// setup the default geneis to start
 	defaultGenesis := module.NewBasicManager(
 		apps.AppModuleBasic{},
@@ -91,10 +90,14 @@ func newAppState(keys KeysFile) []byte {
 		supply.AppModuleBasic{},
 		pocket.AppModuleBasic{},
 	).DefaultGenesis()
-	setupNodeGenesis(defaultGenesis, keys)
-	setupAppGenesis(defaultGenesis, keys)
+	var c []string
+	for hash := range chains.M {
+		c = append(c, hash)
+	}
+	setupNodeGenesis(defaultGenesis, keys, c)
+	setupAppGenesis(defaultGenesis, keys, c)
 	setupAccGenesis(defaultGenesis, keys)
-	setupPocketGenesis(defaultGenesis)
+	setupPocketGenesis(defaultGenesis, c)
 	genesisJSON, er := pocketTypes.ModuleCdc.MarshalJSONIndent(defaultGenesis, "", "    ")
 	if er != nil {
 		panic(er)
@@ -108,46 +111,34 @@ func setupAccGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) {
 	rawAccGenesis := defaultGenesis[auth.ModuleName]
 	pocketTypes.ModuleCdc.MustUnmarshalJSON(rawAccGenesis, &accGenesisObj)
 	for _, app := range keys.AppKeys {
-		addr, err := hex.DecodeString(app.Addr)
-		if err != nil {
-			panic(err)
-		}
 		pk, err := crypto.NewPublicKey(app.Pub)
 		if err != nil {
 			panic(err)
 		}
 		accGenesisObj.Accounts = append(accGenesisObj.Accounts, &auth.BaseAccount{
-			Address: addr,
+			Address: sdk.Address(pk.Address()),
 			Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultStakeDenom, sdk.NewInt(1000000000))),
 			PubKey:  pk,
 		})
 	}
 	for _, app := range keys.NodeKeys {
-		addr, err := hex.DecodeString(app.Addr)
-		if err != nil {
-			panic(err)
-		}
 		pk, err := crypto.NewPublicKey(app.Pub)
 		if err != nil {
 			panic(err)
 		}
 		accGenesisObj.Accounts = append(accGenesisObj.Accounts, &auth.BaseAccount{
-			Address: addr,
+			Address: sdk.Address(pk.Address()),
 			Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultStakeDenom, sdk.NewInt(1000000000))),
 			PubKey:  pk,
 		})
 	}
 	for _, app := range keys.AccKeys {
-		addr, err := hex.DecodeString(app.Addr)
-		if err != nil {
-			panic(err)
-		}
 		pk, err := crypto.NewPublicKey(app.Pub)
 		if err != nil {
 			panic(err)
 		}
 		accGenesisObj.Accounts = append(accGenesisObj.Accounts, &auth.BaseAccount{
-			Address: addr,
+			Address: sdk.Address(pk.Address()),
 			Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultStakeDenom, sdk.NewInt(1000000000))),
 			PubKey:  pk,
 		})
@@ -156,25 +147,21 @@ func setupAccGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) {
 	defaultGenesis[auth.ModuleName] = res
 }
 
-func setupAppGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) {
+func setupAppGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile, chains []string) {
 	var appsGenesisObj appsTypes.GenesisState
 	rawAppsGenesis := defaultGenesis[appsTypes.ModuleName]
 	pocketTypes.ModuleCdc.MustUnmarshalJSON(rawAppsGenesis, &appsGenesisObj)
 	for _, app := range keys.AppKeys {
-		addr, err := hex.DecodeString(app.Addr)
-		if err != nil {
-			panic(err)
-		}
 		pk, err := crypto.NewPublicKey(app.Pub)
 		if err != nil {
 			panic(err)
 		}
 		appsGenesisObj.Applications = append(appsGenesisObj.Applications, appsTypes.Application{
-			Address:      addr,
+			Address:      sdk.Address(pk.Address()),
 			PublicKey:    pk,
 			Jailed:       false,
 			Status:       sdk.Staked,
-			Chains:       []string{ethereum, bitcoin},
+			Chains:       chains,
 			StakedTokens: sdk.NewInt(1000000000),
 		})
 	}
@@ -182,26 +169,22 @@ func setupAppGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) {
 	defaultGenesis[appsTypes.ModuleName] = res
 }
 
-func setupNodeGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) {
+func setupNodeGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile, chains []string) {
 	// setup the service url prefix
 	serviceURLPrefix := "http://www.pocket-core-testnet"
 	rawNodesGenesis := defaultGenesis[nodesTypes.ModuleName]
 	var nodesGenesisObj nodesTypes.GenesisState
 	pocketTypes.ModuleCdc.MustUnmarshalJSON(rawNodesGenesis, &nodesGenesisObj)
 	for i, node := range keys.NodeKeys {
-		addr, err := hex.DecodeString(node.Addr)
-		if err != nil {
-			panic(err)
-		}
 		pk, err := crypto.NewPublicKey(node.Pub)
 		if err != nil {
 			panic(err)
 		}
 		nodesGenesisObj.Validators = append(nodesGenesisObj.Validators,
-			nodesTypes.Validator{Address: addr,
+			nodesTypes.Validator{Address: sdk.Address(pk.Address()),
 				PublicKey:    pk,
 				Status:       sdk.Staked,
-				Chains:       []string{ethereum, bitcoin},
+				Chains:       chains,
 				ServiceURL:   serviceURLPrefix + strconv.Itoa(i) + ":8081",
 				StakedTokens: sdk.NewInt(1000000000)})
 	}
@@ -209,13 +192,12 @@ func setupNodeGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) 
 	defaultGenesis[nodesTypes.ModuleName] = res
 }
 
-func setupPocketGenesis(defaultGenesis map[string]json.RawMessage) {
+func setupPocketGenesis(defaultGenesis map[string]json.RawMessage, chains []string) {
 	// setup the service url prefix
 	rawPocketGenesis := defaultGenesis[pocketTypes.ModuleName]
 	var pocketGenesisObj pocketTypes.GenesisState
 	pocketTypes.ModuleCdc.MustUnmarshalJSON(rawPocketGenesis, &pocketGenesisObj)
-	pocketGenesisObj.Params.SupportedBlockchains = append(pocketGenesisObj.Params.SupportedBlockchains, ethereum)
-	pocketGenesisObj.Params.SupportedBlockchains = append(pocketGenesisObj.Params.SupportedBlockchains, bitcoin)
+	pocketGenesisObj.Params.SupportedBlockchains = chains
 	res := pocketTypes.ModuleCdc.MustMarshalJSON(pocketGenesisObj)
 	defaultGenesis[pocketTypes.ModuleName] = res
 }
