@@ -8,7 +8,7 @@
 
 A simple tool to generate chains.json, keys.json, and a corresponding genesis.json
 
-`./config_generator 20 http://foo.com http://bar.com`
+Can put keys.json next to main.go or use the CLI for random keys!
 
 ### Installation
 
