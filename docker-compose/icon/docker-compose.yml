@@ -1,78 +1,148 @@
-version: '2.1'
-
+version: "2.2"
 services:
-
-  icon-testnet:
-    image: 'iconloop/prep-node:2001091813x7eba36-dev'
-    restart: "always"
-    environment:
-      LOOPCHAIN_LOG_LEVEL: "DEBUG"
-      ICON_LOG_LEVEL: "DEBUG"
-      NETWORK_ENV: "testnet"
-      DEFAULT_PATH: "/data/loopchain"
-      LOG_OUTPUT_TYPE: "file"
-      PRIVATE_PATH: "/cert/key"
-      PRIVATE_PASSWORD: "qwer1234!"
-      CERT_PATH: "/cert"
-      SERVICE: "zicon"
-      FASTEST_START: "yes"
-    cap_add:
-      - SYS_TIME
-    volumes:
-      - icon-testnet-data:/data
-      - icon-testnet-cert:/cert:ro
-      - ./cert/key:/cert/key
-    ports:
-      - 9000:9000
-      - 7100:7100
-    networks:
-      - pocket
-
-  pocket-core-testnet:
-    image: poktnetwork/pocket-core:${ENV:-staging-latest}
-    privileged: true
-    command: "/usr/bin/expect /home/app/command.sh"
-    build: ../../docker
-    expose:
-      - "8081"
-      - "46656"
-    environment:
-      POCKET_CORE_KEY: "b8a56dead392e2b57eaba988068d0cedc0a11b9a16ca9610b094ec31a9cbc06650220553e5ccf56a863eaed88ebf1487e1dcb20e7fffbe0fb841cab1bb76af4d"
-      POCKET_CORE_PERSISTENT_PEERS: "3C4CE33E68A726BCA3801E99E24F80C10EAF343C@pocket-core-testnet2:46656,  4BCB7B0E9C3FC3343905260BF36D40979BE524CD@pocket-core-testnet3:46656, E1EC5FBE826BB6DD3CEB04B33BBF221E611C601E@pocket-core-testnet4:46656, 8ED7A41B06EA855FF4BA3EE630688B73499626AE@pocket-core-testnet5:46656"
-    networks:
-      - pocket
-    volumes:
-        - "./chains.json:/home/app/.pocket/chains.json"
-        - "./genesis.json:/home/app/.pocket/genesis.json"
-
-  pocket-core-testnet2:
-    extends: pocket-core-testnet
-    environment:
-      POCKET_CORE_KEY: "a49ff628a250c2d8e9a8e6dff2c86c075a5f0b22c489ac5d8a0b47392b02052bff1e6080925587cd76974710b14d1c2229aed4442921ccd67b7c97fece399ebe"
-      POCKET_CORE_PERSISTENT_PEERS: "3DC42932FF52F9F506DCE1D75B634DDAD654E22E@pocket-core-testnet:46656,  4BCB7B0E9C3FC3343905260BF36D40979BE524CD@pocket-core-testnet3:46656, E1EC5FBE826BB6DD3CEB04B33BBF221E611C601E@pocket-core-testnet4:46656, 8ED7A41B06EA855FF4BA3EE630688B73499626AE@pocket-core-testnet5:46656"
-
-  pocket-core-testnet3:
-    extends: pocket-core-testnet
-    environment:
-      POCKET_CORE_KEY: "44cb0f6fcaac7bb3199bcb3c8548dbebeeef9746441449db1515a3f890ccfcf24f26a1d836d8d421007bcb20a67b4afc70511cac6a0975347e430140d80741ee"
-      POCKET_CORE_PERSISTENT_PEERS: "3DC42932FF52F9F506DCE1D75B634DDAD654E22E@pocket-core-testnet:46656,  3C4CE33E68A726BCA3801E99E24F80C10EAF343C@pocket-core-testnet2:46656, E1EC5FBE826BB6DD3CEB04B33BBF221E611C601E@pocket-core-testnet4:46656, 8ED7A41B06EA855FF4BA3EE630688B73499626AE@pocket-core-testnet5:46656"
-
-  pocket-core-testnet4:
-    extends: pocket-core-testnet
-    environment:
-      POCKET_CORE_KEY: "11c1eb0da2fd2bc6aef9ab45cb2576807cd00e4147ea8388900860a2eed236078ab9c7a3b341bc071ad2f11e84c695812fe5c2771524b89ae1131cae48d93c8f"
-      POCKET_CORE_PERSISTENT_PEERS: "3DC42932FF52F9F506DCE1D75B634DDAD654E22E@pocket-core-testnet:46656,  3C4CE33E68A726BCA3801E99E24F80C10EAF343C@pocket-core-testnet2:46656, 4BCB7B0E9C3FC3343905260BF36D40979BE524CD@pocket-core-testnet3:46656, 8ED7A41B06EA855FF4BA3EE630688B73499626AE@pocket-core-testnet5:46656"
-
-  pocket-core-testnet5:
-    extends: pocket-core-testnet
-    environment:
-      POCKET_CORE_KEY: "b7f2d96ef6f3b7b7e54fdf9dba81e3912c7d45d43785138c3be47c885009d3e09b1be29dd2c546244f13d9cb3abf9202707494286bf8d440f3e75f6dba30c57a"
-      POCKET_CORE_PERSISTENT_PEERS: "3DC42932FF52F9F506DCE1D75B634DDAD654E22E@pocket-core-testnet:46656,  3C4CE33E68A726BCA3801E99E24F80C10EAF343C@pocket-core-testnet2:46656, 4BCB7B0E9C3FC3343905260BF36D40979BE524CD@pocket-core-testnet3:46656, E1EC5FBE826BB6DD3CEB04B33BBF221E611C601E@pocket-core-testnet4:46656"
-
-volumes:
-  icon-testnet-data:
-  icon-testnet-cert:
-
+    prep-node:
+        image: 'iconloop/prep-node:2001091813x7eba36-dev'
+        container_name: "prep-testnet"
+        restart: "always"
+        environment:
+          LOOPCHAIN_LOG_LEVEL: "DEBUG"
+          ICON_LOG_LEVEL: "DEBUG"
+          DEFAULT_PATH: "/data/loopchain"
+          LOG_OUTPUT_TYPE: "file"
+          PRIVATE_PATH: "/cert/key"
+          PRIVATE_PASSWORD: "qwer1234!"
+          CERT_PATH: "/cert"
+          SERVICE: "zicon"
+          FASTEST_START: "yes"
+        cap_add:
+          - SYS_TIME
+        volumes:
+          - ./data:/data
+          - ./cert:/cert:ro
+        ports:
+          - '7100:7100'
+          - '9000:9000'
+        expose:
+          - "7100"
+          - "9000"
+        networks:
+          - pocket
+    ubuntu:
+        image: ubuntu:18.04
+        networks:
+            - pocket
+        command: /bin/bash -c "sleep 36000"
+    pocket-core-testnet0:
+        image: poktnetwork/pocket-core:${ENV:-staging-latest}
+        privileged: true
+        command: pocket-core start --seeds "0464B2D8E9D161240BAD90CCBAED7BEE80B1096B@pocket-core-testnet1:26656, 0212AEDC9FB7258AB2DB6C6781C6D002597D10DD@pocket-core-testnet2:26656, F08DED1A20F284C3A523060E5488E86AC4738346@pocket-core-testnet3:26656, EA925BE430F20A97B6641A562006FF12078ED2F4@pocket-core-testnet4:26656" --blockTime=1
+        build: ../../docker
+        cpus: 4
+        ports:
+          - 8081:8081
+          - 26657:26657
+        expose:
+          - "8081"
+          - "26657"
+          - "26656"
+          - "46656"
+        environment:
+            POCKET_CORE_PASSPHRASE: "yo"
+            POCKET_CORE_KEY: c6ba4ffae37bb32ccb5601475fe575f182305ee2e90beafd1937723b3000a52029f4e19c2e06d9e6f87ef13f91b49ee70c9d4425aa524592e46a517b365946ad
+            POCKET_CORE_SEEDS: "0464B2D8E9D161240BAD90CCBAED7BEE80B1096B@pocket-core-testnet1:26656, 0212AEDC9FB7258AB2DB6C6781C6D002597D10DD@pocket-core-testnet2:26656, F08DED1A20F284C3A523060E5488E86AC4738346@pocket-core-testnet3:26656, EA925BE430F20A97B6641A562006FF12078ED2F4@pocket-core-testnet4:26656"
+        networks:
+          - pocket
+        volumes:
+          - ./chains.json:/home/app/.pocket/config/chains.json
+          - ./genesis.json:/home/app/.pocket/config/genesis.json
+    pocket-core-testnet1:
+        image: poktnetwork/pocket-core:${ENV:-staging-latest}
+        privileged: true
+        command: pocket-core start --seeds "765715602C85830EC95CE789B4F6E5B81DF7ED16@pocket-core-testnet0:26656, 0212AEDC9FB7258AB2DB6C6781C6D002597D10DD@pocket-core-testnet2:26656, F08DED1A20F284C3A523060E5488E86AC4738346@pocket-core-testnet3:26656, EA925BE430F20A97B6641A562006FF12078ED2F4@pocket-core-testnet4:26656" --blockTime=1
+        build: ../../docker
+        cpus: 4
+        ports:
+          - 8082:8081
+        expose:
+          - "8081"
+          - "26657"
+          - "26656"
+          - "46656"
+        environment:
+            POCKET_CORE_PASSPHRASE: "yo"
+            POCKET_CORE_KEY: 10682a6031c3a1f1348565784cb144cc86a5e30ef9b2c384a88824d953003bd43ebdf8f61121b02969e44f879442bf1de3ce0b681ed92453be6ff1c0bbe29e8a
+            POCKET_CORE_SEEDS: "765715602C85830EC95CE789B4F6E5B81DF7ED16@pocket-core-testnet0:26656, 0212AEDC9FB7258AB2DB6C6781C6D002597D10DD@pocket-core-testnet2:26656, F08DED1A20F284C3A523060E5488E86AC4738346@pocket-core-testnet3:26656, EA925BE430F20A97B6641A562006FF12078ED2F4@pocket-core-testnet4:26656"
+        networks:
+          - pocket
+        volumes:
+          - ./chains.json:/home/app/.pocket/config/chains.json
+          - ./genesis.json:/home/app/.pocket/config/genesis.json
+    pocket-core-testnet2:
+        image: poktnetwork/pocket-core:${ENV:-staging-latest}
+        privileged: true
+        command: pocket-core start --seeds "765715602C85830EC95CE789B4F6E5B81DF7ED16@pocket-core-testnet0:26656, 0464B2D8E9D161240BAD90CCBAED7BEE80B1096B@pocket-core-testnet1:26656, F08DED1A20F284C3A523060E5488E86AC4738346@pocket-core-testnet3:26656, EA925BE430F20A97B6641A562006FF12078ED2F4@pocket-core-testnet4:26656" --blockTime=1
+        build: ../../docker
+        cpus: 4
+        ports:
+          - 8083:8081
+        expose:
+          - "8081"
+          - "26657"
+          - "26656"
+          - "46656"
+        environment:
+            POCKET_CORE_PASSPHRASE: "yo"
+            POCKET_CORE_KEY: d3410ab2a8151c5b8b9ada1e78bc336520826b7945e5ffcf43b81d28a80de26763209e85cbf2a381d57474d493485b74c9c41a2384b89edca6739516628f67f3
+            POCKET_CORE_SEEDS: "765715602C85830EC95CE789B4F6E5B81DF7ED16@pocket-core-testnet0:26656, 0464B2D8E9D161240BAD90CCBAED7BEE80B1096B@pocket-core-testnet1:26656, F08DED1A20F284C3A523060E5488E86AC4738346@pocket-core-testnet3:26656, EA925BE430F20A97B6641A562006FF12078ED2F4@pocket-core-testnet4:26656"
+        networks:
+          - pocket
+        volumes:
+          - ./chains.json:/home/app/.pocket/config/chains.json
+          - ./genesis.json:/home/app/.pocket/config/genesis.json
+    pocket-core-testnet3:
+        image: poktnetwork/pocket-core:${ENV:-staging-latest}
+        privileged: true
+        command: pocket-core start --seeds "765715602C85830EC95CE789B4F6E5B81DF7ED16@pocket-core-testnet0:26656, 0464B2D8E9D161240BAD90CCBAED7BEE80B1096B@pocket-core-testnet1:26656, 0212AEDC9FB7258AB2DB6C6781C6D002597D10DD@pocket-core-testnet2:26656, EA925BE430F20A97B6641A562006FF12078ED2F4@pocket-core-testnet4:26656" --blockTime=1
+        build: ../../docker
+        cpus: 4
+        ports:
+          - 8084:8081
+        expose:
+          - "8081"
+          - "26657"
+          - "26656"
+          - "46656"
+        environment:
+            POCKET_CORE_PASSPHRASE: "yo"
+            POCKET_CORE_KEY: 3311ff9c9ec2e14ae282e849338c8f53d77aa08e31f920bd405c78944f1e33b01c3fa5c1a6bbdd0003db9f1b1a0c46685f72d0e552e026bf4e08bd6bf5767253
+            POCKET_CORE_SEEDS: "765715602C85830EC95CE789B4F6E5B81DF7ED16@pocket-core-testnet0:26656, 0464B2D8E9D161240BAD90CCBAED7BEE80B1096B@pocket-core-testnet1:26656, 0212AEDC9FB7258AB2DB6C6781C6D002597D10DD@pocket-core-testnet2:26656, EA925BE430F20A97B6641A562006FF12078ED2F4@pocket-core-testnet4:26656"
+        networks:
+          - pocket
+        volumes:
+          - ./chains.json:/home/app/.pocket/config/chains.json
+          - ./genesis.json:/home/app/.pocket/config/genesis.json
+    pocket-core-testnet4:
+        image: poktnetwork/pocket-core:${ENV:-staging-latest}
+        privileged: true
+        command: pocket-core start --seeds "765715602C85830EC95CE789B4F6E5B81DF7ED16@pocket-core-testnet0:26656, 0464B2D8E9D161240BAD90CCBAED7BEE80B1096B@pocket-core-testnet1:26656, 0212AEDC9FB7258AB2DB6C6781C6D002597D10DD@pocket-core-testnet2:26656, F08DED1A20F284C3A523060E5488E86AC4738346@pocket-core-testnet3:26656" --blockTime=1
+        build: ../../docker
+        cpus: 4
+        ports:
+          - 8085:8081
+        expose:
+          - "8081"
+          - "26657"
+          - "26656"
+          - "46656"
+        environment:
+            POCKET_CORE_PASSPHRASE: "yo"
+            POCKET_CORE_KEY: ca616e929cc25705e31a1aa47afdb2a0f49bb73839b0ce6c6f8ddf1e4e0a10da2747b0dd9e3997c937de7812aff8510614e0af8bfc223d85c433841b7ad4d758
+            POCKET_CORE_SEEDS: "765715602C85830EC95CE789B4F6E5B81DF7ED16@pocket-core-testnet0:26656, 0464B2D8E9D161240BAD90CCBAED7BEE80B1096B@pocket-core-testnet1:26656, 0212AEDC9FB7258AB2DB6C6781C6D002597D10DD@pocket-core-testnet2:26656, F08DED1A20F284C3A523060E5488E86AC4738346@pocket-core-testnet3:26656"
+        networks:
+          - pocket
+        volumes:
+          - ./chains.json:/home/app/.pocket/config/chains.json
+          - ./genesis.json:/home/app/.pocket/config/genesis.json
 networks:
-  pocket:
-    driver: bridge
+    pocket:
+        driver: bridge

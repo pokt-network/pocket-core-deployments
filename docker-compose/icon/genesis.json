@@ -1,6 +1,6 @@
 {
-  "genesis_time": "0001-01-01T00:00:00Z",
-  "chain_id": "pocket-test",
+  "genesis_time": "2020-02-25T10:41:05.434655044Z",
+  "chain_id": "pocket-testet-playground",
   "consensus_params": {
     "block": {
       "max_bytes": "15000",
@@ -18,15 +18,196 @@
   },
   "app_hash": "",
   "app_state": {
+    "supply": {
+      "supply": []
+    },
+    "pocketcore": {
+      "params": {
+        "session_node_count": "5",
+        "proof_waiting_period": "3",
+        "supported_blockchains": [
+          "d9d77bce50d80e70026bd240fb0759f08aab7aee63d0a6d98c545f2b5ae0a0b8"
+        ],
+        "claim_expiration": "100"
+      },
+      "proofs": null,
+      "claims": null
+    },
+    "application": {
+      "params": {
+        "unstaking_time": "1814400000000000",
+        "max_applications": "18446744073709551615",
+        "app_stake_minimum": "1000000",
+        "base_relays_per_pokt": "100",
+        "stability_adjustment": "0",
+        "participation_rate_on": false
+      },
+      "applications": [
+        {
+          "address": "2d089de210afd5176b46b38b7c5f4b1ce63622bf",
+          "public_key": "fa457de4393c386ae3c4dde8703bf25080cc9909d98b55fbc7d6f2ca057450a2",
+          "jailed": false,
+          "chains": [
+            "d9d77bce50d80e70026bd240fb0759f08aab7aee63d0a6d98c545f2b5ae0a0b8"
+          ],
+          "max_relays": "0",
+          "status": 2,
+          "staked_tokens": "1000000000",
+          "unstaking_time": "0001-01-01T00:00:00Z"
+        }
+      ],
+      "exported": false
+    },
+    "auth": {
+      "params": {
+        "max_memo_characters": "256",
+        "tx_sig_limit": "7",
+        "tx_size_cost_per_byte": "10"
+      },
+      "Accounts": [
+        {
+          "type": "posmint/Account",
+          "value": {
+            "address": "CBE7100E68125D3D176B60E76365D37044C9C2C6",
+            "coins": [
+              {
+                "denom": "upokt",
+                "amount": "1000000000"
+              }
+            ],
+            "public_key": {
+              "type": "crypto/ed25519_public_key",
+              "value": "2rnqQatHOndQzVCtuWhfuDrautXM0KEWkFNyANpFaMI="
+            }
+          }
+        },
+        {
+          "type": "posmint/Account",
+          "value": {
+            "address": "17969c70fbd3c75c84ce182c7ba03adff8548913",
+            "coins": [
+              {
+                "denom": "upokt",
+                "amount": "1000000000"
+              }
+            ],
+            "public_key": {
+              "type": "crypto/ed25519_public_key",
+              "value": "oQa1etgr1OgzRp/ffHqv29HhWsNgkyikq0ftGIMCv4U="
+            }
+          }
+        },
+        {
+          "type": "posmint/Account",
+          "value": {
+            "address": "f078c4a67d216631b629aed121e0898f74244077",
+            "coins": [
+              {
+                "denom": "upokt",
+                "amount": "1000000000"
+              }
+            ],
+            "public_key": {
+              "type": "crypto/ed25519_public_key",
+              "value": "/VK9L7p6Z3NlzAXlkMpLapm0x5/mBEAw9+OwLioUNfw="
+            }
+          }
+        },
+        {
+          "type": "posmint/Account",
+          "value": {
+            "address": "92f2540da8549a1197e678cada7ef9d39e64a729",
+            "coins": [
+              {
+                "denom": "upokt",
+                "amount": "1000000000"
+              }
+            ],
+            "public_key": {
+              "type": "crypto/ed25519_public_key",
+              "value": "R1rRJ1+2n3CS6tPZ1C6DuBDZRoSNV0JgdGn67cZBJKE="
+            }
+          }
+        },
+        {
+          "type": "posmint/Account",
+          "value": {
+            "address": "09c9052b1085477ca04e151009193bbcedefb8ea",
+            "coins": [
+              {
+                "denom": "upokt",
+                "amount": "1000000000"
+              }
+            ],
+            "public_key": {
+              "type": "crypto/ed25519_public_key",
+              "value": "EYNqvs5VCQEUVTF1fwUBaDafV/kdkw3+BKY8hzAf4ag="
+            }
+          }
+        },
+        {
+          "type": "posmint/Account",
+          "value": {
+            "address": "e48ea158b20b513c0d1b75d3aef5b842a4acca26",
+            "coins": [
+              {
+                "denom": "upokt",
+                "amount": "1000000000"
+              }
+            ],
+            "public_key": {
+              "type": "crypto/ed25519_public_key",
+              "value": "VFu7WqcJ00kI9kXTsaX+IzoBnTzb+iyYSpyUa/f+EAQ="
+            }
+          }
+        },
+        {
+          "type": "posmint/Account",
+          "value": {
+            "address": "cc532e05e19537034a47936f830a7cb1ea3ce5df",
+            "coins": [
+              {
+                "denom": "upokt",
+                "amount": "1000000000"
+              }
+            ],
+            "public_key": {
+              "type": "crypto/ed25519_public_key",
+              "value": "WaWDvS/dQL2JO0pTy9819ZVAP+INEiTqKHa+lugIEfY="
+            }
+          }
+        },
+        {
+          "type": "posmint/Account",
+          "value": {
+            "address": "2011232b18f6b7be38fc68532700e43018028f3f",
+            "coins": [
+              {
+                "denom": "upokt",
+                "amount": "1000000000"
+              }
+            ],
+            "public_key": {
+              "type": "crypto/ed25519_public_key",
+              "value": "gmlrklAi8FjVzPlk2M3x+C/YK4n7XeMRFopjlo6DuUU="
+            }
+          }
+        }
+      ]
+    },
+    "bank": {
+      "send_enabled": true
+    },
+    "params": null,
     "pos": {
       "params": {
         "unstaking_time": "1814400000000000",
         "max_validators": "100000",
-        "stake_denom": "stake",
-        "stake_minimum": "1",
-        "base_proposer_award": 90,
+        "stake_denom": "upokt",
+        "stake_minimum": "1000000",
         "session_block_frequency": "25",
-        "relays_to_tokens": "0.000100000000000000",
+        "dao_allocation": "10",
+        "proposer_allocation": "1",
         "max_evidence_age": "120000000000",
         "signed_blocks_window": "100",
         "min_signed_per_window": "0.500000000000000000",
@@ -38,67 +219,62 @@
       "prevState_validator_powers": null,
       "validators": [
         {
-          "address": "3dc42932ff52f9f506dce1d75b634ddad654e22e",
-          "public_key": "50220553e5ccf56a863eaed88ebf1487e1dcb20e7fffbe0fb841cab1bb76af4d",
+          "address": "765715602C85830EC95CE789B4F6E5B81DF7ED16",
+          "public_key": "29f4e19c2e06d9e6f87ef13f91b49ee70c9d4425aa524592e46a517b365946ad",
           "jailed": false,
           "status": 2,
-          "tokens": "10000000",
-          "service_url": "http://www.pocket-core-testnet0:8081",
+          "tokens": "1000000000",
+          "service_url": "http://pocket-core-testnet0:8081",
           "chains": [
-            "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",
-            "49aff8a9f51b268f6fc485ec14fb08466c3ec68c8d86d9b5810ad80546b65f29"
+            "d9d77bce50d80e70026bd240fb0759f08aab7aee63d0a6d98c545f2b5ae0a0b8"
           ],
           "unstaking_time": "0001-01-01T00:00:00Z"
         },
         {
-          "address": "3c4ce33e68a726bca3801e99e24f80c10eaf343c",
-          "public_key": "ff1e6080925587cd76974710b14d1c2229aed4442921ccd67b7c97fece399ebe",
+          "address": "0464B2D8E9D161240BAD90CCBAED7BEE80B1096B",
+          "public_key": "3ebdf8f61121b02969e44f879442bf1de3ce0b681ed92453be6ff1c0bbe29e8a",
           "jailed": false,
           "status": 2,
-          "tokens": "10000000",
-          "service_url": "http://www.pocket-core-testnet1:8081",
+          "tokens": "1000000000",
+          "service_url": "http://pocket-core-testnet1:8082",
           "chains": [
-            "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",
-            "49aff8a9f51b268f6fc485ec14fb08466c3ec68c8d86d9b5810ad80546b65f29"
+            "d9d77bce50d80e70026bd240fb0759f08aab7aee63d0a6d98c545f2b5ae0a0b8"
           ],
           "unstaking_time": "0001-01-01T00:00:00Z"
         },
         {
-          "address": "4bcb7b0e9c3fc3343905260bf36d40979be524cd",
-          "public_key": "4f26a1d836d8d421007bcb20a67b4afc70511cac6a0975347e430140d80741ee",
+          "address": "0212AEDC9FB7258AB2DB6C6781C6D002597D10DD",
+          "public_key": "63209e85cbf2a381d57474d493485b74c9c41a2384b89edca6739516628f67f3",
           "jailed": false,
           "status": 2,
-          "tokens": "10000000",
-          "service_url": "http://www.pocket-core-testnet2:8081",
+          "tokens": "1000000000",
+          "service_url": "http://pocket-core-testnet2:8083",
           "chains": [
-            "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",
-            "49aff8a9f51b268f6fc485ec14fb08466c3ec68c8d86d9b5810ad80546b65f29"
+            "d9d77bce50d80e70026bd240fb0759f08aab7aee63d0a6d98c545f2b5ae0a0b8"
           ],
           "unstaking_time": "0001-01-01T00:00:00Z"
         },
         {
-          "address": "e1ec5fbe826bb6dd3ceb04b33bbf221e611c601e",
-          "public_key": "8ab9c7a3b341bc071ad2f11e84c695812fe5c2771524b89ae1131cae48d93c8f",
+          "address": "F08DED1A20F284C3A523060E5488E86AC4738346",
+          "public_key": "1c3fa5c1a6bbdd0003db9f1b1a0c46685f72d0e552e026bf4e08bd6bf5767253",
           "jailed": false,
           "status": 2,
-          "tokens": "10000000",
-          "service_url": "http://www.pocket-core-testnet3:8081",
+          "tokens": "1000000000",
+          "service_url": "http://pocket-core-testnet3:8084",
           "chains": [
-            "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",
-            "49aff8a9f51b268f6fc485ec14fb08466c3ec68c8d86d9b5810ad80546b65f29"
+            "d9d77bce50d80e70026bd240fb0759f08aab7aee63d0a6d98c545f2b5ae0a0b8"
           ],
           "unstaking_time": "0001-01-01T00:00:00Z"
         },
         {
-          "address": "8ed7a41b06ea855ff4ba3ee630688b73499626ae",
-          "public_key": "9b1be29dd2c546244f13d9cb3abf9202707494286bf8d440f3e75f6dba30c57a",
+          "address": "EA925BE430F20A97B6641A562006FF12078ED2F4",
+          "public_key": "2747b0dd9e3997c937de7812aff8510614e0af8bfc223d85c433841b7ad4d758",
           "jailed": false,
           "status": 2,
-          "tokens": "10000000",
-          "service_url": "http://www.pocket-core-testnet4:8081",
+          "tokens": "1000000000",
+          "service_url": "http://pocket-core-testnet4:8085",
           "chains": [
-            "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",
-            "49aff8a9f51b268f6fc485ec14fb08466c3ec68c8d86d9b5810ad80546b65f29"
+            "d9d77bce50d80e70026bd240fb0759f08aab7aee63d0a6d98c545f2b5ae0a0b8"
           ],
           "unstaking_time": "0001-01-01T00:00:00Z"
         }
@@ -110,45 +286,6 @@
       "signing_infos": {},
       "missed_blocks": {},
       "previous_proposer": ""
-    },
-    "supply": {
-      "supply": []
-    },
-    "pocketcore": {
-      "params": {
-        "session_node_count": "5",
-        "proof_waiting_period": "3",
-        "supported_blockchains": null,
-        "claim_expiration": "25"
-      },
-      "proofs": null,
-      "claims": null
-    },
-    "application": {
-      "params": {
-        "unstaking_time": "1814400000000000",
-        "max_applications": "100000",
-        "app_stake_minimum": "1",
-        "base_relays_per_pokt": "100",
-        "staking_adjustment": "0",
-        "participation_rate_on": false
-      },
-      "applications": null,
-      "exported": false
-    },
-    "auth": {
-      "params": {
-        "max_memo_characters": "256",
-        "tx_sig_limit": "7",
-        "tx_size_cost_per_byte": "10",
-        "sig_verify_cost_ed25519": "590",
-        "sig_verify_cost_secp256k1": "1000"
-      },
-      "Accounts": null
-    },
-    "bank": {
-      "send_enabled": true
-    },
-    "params": null
+    }
   }
 }
