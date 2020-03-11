@@ -16,7 +16,7 @@ services:
       - pocket
 
   aion-mainnet:
-    image: poktnetwork/aion:mainnet-1.0.1 
+    image: poktnetwork/aion:mainnet-1.2.0
     command: "./mainnet.sh"
     build: 
       context: .
@@ -30,6 +30,7 @@ services:
     volumes:
       - aion-mainnet:/root/.aion
     environment:
+      AIONR_HOME: "/aionr/mainnet"
       java_api_listen_address: "0.0.0.0"
       rpc_listen_address: "0.0.0.0"
       AION_NETWORK: "mainnet"
@@ -37,7 +38,7 @@ services:
       - pocket
 
   aion-mastery:
-    image: poktnetwork/aion:mastery-1.0.1 
+    image: poktnetwork/aion:mastery-1.2.0 
     build: 
       context: .
       dockerfile: Dockerfile
@@ -52,6 +53,7 @@ services:
       - aion-mastery:/root/.aion
     
     environment:
+      AIONR_HOME: "/aionr/mastery"
       java_api_listen_address: "0.0.0.0"
       rpc_listen_address: "0.0.0.0"
       AION_NETWORK: "mastery" 
