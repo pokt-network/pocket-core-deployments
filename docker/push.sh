@@ -36,12 +36,12 @@ then
     # Resolve DOCKER_TAG using the branch name
     if [ "$BRANCH_NAME" = "$STAGING_BRANCH" ]; then
         # Handle staging branch
-        echo "It's staging!"
-        DOCKER_TAG="staging-latest"
-    elif [ "$BRANCH_NAME" = "$MASTER_BRANCH" ]; then
+        echo "It's devnet!"
+        DOCKER_TAG="devnet-latest"
+    elif [[ "$BRANCH_NAME" = "RC-"* ]]; then
         # Handle master branch
-        echo "It's staging!"
-        DOCKER_TAG="latest"
+        echo "It's stagenet!"
+        DOCKER_TAG="stagenet-latest"
     else
         # It's a tag!
         echo "It's a tag!"
