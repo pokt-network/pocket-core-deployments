@@ -1,0 +1,76 @@
+version: "2.1"
+services:
+    pocket-core-testnet0:
+        image: poktnetwork/pocket-core:${ENV:-staging-latest}
+        privileged: true
+        command: /usr/bin/expect /home/app/.pocket/local_command.sh
+        build: ../../docker
+        ports:
+          - 8081:8081
+          - 26657:26657
+        expose:
+          - "8081"
+          - "26657"
+          - "26656"
+          - "46656"
+        environment:
+            POCKET_CORE_KEY: cd0f81fb5d8499d1374769d08246a61e96680d5f988100a885b5fb69321264190aef0ab8b117f7979eb4773b83402d06f54c15a3ebbf4cd75f5aa2901f9d628e
+            POCKET_CORE_SEEDS: 'e54ca338dfaa525af80db3d4c0f36e0ee9931b12@pocket-core-testnet1:26656
+                , 3a9fd94b1ed59d6124d86b96f54df4139fc7adc9@pocket-core-testnet2:26656
+                , '
+            POCKET_CORE_PASSPHRASE: yo
+        networks:
+          - pocket
+        volumes:
+          - ./local_command.sh:/home/app/.pocket/local_command.sh
+          - ./chains.json:/home/app/.pocket/config/chains.json
+          - ./genesis.json:/home/app/.pocket/config/genesis.json
+    pocket-core-testnet1:
+        image: poktnetwork/pocket-core:${ENV:-staging-latest}
+        privileged: true
+        command: /usr/bin/expect /home/app/.pocket/local_command.sh
+        build: ../../docker
+        ports: []
+        expose:
+          - "8081"
+          - "26657"
+          - "26656"
+          - "46656"
+        environment:
+            POCKET_CORE_KEY: f9ed9278663356929e9a69e2a42e224e25ee72897aaa28f047baa69ffc025c8ac424888d82b2c54dc20165e661d826b36e10ffca93b5c90e94d611e5055ee305
+            POCKET_CORE_SEEDS: '45e416bfd61e35485b1d0c3523357afc6d7f04b9@pocket-core-testnet0:26656
+                , 3a9fd94b1ed59d6124d86b96f54df4139fc7adc9@pocket-core-testnet2:26656
+                , '
+            POCKET_CORE_PASSPHRASE: yo
+        networks:
+          - pocket
+        volumes:
+          - ./local_command.sh:/home/app/.pocket/local_command.sh
+          - ./chains.json:/home/app/.pocket/config/chains.json
+          - ./genesis.json:/home/app/.pocket/config/genesis.json
+    pocket-core-testnet2:
+        image: poktnetwork/pocket-core:${ENV:-staging-latest}
+        privileged: true
+        command: /usr/bin/expect /home/app/.pocket/local_command.sh
+        build: ../../docker
+        ports: []
+        expose:
+          - "8081"
+          - "26657"
+          - "26656"
+          - "46656"
+        environment:
+            POCKET_CORE_KEY: 9ff679e25bcd16e9e3a194d11d436afde690e74f69b5ae2bb19a134aa1531bda6a9a980580386e2c12caacf0f329683816b7f11fee45f5d40d6aedaf806267ba
+            POCKET_CORE_SEEDS: '45e416bfd61e35485b1d0c3523357afc6d7f04b9@pocket-core-testnet0:26656
+                , e54ca338dfaa525af80db3d4c0f36e0ee9931b12@pocket-core-testnet1:26656
+                , '
+            POCKET_CORE_PASSPHRASE: yo
+        networks:
+          - pocket
+        volumes:
+          - ./local_command.sh:/home/app/.pocket/local_command.sh
+          - ./chains.json:/home/app/.pocket/config/chains.json
+          - ./genesis.json:/home/app/.pocket/config/genesis.json
+networks:
+    pocket:
+        driver: bridge

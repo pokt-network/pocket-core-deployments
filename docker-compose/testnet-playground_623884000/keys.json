@@ -1,0 +1,21 @@
+{
+  "nodes": [
+    {
+      "private_key": "cd0f81fb5d8499d1374769d08246a61e96680d5f988100a885b5fb69321264190aef0ab8b117f7979eb4773b83402d06f54c15a3ebbf4cd75f5aa2901f9d628e",
+      "public_key": "0aef0ab8b117f7979eb4773b83402d06f54c15a3ebbf4cd75f5aa2901f9d628e",
+      "address": "45E416BFD61E35485B1D0C3523357AFC6D7F04B9"
+    },
+    {
+      "private_key": "f9ed9278663356929e9a69e2a42e224e25ee72897aaa28f047baa69ffc025c8ac424888d82b2c54dc20165e661d826b36e10ffca93b5c90e94d611e5055ee305",
+      "public_key": "c424888d82b2c54dc20165e661d826b36e10ffca93b5c90e94d611e5055ee305",
+      "address": "E54CA338DFAA525AF80DB3D4C0F36E0EE9931B12"
+    },
+    {
+      "private_key": "9ff679e25bcd16e9e3a194d11d436afde690e74f69b5ae2bb19a134aa1531bda6a9a980580386e2c12caacf0f329683816b7f11fee45f5d40d6aedaf806267ba",
+      "public_key": "6a9a980580386e2c12caacf0f329683816b7f11fee45f5d40d6aedaf806267ba",
+      "address": "3A9FD94B1ED59D6124D86B96F54DF4139FC7ADC9"
+    }
+  ],
+  "apps": [],
+  "accs": []
+}

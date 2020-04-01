@@ -1,0 +1,571 @@
+apiVersion: v1
+items:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+        annotations:
+            kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+            kompose.version: 1.18.0 (06a2e56)
+        creationTimestamp: null
+        labels:
+            app: pocket-core-testnet
+            io.kompose.service: pocket-core-testnet
+        name: pocket-core-testnet
+    spec:
+        ports:
+          - name: http
+            protocol: TCP
+            port: "8081"
+            targetPort: "8081"
+          - name: peers
+            protocol: TCP
+            port: "46656"
+            targetPort: "46656"
+          - name: tendermint
+            protocol: TCP
+            port: "26657"
+            targetPort: "26657"
+          - name: tendermint-peers
+            protocol: TCP
+            port: "26656"
+            targetPort: "26656"
+        type: LoadBalancer
+        loadBalancerIP: 35.236.208.175
+        selector:
+            io.kompose.service: pocket-core-testnet
+    status:
+        loadBalancer: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+        annotations:
+            kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+            kompose.version: 1.18.0 (06a2e56)
+        creationTimestamp: null
+        labels:
+            app: pocket-core-testnet
+            io.kompose.service: pocket-core-testnet
+        name: pocket-core-testnet
+    spec:
+        replicas: "1"
+        selector:
+            matchLabels:
+                app: pocket-core-testnet
+        strategy:
+            type: Recreate
+        template:
+            metadata:
+                labels:
+                    app: pocket-core-testnet
+                    io.kompose.service: pocket-core-testnet
+                creationTimestamp: null
+            spec:
+                securityContext:
+                    fsGroup: "100"
+                containers:
+                    name: pocket-core-testnet
+                    args:
+                      - pocket-core start
+                      - --seeds
+                      - $(POCKET_CORE_SEEDS)
+                      - --blockTime=1
+                    image: poktnetwork/pocket-core:staging-latest
+                    imagePullPolicy: Always
+                    env:
+                      - name: POCKET_CORE_CHAINS
+                        valueFrom:
+                            configMapKeyRef:
+                                name: pocket-core-testnet
+                                key: pocket_core_chains
+                      - name: POCKET_CORE_PASSPHRASE
+                        valueFrom:
+                            configMapKeyRef:
+                                name: pocket-core-testnet
+                                key: pocket_core_passphrase
+                      - name: POCKET_CORE_SEEDS
+                        valueFrom:
+                            configMapKeyRef:
+                                name: pocket-core-testnet
+                                key: pocket_core_seeds
+                      - name: POCKET_CORE_GENESIS
+                        valueFrom:
+                            configMapKeyRef:
+                                name: pocket-core-testnet
+                                key: pocket_core_genesis
+                      - name: POCKET_CORE_KEY
+                        value: cd0f81fb5d8499d1374769d08246a61e96680d5f988100a885b5fb69321264190aef0ab8b117f7979eb4773b83402d06f54c15a3ebbf4cd75f5aa2901f9d628e
+                    ports:
+                      - containerPort: "8081"
+                      - containerPort: "46656"
+                      - containerPort: "26656"
+                      - containerPort: "26657"
+                    resources:
+                        limits:
+                            cpu: 500m
+                            memory: 500Mi
+                        requests:
+                            cpu: 250m
+                            memory: 300Mi
+                    restartPolicy: Always
+                    nodeSelector:
+                        cloud.google.com/gke-nodepool: pocket-core
+                    terminationGracePeriodSeconds: "90"
+  - apiVersion: v1
+    kind: Service
+    metadata:
+        annotations:
+            kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+            kompose.version: 1.18.0 (06a2e56)
+        creationTimestamp: null
+        labels:
+            app: pocket-core-testnet1
+            io.kompose.service: pocket-core-testnet1
+        name: pocket-core-testnet1
+    spec:
+        ports:
+          - name: http
+            protocol: TCP
+            port: "8081"
+            targetPort: "8081"
+          - name: peers
+            protocol: TCP
+            port: "46656"
+            targetPort: "46656"
+          - name: tendermint
+            protocol: TCP
+            port: "26657"
+            targetPort: "26657"
+          - name: tendermint-peers
+            protocol: TCP
+            port: "26656"
+            targetPort: "26656"
+        type: LoadBalancer
+        loadBalancerIP: 35.236.208.175
+        selector:
+            io.kompose.service: pocket-core-testnet1
+    status:
+        loadBalancer: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+        annotations:
+            kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+            kompose.version: 1.18.0 (06a2e56)
+        creationTimestamp: null
+        labels:
+            app: pocket-core-testnet1
+            io.kompose.service: pocket-core-testnet1
+        name: pocket-core-testnet1
+    spec:
+        replicas: "1"
+        selector:
+            matchLabels:
+                app: pocket-core-testnet1
+        strategy:
+            type: Recreate
+        template:
+            metadata:
+                labels:
+                    app: pocket-core-testnet1
+                    io.kompose.service: pocket-core-testnet1
+                creationTimestamp: null
+            spec:
+                securityContext:
+                    fsGroup: "100"
+                containers:
+                    name: pocket-core-testnet1
+                    args:
+                      - pocket-core start
+                      - --seeds
+                      - $(POCKET_CORE_SEEDS)
+                      - --blockTime=1
+                    image: poktnetwork/pocket-core:staging-latest
+                    imagePullPolicy: Always
+                    env:
+                      - name: POCKET_CORE_CHAINS
+                        valueFrom:
+                            configMapKeyRef:
+                                name: pocket-core-testnet
+                                key: pocket_core_chains
+                      - name: POCKET_CORE_PASSPHRASE
+                        valueFrom:
+                            configMapKeyRef:
+                                name: pocket-core-testnet
+                                key: pocket_core_passphrase
+                      - name: POCKET_CORE_SEEDS
+                        valueFrom:
+                            configMapKeyRef:
+                                name: pocket-core-testnet
+                                key: pocket_core_seeds
+                      - name: POCKET_CORE_GENESIS
+                        valueFrom:
+                            configMapKeyRef:
+                                name: pocket-core-testnet
+                                key: pocket_core_genesis
+                      - name: POCKET_CORE_KEY
+                        value: f9ed9278663356929e9a69e2a42e224e25ee72897aaa28f047baa69ffc025c8ac424888d82b2c54dc20165e661d826b36e10ffca93b5c90e94d611e5055ee305
+                    ports:
+                      - containerPort: "8081"
+                      - containerPort: "46656"
+                      - containerPort: "26656"
+                      - containerPort: "26657"
+                    resources:
+                        limits:
+                            cpu: 500m
+                            memory: 500Mi
+                        requests:
+                            cpu: 250m
+                            memory: 300Mi
+                    restartPolicy: Always
+                    nodeSelector:
+                        cloud.google.com/gke-nodepool: pocket-core
+                    terminationGracePeriodSeconds: "90"
+  - apiVersion: v1
+    kind: Service
+    metadata:
+        annotations:
+            kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+            kompose.version: 1.18.0 (06a2e56)
+        creationTimestamp: null
+        labels:
+            app: pocket-core-testnet2
+            io.kompose.service: pocket-core-testnet2
+        name: pocket-core-testnet2
+    spec:
+        ports:
+          - name: http
+            protocol: TCP
+            port: "8081"
+            targetPort: "8081"
+          - name: peers
+            protocol: TCP
+            port: "46656"
+            targetPort: "46656"
+          - name: tendermint
+            protocol: TCP
+            port: "26657"
+            targetPort: "26657"
+          - name: tendermint-peers
+            protocol: TCP
+            port: "26656"
+            targetPort: "26656"
+        type: LoadBalancer
+        loadBalancerIP: 35.236.208.175
+        selector:
+            io.kompose.service: pocket-core-testnet2
+    status:
+        loadBalancer: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+        annotations:
+            kompose.cmd: kompose convert -f docker-compose.yml -o geth.yml
+            kompose.version: 1.18.0 (06a2e56)
+        creationTimestamp: null
+        labels:
+            app: pocket-core-testnet2
+            io.kompose.service: pocket-core-testnet2
+        name: pocket-core-testnet2
+    spec:
+        replicas: "1"
+        selector:
+            matchLabels:
+                app: pocket-core-testnet2
+        strategy:
+            type: Recreate
+        template:
+            metadata:
+                labels:
+                    app: pocket-core-testnet2
+                    io.kompose.service: pocket-core-testnet2
+                creationTimestamp: null
+            spec:
+                securityContext:
+                    fsGroup: "100"
+                containers:
+                    name: pocket-core-testnet2
+                    args:
+                      - pocket-core start
+                      - --seeds
+                      - $(POCKET_CORE_SEEDS)
+                      - --blockTime=1
+                    image: poktnetwork/pocket-core:staging-latest
+                    imagePullPolicy: Always
+                    env:
+                      - name: POCKET_CORE_CHAINS
+                        valueFrom:
+                            configMapKeyRef:
+                                name: pocket-core-testnet
+                                key: pocket_core_chains
+                      - name: POCKET_CORE_PASSPHRASE
+                        valueFrom:
+                            configMapKeyRef:
+                                name: pocket-core-testnet
+                                key: pocket_core_passphrase
+                      - name: POCKET_CORE_SEEDS
+                        valueFrom:
+                            configMapKeyRef:
+                                name: pocket-core-testnet
+                                key: pocket_core_seeds
+                      - name: POCKET_CORE_GENESIS
+                        valueFrom:
+                            configMapKeyRef:
+                                name: pocket-core-testnet
+                                key: pocket_core_genesis
+                      - name: POCKET_CORE_KEY
+                        value: 9ff679e25bcd16e9e3a194d11d436afde690e74f69b5ae2bb19a134aa1531bda6a9a980580386e2c12caacf0f329683816b7f11fee45f5d40d6aedaf806267ba
+                    ports:
+                      - containerPort: "8081"
+                      - containerPort: "46656"
+                      - containerPort: "26656"
+                      - containerPort: "26657"
+                    resources:
+                        limits:
+                            cpu: 500m
+                            memory: 500Mi
+                        requests:
+                            cpu: 250m
+                            memory: 300Mi
+                    restartPolicy: Always
+                    nodeSelector:
+                        cloud.google.com/gke-nodepool: pocket-core
+                    terminationGracePeriodSeconds: "90"
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+        name: pocket-core-testnet
+        resourceVersion: "1"
+    data:
+        pocket_core_seeds: '0aef0ab8b117f7979eb4773b83402d06f54c15a3ebbf4cd75f5aa2901f9d628e@pocket-core-testnet:26656,
+            c424888d82b2c54dc20165e661d826b36e10ffca93b5c90e94d611e5055ee305@pocket-core-testnet1:26656,
+            6a9a980580386e2c12caacf0f329683816b7f11fee45f5d40d6aedaf806267ba@pocket-core-testnet2:26656, '
+        pocket_core_passphrase: VVb4HgtVQGOKhj7UOnJq
+        pocket_core_chains: |-
+            {
+                "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8": {
+                    "addr": "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",
+                    "url": "0"
+                },
+                "49aff8a9f51b268f6fc485ec14fb08466c3ec68c8d86d9b5810ad80546b65f29": {
+                    "addr": "49aff8a9f51b268f6fc485ec14fb08466c3ec68c8d86d9b5810ad80546b65f29",
+                    "url": "0"
+                }
+            }
+        pocket_core_genesis: |-
+            {
+              "genesis_time": "2020-04-01T16:39:39.62483Z",
+              "chain_id": "pocket-testet-playground",
+              "consensus_params": {
+                "block": {
+                  "max_bytes": "15000",
+                  "max_gas": "-1",
+                  "time_iota_ms": "1"
+                },
+                "evidence": {
+                  "max_age": "1000000"
+                },
+                "validator": {
+                  "pub_key_types": [
+                    "ed25519"
+                  ]
+                }
+              },
+              "app_hash": "",
+              "app_state": {
+                "auth": {
+                  "params": {
+                    "max_memo_characters": "256",
+                    "tx_sig_limit": "7"
+                  },
+                  "accounts": [
+                    {
+                      "type": "posmint/Account",
+                      "value": {
+                        "address": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                        "coins": [
+                          {
+                            "denom": "upokt",
+                            "amount": "1000000000"
+                          }
+                        ],
+                        "public_key": {
+                          "type": "crypto/ed25519_public_key",
+                          "value": "Cu8KuLEX95eetHc7g0AtBvVMFaPrv0zXX1qikB+dYo4="
+                        }
+                      }
+                    },
+                    {
+                      "type": "posmint/Account",
+                      "value": {
+                        "address": "e54ca338dfaa525af80db3d4c0f36e0ee9931b12",
+                        "coins": [
+                          {
+                            "denom": "upokt",
+                            "amount": "1000000000"
+                          }
+                        ],
+                        "public_key": {
+                          "type": "crypto/ed25519_public_key",
+                          "value": "xCSIjYKyxU3CAWXmYdgms24Q/8qTtckOlNYR5QVe4wU="
+                        }
+                      }
+                    },
+                    {
+                      "type": "posmint/Account",
+                      "value": {
+                        "address": "3a9fd94b1ed59d6124d86b96f54df4139fc7adc9",
+                        "coins": [
+                          {
+                            "denom": "upokt",
+                            "amount": "1000000000"
+                          }
+                        ],
+                        "public_key": {
+                          "type": "crypto/ed25519_public_key",
+                          "value": "apqYBYA4biwSyqzw8yloOBa38R/uRfXUDWrtr4BiZ7o="
+                        }
+                      }
+                    }
+                  ],
+                  "supply": []
+                },
+                "pos": {
+                  "params": {
+                    "unstaking_time": "1814400000000000",
+                    "max_validators": "100000",
+                    "stake_denom": "upokt",
+                    "stake_minimum": "1000000",
+                    "session_block_frequency": "25",
+                    "dao_allocation": "10",
+                    "proposer_allocation": "1",
+                    "max_evidence_age": "120000000000",
+                    "signed_blocks_window": "100",
+                    "min_signed_per_window": "0.500000000000000000",
+                    "downtime_jail_duration": "600000000000",
+                    "slash_fraction_double_sign": "0.050000000000000000",
+                    "slash_fraction_downtime": "0.010000000000000000"
+                  },
+                  "prevState_total_power": "0",
+                  "prevState_validator_powers": null,
+                  "validators": [
+                    {
+                      "address": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                      "public_key": "0aef0ab8b117f7979eb4773b83402d06f54c15a3ebbf4cd75f5aa2901f9d628e",
+                      "jailed": false,
+                      "status": 2,
+                      "tokens": "1000000000",
+                      "service_url": "http://www.pocket-core-testnet0:8081",
+                      "chains": [
+                        "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",
+                        "49aff8a9f51b268f6fc485ec14fb08466c3ec68c8d86d9b5810ad80546b65f29"
+                      ],
+                      "unstaking_time": "0001-01-01T00:00:00Z"
+                    },
+                    {
+                      "address": "e54ca338dfaa525af80db3d4c0f36e0ee9931b12",
+                      "public_key": "c424888d82b2c54dc20165e661d826b36e10ffca93b5c90e94d611e5055ee305",
+                      "jailed": false,
+                      "status": 2,
+                      "tokens": "1000000000",
+                      "service_url": "http://www.pocket-core-testnet1:8081",
+                      "chains": [
+                        "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",
+                        "49aff8a9f51b268f6fc485ec14fb08466c3ec68c8d86d9b5810ad80546b65f29"
+                      ],
+                      "unstaking_time": "0001-01-01T00:00:00Z"
+                    },
+                    {
+                      "address": "3a9fd94b1ed59d6124d86b96f54df4139fc7adc9",
+                      "public_key": "6a9a980580386e2c12caacf0f329683816b7f11fee45f5d40d6aedaf806267ba",
+                      "jailed": false,
+                      "status": 2,
+                      "tokens": "1000000000",
+                      "service_url": "http://www.pocket-core-testnet2:8081",
+                      "chains": [
+                        "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",
+                        "49aff8a9f51b268f6fc485ec14fb08466c3ec68c8d86d9b5810ad80546b65f29"
+                      ],
+                      "unstaking_time": "0001-01-01T00:00:00Z"
+                    }
+                  ],
+                  "exported": false,
+                  "signing_infos": {},
+                  "missed_blocks": {},
+                  "previous_proposer": ""
+                },
+                "gov": {
+                  "params": {
+                    "acl": {
+                      "type": "gov/base_acl",
+                      "value": {
+                        "M": {
+                          "pocketcore/SessionNodeCount": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pos/DAOAllocation": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pos/SignedBlocksWindow": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "application/MaxApplications": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "bank/sendenabled": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "auth/TxSizeCostPerByte": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pos/StakeDenom": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pocketcore/SupportedBlockchains": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pos/MaxValidators": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pos/SlashFractionDoubleSign": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pos/SlashFractionDowntime": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "application/AppUnstakingTime": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pos/MaxEvidenceAge": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pos/SessionBlockFrequency": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "gov/acl": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pocketcore/ClaimExpiration": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "application/StabilityAdjustment": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pos/UnstakingTime": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "application/ApplicationStakeMinimum": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pos/ProposerPercentage": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pos/StakeMinimum": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "auth/MaxMemoCharacters": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "application/BaseRelaysPerPOKT": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "auth/TxSigLimit": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "application/ParticipationRateOn": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pos/MinSignedPerWindow": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "gov/daoOwner": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pos/DowntimeJailDuration": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "pocketcore/ClaimSubmissionWindow": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                          "gov/upgrade": "45e416bfd61e35485b1d0c3523357afc6d7f04b9"
+                        }
+                      }
+                    },
+                    "dao_owner": "45e416bfd61e35485b1d0c3523357afc6d7f04b9",
+                    "upgrade": {
+                      "Height": "0",
+                      "Version": "0.0.0"
+                    }
+                  },
+                  "DAO_Tokens": "0"
+                },
+                "pocketcore": {
+                  "params": {
+                    "session_node_count": "5",
+                    "proof_waiting_period": "3",
+                    "supported_blockchains": [
+                      "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",
+                      "49aff8a9f51b268f6fc485ec14fb08466c3ec68c8d86d9b5810ad80546b65f29"
+                    ],
+                    "claim_expiration": "100"
+                  },
+                  "proofs": null,
+                  "claims": null
+                },
+                "application": {
+                  "params": {
+                    "unstaking_time": "1814400000000000",
+                    "max_applications": "18446744073709551615",
+                    "app_stake_minimum": "1000000",
+                    "base_relays_per_pokt": "100",
+                    "stability_adjustment": "0",
+                    "participation_rate_on": false
+                  },
+                  "applications": null,
+                  "exported": false
+                }
+              }
+            }
+kind: List
+metadata: {}

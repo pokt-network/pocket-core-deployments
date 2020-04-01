@@ -13,9 +13,8 @@ import (
 	sdk "github.com/pokt-network/posmint/types"
 	"github.com/pokt-network/posmint/types/module"
 	"github.com/pokt-network/posmint/x/auth"
-	"github.com/pokt-network/posmint/x/bank"
-	"github.com/pokt-network/posmint/x/params"
-	"github.com/pokt-network/posmint/x/supply"
+	"github.com/pokt-network/posmint/x/gov"
+	govTypes "github.com/pokt-network/posmint/x/gov/types"
 	tmTypes "github.com/tendermint/tendermint/types"
 	"io/ioutil"
 	"strconv"
@@ -85,15 +84,14 @@ func newAppState(keys KeysFile) []byte {
 	defaultGenesis := module.NewBasicManager(
 		apps.AppModuleBasic{},
 		auth.AppModuleBasic{},
-		bank.AppModuleBasic{},
-		params.AppModuleBasic{},
 		nodes.AppModuleBasic{},
-		supply.AppModuleBasic{},
+		gov.AppModuleBasic{},
 		pocket.AppModuleBasic{},
 	).DefaultGenesis()
 	setupNodeGenesis(defaultGenesis, keys)
 	setupAppGenesis(defaultGenesis, keys)
 	setupAccGenesis(defaultGenesis, keys)
+	setupGovGenesis(defaultGenesis, keys)
 	setupPocketGenesis(defaultGenesis)
 	genesisJSON, er := pocketTypes.ModuleCdc.MarshalJSONIndent(defaultGenesis, "", "    ")
 	if er != nil {
@@ -180,6 +178,63 @@ func setupAppGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) {
 	}
 	res := appsTypes.ModuleCdc.MustMarshalJSON(appsGenesisObj)
 	defaultGenesis[appsTypes.ModuleName] = res
+}
+
+func setupGovGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) {
+	rawGovGenesis := defaultGenesis[gov.ModuleName]
+	var govGenesisObj govTypes.GenesisState
+	govTypes.ModuleCdc.MustUnmarshalJSON(rawGovGenesis, &govGenesisObj)
+	b, err := hex.DecodeString(keys.NodeKeys[0].Addr)
+	if err != nil {
+		panic(err)
+	}
+	mACL := createDummyACL(b)
+	govGenesisObj.Params.ACL = govTypes.BaseACL{M: mACL.GetAll()}
+	govGenesisObj.Params.DAOOwner = b
+	govGenesisObj.Params.Upgrade = govTypes.Upgrade{
+		Height:  0,
+		Version: "0.0.0",
+	}
+	res := govTypes.ModuleCdc.MustMarshalJSON(govGenesisObj)
+	defaultGenesis[govTypes.ModuleName] = res
+}
+
+func createDummyACL(addr sdk.Address) govTypes.ACL {
+	acl := &govTypes.NonMapACL{}
+	*acl = make([]govTypes.ACLPair, 0)
+	acl.SetOwner("auth/MaxMemoCharacters", addr)
+	acl.SetOwner("auth/TxSigLimit", addr)
+	acl.SetOwner("gov/daoOwner", addr)
+	acl.SetOwner("gov/acl", addr)
+	acl.SetOwner("pos/StakeDenom", addr)
+	acl.SetOwner("pocketcore/SupportedBlockchains", addr)
+	acl.SetOwner("pos/DowntimeJailDuration", addr)
+	acl.SetOwner("pos/SlashFractionDoubleSign", addr)
+	acl.SetOwner("pos/SlashFractionDowntime", addr)
+	acl.SetOwner("application/ApplicationStakeMinimum", addr)
+	acl.SetOwner("pocketcore/ClaimExpiration", addr)
+	acl.SetOwner("pocketcore/SessionNodeCount", addr)
+	acl.SetOwner("pos/MaxValidators", addr)
+	acl.SetOwner("pos/ProposerPercentage", addr)
+	acl.SetOwner("application/StabilityAdjustment", addr)
+	acl.SetOwner("application/AppUnstakingTime", addr)
+	acl.SetOwner("application/ParticipationRateOn", addr)
+	acl.SetOwner("pos/MaxEvidenceAge", addr)
+	acl.SetOwner("pos/MinSignedPerWindow", addr)
+	acl.SetOwner("pos/StakeMinimum", addr)
+	acl.SetOwner("pos/UnstakingTime", addr)
+	acl.SetOwner("application/BaseRelaysPerPOKT", addr)
+	acl.SetOwner("pocketcore/ClaimSubmissionWindow", addr)
+	acl.SetOwner("pos/DAOAllocation", addr)
+	acl.SetOwner("pos/SignedBlocksWindow", addr)
+	acl.SetOwner("pos/SessionBlockFrequency", addr)
+	acl.SetOwner("application/MaxApplications", addr)
+	acl.SetOwner("gov/daoOwner", addr)
+	acl.SetOwner("gov/upgrade", addr)
+
+	acl.SetOwner("bank/sendenabled", addr)
+	acl.SetOwner("auth/TxSizeCostPerByte", addr)
+	return acl
 }
 
 func setupNodeGenesis(defaultGenesis map[string]json.RawMessage, keys KeysFile) {

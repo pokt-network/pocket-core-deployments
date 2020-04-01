@@ -39,7 +39,9 @@ ARG BRANCH_NAME="staging"
 COPY deps.sh /tmp/
 
 # Clone the repository
-RUN git clone --branch ${BRANCH_NAME} https://github.com/pokt-network/pocket-core.git ${POCKET_PATH}
+#RUN git clone --branch ${BRANCH_NAME} https://github.com/pokt-network/pocket-core.git ${POCKET_PATH}
+
+COPY pocket-core ${POCKET_PATH}
 
 # Install rest of source code
 COPY . .
@@ -50,7 +52,7 @@ COPY . .
 #RUN go test ./tests/...
 
 # Install project dependencies and builds the binary
-RUN go build -o ${GOBIN}/bin/pocket-core ./app/cmd/pocket_core/main.go
+RUN go build -mod=vendor -o ${GOBIN}/bin/pocket-core ./app/cmd/pocket_core/main.go
 
 # Second build step: reduce image size to only use app binary
 FROM alpine:3.10
