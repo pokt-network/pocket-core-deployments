@@ -1,9 +1,0 @@
-[
-    {
-        "blockchain": {
-            "name": "ETH",
-            "netid": "1"
-        },
-        "url": "fullnode.dappnode:8545"
-    }
-]
