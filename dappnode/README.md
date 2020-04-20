@@ -14,7 +14,7 @@ Official Pocket Core DAppNode Package to run a Pocket Core MVP Service Node from
       <img src="https://img.shields.io/badge/dappnode-reference-green.svg"/>
     </a>
     <a  href="https://github.com/pokt-network/pocket-js/releases">
-      <img src="https://img.shields.io/badge/version-0.0.2-blue.svg"/>
+      <img src="https://img.shields.io/badge/version-0.1.0-blue.svg"/>
     </a>
     <a href="https://opensource.org/licenses/MIT">
       <img src="https://img.shields.io/badge/License-MIT-blue.svg"/>
@@ -23,7 +23,13 @@ Official Pocket Core DAppNode Package to run a Pocket Core MVP Service Node from
 
 This tutorial is for those who wish to use [DAppNode](https://dappnode.io) to deploy a Service Node to connect in the Pocket Network. This is achieved by using the Pocket Core DNP, [hosted here.](http://github.com/pokt-network/pocket-core-deployments/dappnode)
 
-See below for the latest Pocket Core DNP specifications:
+### See below for the latest Pocket Core DNP specifications:
+*   Name: `pocket-core.public.dappnode.eth`
+*   Version: `0.1.0`
+*   Pocket Core Version: `0.2.2`
+*   IPFS Hash: `/ipfs/Qmf5orramu4DWSrmzCctQs2mL9ebFgHxvLoZ87gvkR3z1n`
+
+### Previous versions:
 *   Name: `pocket-core.public.dappnode.eth`
 *   Version: `0.0.3`
 *   Pocket Core Version: `MVP-1.7`
