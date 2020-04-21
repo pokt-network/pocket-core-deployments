@@ -1,0 +1,37 @@
+{
+  "description": "Pocket Node installation",  
+  "type": "object",
+    "properties": {
+      "genesis": {
+        "type": "string",
+        "format": "data-url",
+        "title": "Genesis",
+        "description": "Your genesis.json"
+      },
+      "chains": {
+        "type": "string",
+        "format": "data-url",
+        "title": "Chains",
+        "description": "Your chains.json"
+      },
+      "password": {
+        "type": "string",
+        "title": "Password",
+        "description": "Password"
+      },
+      "key": {
+        "type": "string",
+        "title": "Private Key",
+        "description": "Your private key"
+      },
+      "seeds": {
+        "type": "string",
+        "title": "Seeds",
+        "description": "Your seeds"
+      }
+    },
+    "required": [
+      "password",
+      "seeds"
+    ]
+}

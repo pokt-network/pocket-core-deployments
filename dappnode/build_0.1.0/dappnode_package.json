@@ -1,32 +1,10 @@
 {
   "name": "pocket-core.public.dappnode.eth",
   "version": "0.1.0",
-  "upstreamVersion": "0.2.2",
+  "upstreamVersion": "0.2.1",
   "shortDescription": "A package to run a Pocket Core Service Node",
   "description": "A package to run a Pocket Core Service Node",
-  "avatar": "/ipfs/QmPkJxCXN7joLVGzw1UfUwRAiCCCVSebQZKU5i17je8mZo",
   "type": "service",
-  "image": {
-    "path": "pocket-core.public.dappnode.eth_0.1.0.tar.xz",
-    "hash": "/ipfs/QmVxVtwZbZWqpaw6w6SQtovmVPAAtdvrc7m3xT9rwzDAVZ",
-    "size": 16463392,
-    "restart": "on-failure",
-    "ports": [
-      "8081:8081",
-      "26656:26656",
-      "26657:26657",
-      "46656:46656"
-    ],
-    "environment": [
-      "POCKET_CORE_KEY=",
-      "POCKET_CORE_SEEDS=",
-      "POCKET_CORE_GENESIS=",
-      "POCKET_CORE_PASSPHRASE="
-    ],
-    "volumes": [
-      "datadir:/home/app/.pocket/"
-    ]
-  },
   "author": "Luis C. de Leon <luis@pokt.network>",
   "license": "MIT",
   "keywords": [
