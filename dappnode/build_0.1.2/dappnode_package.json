@@ -35,8 +35,10 @@
     "Decentralized Infrastructure",
     "Node"
   ],
-  "backup": [{
-    "name": "data",
-    "path": "/data"
-  }]
+  "backup": [
+    {
+      "name": "data",
+      "path": "/data"
+    }
+  ]
 }
