@@ -17,27 +17,27 @@ if { $command eq "" } {
         
         if { [info exists env(POCKET_CORE_KEY)] } {
             
-            spawn pocket-core accounts import-raw $env(POCKET_CORE_KEY)
+            spawn pocket accounts import-raw $env(POCKET_CORE_KEY)
             sleep 1
             send -- "$env(POCKET_CORE_PASSPHRASE)\n"
             expect eof
-            spawn pocket-core start --seeds $env(POCKET_CORE_SEEDS)
+            spawn pocket start --seeds $env(POCKET_CORE_SEEDS)
         } else {
             
-            spawn pocket-core start --seeds $env(POCKET_CORE_SEEDS)
+            spawn pocket start --seeds $env(POCKET_CORE_SEEDS)
         } 
     } else {
         
         if { [info exists env(POCKET_CORE_KEY)] } {
             
-            spawn pocket-core accounts import-raw $env(POCKET_CORE_KEY)
+            spawn pocket accounts import-raw $env(POCKET_CORE_KEY)
             sleep 1
             send -- "$env(POCKET_CORE_PASSPHRASE)\n"
             expect eof
-            spawn pocket-core start 
+            spawn pocket start 
         } else {
             
-            spawn pocket-core start 
+            spawn pocket start 
             sleep 1
             send -- "$env(POCKET_CORE_PASSPHRASE)\n"
         }
@@ -46,7 +46,7 @@ if { $command eq "" } {
     
     if  { [info exists env(POCKET_CORE_KEY)] } {
         
-        spawn pocket-core accounts import-raw $env(POCKET_CORE_KEY)
+        spawn pocket accounts import-raw $env(POCKET_CORE_KEY)
         sleep 1
         send -- "$env(POCKET_CORE_PASSPHRASE)\n"
         expect eof
