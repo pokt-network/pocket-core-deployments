@@ -1,6 +1,6 @@
 {
-    "ui:order": ["validator_account", "*"],
+    "ui:order": ["genesis", "chains","password", "key", "seeds"],
     "password": {
       "ui:widget": "password"
     }
-}
+  }

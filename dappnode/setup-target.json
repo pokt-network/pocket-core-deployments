@@ -1,14 +1,22 @@
 {
-    "validatorprivatekey": {
+    "genesis": {
       "type": "fileUpload",
-      "path": "/data/validatorprivatekey"
+      "path": "/home/app/.pocket/config/genesis.json"
     },
-    "shardwithdrawalkey": {
+    "chains": {
       "type": "fileUpload",
-      "path": "/data/shardwithdrawalkey"
+      "path": "/home/app/.pocket/config/chains.json"
     },
     "password": {
       "type": "environment",
-      "name": "PASSWORD"
+      "name": "POCKET_CORE_PASSPHRASE"
+    },
+    "key": {
+      "type": "environment",
+      "name": "POCKET_CORE_KEY"
+    },
+    "seeds": {
+      "type": "environment",
+      "name": "POCKET_CORE_SEEDS"
     }
   }

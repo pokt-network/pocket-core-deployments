@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   pocket-core.public.dappnode.eth:
-    image: 'pocket-core.public.dappnode.eth:0.1.2'
+    image: 'pocket-core.public.dappnode.eth:0.1.1'
     build: ./build/
     volumes:
       - 'data:/home/app/.pocket/'
