@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   pocket-core.public.dappnode.eth:
-    image: 'pocket-core.public.dappnode.eth:0.1.0'
+    image: 'pocket-core.public.dappnode.eth:0.1.1'
     build: ./build/
     volumes:
       - 'data:/home/app/.pocket/'
@@ -11,12 +11,11 @@ services:
       - '26657:26657'
       - '46656:46656'
     environment:
-      POCKET_CORE_KEY: ''
-      POCKET_CORE_SEEDS: ''
-      POCKET_CORE_GENESIS: ''
-      POCKET_CORE_PASSPHRASE: ''
-      POCKET_CORE_CHAINS: >-
-        {"0de3141aec1e69aea9d45d9156269b81a3ab4ead314fbf45a8007063879e743b":{"addr":"0de3141aec1e69aea9d45d9156269b81a3ab4ead314fbf45a8007063879e743b","url":"http://my.ethchain.dnp.dappnode.eth:8545"}}
+      - POCKET_CORE_KEY
+      - POCKET_CORE_SEEDS
+      - POCKET_CORE_GENESIS
+      - POCKET_CORE_PASSPHRASE
+      - POCKET_CORE_CHAINS
     restart: on-failure
 volumes:
   data: {}

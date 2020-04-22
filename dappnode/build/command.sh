@@ -3,6 +3,14 @@
 set command $argv;
 set timeout -1
 
+if { [file exists /home/app/.pocket/chains.json] } {
+    
+} else {
+    puts [open /home/app/.pocket/chains.json w] {{"0de3141aec1e69aea9d45d9156269b81a3ab4ead314fbf45a8007063879e743b":{"addr":"0de3141aec1e69aea9d45d9156269b81a3ab4ead314fbf45a8007063879e743b","url":"http://my.ethchain.dnp.dappnode.eth:8545"}}}
+}
+
+
+
 if { $command eq "" } {
     
     if  { [info exists env(POCKET_CORE_SEEDS)] } {

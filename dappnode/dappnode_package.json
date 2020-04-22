@@ -27,8 +27,5 @@
   },
   "bugs": {
     "url": "https://github.com/pokt-network/pocket-core-deployments/issues"
-  },
-  "dependencies": {
-    "pocket-core.public.dappnode.eth": "0.1.1"
   }
 }
