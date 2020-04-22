@@ -16,7 +16,7 @@ services:
       - pocket
 
   aion-mainnet:
-    image: poktnetwork/aionr:mainnet-1.2.0
+    image: poktnetwork/aionr:mainnet-1.3.0
     command: "./mainnet.sh"
     build: 
       context: .
@@ -38,7 +38,7 @@ services:
       - pocket
 
   aion-mastery:
-    image: poktnetwork/aionr:mastery-1.2.0 
+    image: poktnetwork/aionr:mastery-1.3.0 
     build: 
       context: .
       dockerfile: Dockerfile
