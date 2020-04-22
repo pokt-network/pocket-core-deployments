@@ -3,7 +3,7 @@ version: '2.1'
 services:
 
   geth-rinkeby:
-    image: ethereum/client-go:v1.9.9
+    image: ethereum/client-go:v1.9.13
     expose:
       - "8545"
       - "8546"
@@ -15,7 +15,7 @@ services:
       - pocket
 
   geth-mainnet:
-    image: ethereum/client-go:v1.9.9
+    image: ethereum/client-go:v1.9.13
     expose:
       - "8545"
       - "8546"
@@ -28,6 +28,7 @@ services:
 
   pocket-core-testnet:
     image: poktnetwork/pocket-core:${ENV:-staging-latest}
+
     privileged: true
     command: "pocket-core start --seeds 3C4CE33E68A726BCA3801E99E24F80C10EAF343C@pocket-core-testnet2:26656, 4BCB7B0E9C3FC3343905260BF36D40979BE524CD@pocket-core-testnet3:26656, E1EC5FBE826BB6DD3CEB04B33BBF221E611C601E@pocket-core-testnet4:26656, 8ED7A41B06EA855FF4BA3EE630688B73499626AE@pocket-core-testnet5:26656 --blockTime=1"
     build: ../../docker
