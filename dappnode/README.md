@@ -27,7 +27,7 @@ This tutorial is for those who wish to use [DAppNode](https://dappnode.io) to de
 *   Name: `pocket-core.public.dappnode.eth`
 *   Version: `0.1.2`
 *   Pocket Core Version: `0.2.3`
-*   IPFS Hash: `/ipfs/QmbtTeWjSUE8euUBf8kEsj4BC2TyC6tUXeUF9xifSkEusL`
+*   IPFS Hash: `/ipfs/QmYv2VzNzqftDoCYknFefRLQCHiUVnj9mfamrx98AHLnno`
 
 ### Previous versions:
 *   Name: `pocket-core.public.dappnode.eth`
