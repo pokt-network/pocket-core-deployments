@@ -1,6 +1,7 @@
 # This Dockerfile attempts to install dependencies, run the tests and build the pocket-core binary
 # The result of this Dockerfile will put the pocket-core executable in the $GOBIN/bin, which in turn
 # is part of the $PATH
+
 # Dynamically pull Go-lang version for the image
 ARG GOLANG_IMAGE_VERSION=golang:1.13-alpine
 
@@ -18,7 +19,8 @@ RUN apk -v --update --no-cache add \
 	mailcap \
 	gcc \
 	libc-dev \
-	bash && \
+	bash  \
+	leveldb-dev && \
 	pip install --upgrade --no-cache awscli s3cmd python-magic && \
 	apk -v --purge del py-pip && \
 	rm /var/cache/apk/* || true
@@ -32,7 +34,7 @@ RUN mkdir -p ${POCKET_PATH}
 WORKDIR $POCKET_PATH
 
 # Creating the BRANCH_NAME variable
-ARG BRANCH_NAME="RC-0.2.2"
+ARG BRANCH_NAME="RC-0.2.3"
 
 # Copying deps sh to tmp folder
 COPY deps.sh /tmp/
@@ -49,19 +51,19 @@ COPY . .
 #RUN go test ./tests/...
 
 # Install project dependencies and builds the binary
-RUN go build -o ${GOBIN}/bin/pocket-core ./app/cmd/pocket_core/main.go
+RUN go build -tags cleveldb -o ${GOBIN}/bin/pocket ./app/cmd/pocket_core/main.go
 
 # Second build step: reduce image size to only use app binary
 FROM alpine:3.10
 
-COPY --from=builder /bin/pocket-core /bin/pocket-core
+COPY --from=builder /bin/pocket /bin/pocket
 COPY entrypoint.sh /tmp/
 COPY command.sh /tmp/
-RUN apk add --update --no-cache expect bash
+RUN apk add --update --no-cache expect bash leveldb-dev
 # Create app user and add permissions
 RUN addgroup -S app \
 	&& adduser -S -G app app
-RUN mv /tmp/entrypoint.sh /home/app/ && mv /tmp/command.sh /home/app/command.sh && chown -R app /bin/pocket-core  && mkdir -p /home/app/.pocket/config && chown -R app /home/app/.pocket
+RUN mv /tmp/entrypoint.sh /home/app/ && mv /tmp/command.sh /home/app/command.sh && chown -R app /bin/pocket  && mkdir -p /home/app/.pocket/config && chown -R app /home/app/.pocket
 USER app
 
 # Setup the WORKDIR with app user

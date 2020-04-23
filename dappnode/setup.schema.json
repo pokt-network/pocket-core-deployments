@@ -1,0 +1,35 @@
+{
+  "description": "Pocket Node installation",  
+  "type": "object",
+    "properties": {
+      "genesis": {
+        "type": "string",
+        "format": "data-url",
+        "title": "Genesis",
+        "description": " The genesis.json is shared amongst all nodes and indicates the necessary information to start syncing the network (Learn more here: https://docs.pokt.network/docs/service-node-setup-binary#section--connecting-to-the-current-network-)"
+      },
+      "chains": {
+        "type": "string",
+        "title": "Chains",
+        "description": "Your chains.json file. https://docs.pokt.network/docs/connecting-your-service-node-to-a-blockchain"
+      },
+      "password": {
+        "type": "string",
+        "title": "Password",
+        "description": "Enter the password that will be used to encrypt your coinbase account (Learn more here: https://docs.pokt.network/docs/faq-for-nodes#section--what-is-a-coinbase-account-)"
+      },
+      "key": {
+        "type": "string",
+        "title": "Node Private Key",
+        "description": "The private key of the account that will be used to identify the node (Learn more here: https://docs.pokt.network/docs/faq-for-nodes#section--what-is-a-coinbase-account-)"
+      },
+      "seeds": {
+        "type": "string",
+        "title": "Seeds",
+        "description": "The nodes from which your node will seed it's initial peers list (Learn more here: https://docs.pokt.network/docs/service-node-setup-binary#section--seeding-your-node-)"
+      }
+    },
+    "required": [
+      "password"
+    ]
+}

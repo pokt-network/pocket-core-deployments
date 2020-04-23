@@ -1,0 +1,36 @@
+{
+  "description": "Pocket Node installation",  
+  "type": "object",
+    "properties": {
+      "genesis": {
+        "type": "string",
+        "format": "data-url",
+        "title": "Genesis",
+        "description": "Your genesis.json file"
+      },
+      "chains": {
+        "type": "string",
+        "format": "data-url",
+        "title": "Chains",
+        "description": "Your chains.json file. https://docs.pokt.network/docs/connecting-your-service-node-to-a-blockchain"
+      },
+      "password": {
+        "type": "string",
+        "title": "Password",
+        "description": "Encryption password"
+      },
+      "key": {
+        "type": "string",
+        "title": "Node Private Key",
+        "description": "Your staked nodes private key "
+      },
+      "seeds": {
+        "type": "string",
+        "title": "Seeds",
+        "description": "Your seeds"
+      }
+    },
+    "required": [
+      "password"
+    ]
+}

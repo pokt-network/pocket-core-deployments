@@ -1,10 +1,24 @@
 {
   "0.1.1": {
-    "hash": "/ipfs/QmbLZkqTA6zyYwpUFAzf2YUD5X8jiUEPjJEthoFbnLBFqp",
-    "type": "manifest",
+    "hash": "/ipfs/QmRXt1C6WG1YwCKJd5xAwdLh24uynqLEumaLCfyw1Xgk7T",
+    "type": "directory",
     "uploadedTo": {
-      "dappnode": "Tue, 21 Apr 2020 15:06:04 GMT"
+      "dappnode": "Wed, 22 Apr 2020 00:55:43 GMT"
     },
     "link": "http://my.dappnode/#/sdk/publish/r=pocket-core.public.dappnode.eth&v=0.1.1&h=%2Fipfs%2FQmbLZkqTA6zyYwpUFAzf2YUD5X8jiUEPjJEthoFbnLBFqp"
+  },
+  "0.1.0": {
+    "hash": "/ipfs/QmZ96mFUx7zK7NomsGTpRs6ctBTxmH4KxUryH2fE4XdzF2",
+    "type": "directory",
+    "uploadedTo": {
+      "dappnode": "Tue, 21 Apr 2020 20:35:37 GMT"
+    }
+  },
+  "0.1.2": {
+    "hash": "/ipfs/QmYv2VzNzqftDoCYknFefRLQCHiUVnj9mfamrx98AHLnno",
+    "type": "directory",
+    "uploadedTo": {
+      "dappnode": "Thu, 23 Apr 2020 05:26:49 GMT"
+    }
   }
 }
