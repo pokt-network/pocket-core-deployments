@@ -2,7 +2,7 @@ FROM alpine:3.11.5
 # REF: https://github.com/ekino/docker-nginx-brotli/blob/master/Dockerfile
 LABEL maintainer="NGINX Docker Maintainers <docker-maint@nginx.com>"
 
-ENV NGINX_VERSION 1.17.0
+ENV NGINX_VERSION 1.18.0
 ENV NGX_BROTLI_COMMIT 8104036af9cff4b1d34f22d00ba857e2a93a243c 
 
 RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
