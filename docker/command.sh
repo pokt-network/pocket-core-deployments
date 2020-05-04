@@ -11,6 +11,10 @@ if { $env(POCKET_CORE_KEY) eq "" }  {
     sleep 1
     send -- "$env(POCKET_CORE_PASSPHRASE)\n"
     expect eof
+    spawn sh -c "pocket accounts set-validator `pocket accounts list | cut -d' ' -f2- `"
+    sleep 1
+    send -- "$env(POCKET_CORE_PASSPHRASE)\n"
+    expect eof
     spawn sh -c "$command"
 }
 
