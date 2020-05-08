@@ -16,7 +16,7 @@ send -- "$env(POCKET_CORE_PASSPHRASE)\n"
 expect eof
 
 # Start pocket core
-spawn sh -c "pocket start --seeds $env(POCKET_CORE_SEEDS)"
+spawn sh -c "pocket start"
 
 expect eof
 exit
