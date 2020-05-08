@@ -48,7 +48,7 @@
             "RootDir": "/home/app/.pocket",
             "ListenAddress": "tcp://0.0.0.0:26656",
             "ExternalAddress": "",
-            "Seeds": "",
+            "Seeds": "765715602c85830ec95ce789b4f6e5b81df7ed16@pocket-core-testnet0:26656, 0464b2d8e9d161240bad90ccbaed7bee80b1096b@pocket-core-testnet1:26656, 0212aedc9fb7258ab2db6c6781c6d002597d10dd@pocket-core-testnet2:26656, f08ded1a20f284c3a523060e5488e86ac4738346@pocket-core-testnet3:26656, ea925be430f20a97b6641a562006ff12078ed2f4@pocket-core-testnet4:26656",
             "PersistentPeers": "",
             "UPNP": false,
             "AddrBook": "config/addrbook.json",
