@@ -22,11 +22,18 @@
     }
   },
   "0.1.3": {
-    "hash": "/ipfs/QmbHkvASj1T2efaYWRduvGHjTNEhKkwNqpSsoef5CwWpT7",
+    "hash": "/ipfs/QmZZzjFk3oY25GcKL96MSsmEKYfJXtsqa731efNWRrpoQ9",
     "type": "directory",
     "uploadedTo": {
-      "dappnode": "Tue, 28 Apr 2020 13:29:51 GMT"
+      "dappnode": "Thu, 07 May 2020 13:59:49 GMT"
     },
     "link": "http://my.dappnode/#/sdk/publish/r=pocket-core.public.dappnode.eth&v=0.1.3&h=%2Fipfs%2FQmbHkvASj1T2efaYWRduvGHjTNEhKkwNqpSsoef5CwWpT7"
+  },
+  "0.2.0": {
+    "hash": "/ipfs/QmdJrPMLVpKpPUkPyTcVvTzf6dz1sVcKxvwy7RpsiLby24",
+    "type": "directory",
+    "uploadedTo": {
+      "dappnode": "Sun, 10 May 2020 22:46:08 GMT"
+    }
   }
 }
