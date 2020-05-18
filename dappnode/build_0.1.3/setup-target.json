@@ -3,9 +3,13 @@
       "type": "fileUpload",
       "path": "/home/app/.pocket/config/genesis.json"
     },
+    "config": {
+      "type": "fileUpload",
+      "path": "/home/app/.pocket/config/config.json"
+    },
     "chains": {
-      "type": "environment",
-      "path": "POCKET_CORE_CHAINS"
+      "type": "fileUpload",
+      "path": "/home/app/.pocket/config/chains.json"
     },
     "password": {
       "type": "environment",
@@ -14,9 +18,5 @@
     "key": {
       "type": "environment",
       "name": "POCKET_CORE_KEY"
-    },
-    "seeds": {
-      "type": "environment",
-      "name": "POCKET_CORE_SEEDS"
     }
   }

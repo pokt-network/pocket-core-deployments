@@ -1,0 +1,129 @@
+version: "2.1"
+services:
+    ganache:
+        image: trufflesuite/ganache-cli:latest
+        ports:
+          - "8545:8545"
+        expose:
+          - "8545"
+        networks:
+          - pocket
+    pocket-core-testnet0:
+        image: poktnetwork/pocket-core:RC-0.3.0
+        privileged: true
+        command: /usr/bin/expect /home/app/.pocket/local_command.sh
+        build: ./
+        ports:
+          - 8081:8081
+          - 26657:26657
+        expose:
+          - "8081"
+          - "26657"
+          - "26656"
+          - "46656"
+        environment:
+            POCKET_CORE_KEY: c6ba4ffae37bb32ccb5601475fe575f182305ee2e90beafd1937723b3000a52029f4e19c2e06d9e6f87ef13f91b49ee70c9d4425aa524592e46a517b365946ad
+            POCKET_CORE_PASSPHRASE: yo
+            POCKET_CORE_ADDRESS: 765715602c85830ec95ce789b4f6e5b81df7ed16
+        networks:
+          - pocket
+        volumes:
+          - ./local_command.sh:/home/app/.pocket/local_command.sh
+          - ./chains.json:/home/app/.pocket/config/chains.json
+          - ./genesis.json:/home/app/.pocket/config/genesis.json
+          - ./validator/config.json:/home/app/.pocket/config/config.json
+    pocket-core-testnet1:
+        image: poktnetwork/pocket-core:RC-0.3.0
+        privileged: true
+        command: /usr/bin/expect /home/app/.pocket/local_command.sh
+        build: ./
+        ports:
+          - 8082:8081
+        expose:
+          - "8081"
+          - "26657"
+          - "26656"
+          - "46656"
+        environment:
+            POCKET_CORE_KEY: 10682a6031c3a1f1348565784cb144cc86a5e30ef9b2c384a88824d953003bd43ebdf8f61121b02969e44f879442bf1de3ce0b681ed92453be6ff1c0bbe29e8a
+            POCKET_CORE_PASSPHRASE: yo
+            POCKET_CORE_ADDRESS: 0464b2d8e9d161240bad90ccbaed7bee80b1096b
+        networks:
+          - pocket
+        volumes:
+          - ./local_command.sh:/home/app/.pocket/local_command.sh
+          - ./chains.json:/home/app/.pocket/config/chains.json
+          - ./genesis.json:/home/app/.pocket/config/genesis.json
+          - ./validator/config.json:/home/app/.pocket/config/config.json
+    pocket-core-testnet2:
+        image: poktnetwork/pocket-core:RC-0.3.0
+        privileged: true
+        command: /usr/bin/expect /home/app/.pocket/local_command.sh
+        build: ./
+        ports:
+          - 8083:8081
+        expose:
+          - "8081"
+          - "26657"
+          - "26656"
+          - "46656"
+        environment:
+            POCKET_CORE_KEY: d3410ab2a8151c5b8b9ada1e78bc336520826b7945e5ffcf43b81d28a80de26763209e85cbf2a381d57474d493485b74c9c41a2384b89edca6739516628f67f3
+            POCKET_CORE_PASSPHRASE: yo
+            POCKET_CORE_ADDRESS: 0212aedc9fb7258ab2db6c6781c6d002597d10dd
+        networks:
+          - pocket
+        volumes:
+          - ./local_command.sh:/home/app/.pocket/local_command.sh
+          - ./chains.json:/home/app/.pocket/config/chains.json
+          - ./genesis.json:/home/app/.pocket/config/genesis.json
+          - ./validator/config.json:/home/app/.pocket/config/config.json
+    pocket-core-testnet3:
+        image: poktnetwork/pocket-core:RC-0.3.0
+        privileged: true
+        command: /usr/bin/expect /home/app/.pocket/local_command.sh
+        build: ./
+        ports:
+          - 8084:8081
+        expose:
+          - "8081"
+          - "26657"
+          - "26656"
+          - "46656"
+        environment:
+            POCKET_CORE_KEY: 3311ff9c9ec2e14ae282e849338c8f53d77aa08e31f920bd405c78944f1e33b01c3fa5c1a6bbdd0003db9f1b1a0c46685f72d0e552e026bf4e08bd6bf5767253
+            POCKET_CORE_PASSPHRASE: yo
+            POCKET_CORE_ADDRESS: f08ded1a20f284c3a523060e5488e86ac4738346
+        networks:
+          - pocket
+        volumes:
+          - ./local_command.sh:/home/app/.pocket/local_command.sh
+          - ./chains.json:/home/app/.pocket/config/chains.json
+          - ./genesis.json:/home/app/.pocket/config/genesis.json
+          - ./validator/config.json:/home/app/.pocket/config/config.json
+    pocket-core-testnet4:
+        image: poktnetwork/pocket-core:RC-0.3.0
+        privileged: true
+        command: /usr/bin/expect /home/app/.pocket/local_command.sh
+        build: ./
+        ports:
+          - 8085:8081
+        expose:
+          - "8081"
+          - "26657"
+          - "26656"
+          - "46656"
+        environment:
+            POCKET_CORE_KEY: ca616e929cc25705e31a1aa47afdb2a0f49bb73839b0ce6c6f8ddf1e4e0a10da2747b0dd9e3997c937de7812aff8510614e0af8bfc223d85c433841b7ad4d758
+            POCKET_CORE_PASSPHRASE: yo
+            POCKET_CORE_ADDRESS: ea925be430f20a97b6641a562006ff12078ed2f4
+        networks:
+          - pocket
+        volumes:
+          - ./local_command.sh:/home/app/.pocket/local_command.sh
+          - ./chains.json:/home/app/.pocket/config/chains.json
+          - ./genesis.json:/home/app/.pocket/config/genesis.json
+          - ./validator/config.json:/home/app/.pocket/config/config.json
+networks:
+    pocket:
+        driver: bridge

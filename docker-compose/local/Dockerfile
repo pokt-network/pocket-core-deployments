@@ -34,21 +34,13 @@ RUN mkdir -p ${POCKET_PATH}
 WORKDIR $POCKET_PATH
 
 # Creating the BRANCH_NAME variable
-ARG BRANCH_NAME="RC-0.3.1"
-
-# Copying deps sh to tmp folder
-COPY deps.sh /tmp/
+ARG BRANCH_NAME="RC-0.3.0"
 
 # Clone the repository
 RUN git clone --branch ${BRANCH_NAME} https://github.com/pokt-network/pocket-core.git ${POCKET_PATH}
 
 # Install rest of source code
 COPY . .
-
-# Run tests
-# As the tests were removed recently for the fact that most of them were broken, I commented this line,
-# It should be uncommented as soon as the new tests are available.
-#RUN go test ./tests/...
 
 # Install project dependencies and builds the binary
 RUN go build -tags cleveldb -o ${GOBIN}/bin/pocket ./app/cmd/pocket_core/main.go
@@ -57,14 +49,13 @@ RUN go build -tags cleveldb -o ${GOBIN}/bin/pocket ./app/cmd/pocket_core/main.go
 FROM alpine:3.10
 
 COPY --from=builder /bin/pocket /bin/pocket
-COPY entrypoint.sh /tmp/
-COPY command.sh /tmp/
 RUN apk add --update --no-cache expect bash leveldb-dev
+
 # Create app user and add permissions
 RUN addgroup -S app \
 	&& adduser -S -G app app
-RUN mv /tmp/entrypoint.sh /home/app/ && mv /tmp/command.sh /home/app/command.sh && chown -R app /bin/pocket  && mkdir -p /home/app/.pocket/config && chown -R app /home/app/.pocket
+RUN chown -R app /bin/pocket  && mkdir -p /home/app/.pocket/config
+RUN chown -R app /home/app/.pocket
 USER app
 
-# Setup the WORKDIR with app user
-ENTRYPOINT ["/home/app/entrypoint.sh"]
+

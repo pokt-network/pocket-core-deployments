@@ -34,11 +34,13 @@ fi
 if [ ! -n "$DOCKER_TAG" ]
 then
     # Resolve DOCKER_TAG using the branch name
-    if [ "$BRANCH_NAME" = "$STAGING_BRANCH" ]; then
+    if [ "$BRANCH_NAME" = "$STAGING_BRANCH" ]
+    then
         # Handle staging branch
         echo "It's devnet!"
         DOCKER_TAG="devnet-latest"
-    elif [[ "$BRANCH_NAME" = "RC-"* ]]; then
+    elif [[ "$BRANCH_NAME" = "RC-"* ]]
+    then
         # Handle master branch
         echo "It's stagenet!"
         DOCKER_TAG="stagenet-latest"
@@ -72,6 +74,12 @@ TAG_COMMAND="docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$DOCKE
 eval $TAG_COMMAND
 
 # Push the image
+
+if [[ "$BRANCH_NAME" = "RC-"* ]]; then
+    eval "docker push $DOCKER_IMAGE_NAME:$BRANCH_NAME"
+fi
+
+
 PUSH_COMMAND="docker push $DOCKER_IMAGE_NAME:$DOCKER_TAG"
 echo "$PUSH_COMMAND"
 eval $PUSH_COMMAND
