@@ -3,25 +3,35 @@ version: '2.1'
 services:
 
   algorand-testnet:
-    image: algorand/testnet  
+    image: poktnetwork/algorand:2.0.6-testnet 
+    build:
+      context: . 
+      dockerfile: Dockerfile.testnet 
     expose:
       - "8080"
     volumes:
       - ./command.sh:/root/node/command.sh
-      - algorand-testnet:/root/node/data/
+      - algorand-testnet:/root/node/.data/
       - ./config_testnet.json:/root/node/data/config.json
+    entrypoint: bash
     command: command.sh
+    environment:
+      NETWORK: "testnet"
     networks:
       - pocket
 
   algorand-mainnet:
-    image: algorand/stable:2.0.4
+    image: poktnetwork/algorand:2.0.6-mainnet
+    build:
+      context: . 
+      dockerfile: Dockerfile 
     expose:
       - "8080"
     volumes:
       - ./command.sh:/root/node/command.sh
-      - algorand-mainnet:/root/node/data/
+      - algorand-mainnet:/root/node/.data/
       - ./config_mainnet.json:/root/node/data/config.json
+    entrypoint: bash
     command: command.sh
     networks:
       - pocket
