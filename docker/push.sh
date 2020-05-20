@@ -80,7 +80,7 @@ if echo "$BRANCH_NAME" | grep -q "RC-"*; then
     eval "docker push $DOCKER_IMAGE_NAME:$BRANCH_NAME"
 fi
 
-if [[ "$BRANCH_NAME" = "staging" ]]; then
+if [ "$BRANCH_NAME" = "staging" ]; then
     eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:devnet-$CIRCLE_BUILD_NUM"
     eval "docker push $DOCKER_IMAGE_NAME:devnet-$CIRCLE_BUILD_NUM"
 fi
