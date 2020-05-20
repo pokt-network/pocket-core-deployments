@@ -39,7 +39,7 @@ then
         # Handle staging branch
         echo "It's devnet!"
         DOCKER_TAG="devnet-latest"
-    elif [[ "$BRANCH_NAME" = "RC-"* ]]
+    elif echo "$BRANCH_NAME" | grep -q "RC-"*
     then
         # Handle master branch
         echo "It's stagenet!"
@@ -75,7 +75,7 @@ eval $TAG_COMMAND
 
 # Push the image
 
-if [[ "$BRANCH_NAME" = "RC-"* ]]; then
+if echo "$BRANCH_NAME" | grep -q "RC-"*; then
     eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$BRANCH_NAME"
     eval "docker push $DOCKER_IMAGE_NAME:$BRANCH_NAME"
 fi
