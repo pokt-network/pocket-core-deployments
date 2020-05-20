@@ -61,8 +61,8 @@ COPY entrypoint.sh /tmp/
 COPY command.sh /tmp/
 RUN apk add --update --no-cache expect bash leveldb-dev
 # Create app user and add permissions
-RUN addgroup -S app \
-	&& adduser -S -G app app
+RUN addgroup --gid 1001 -S app \
+	&& adduser --uid 1005 -S -G app app
 RUN mv /tmp/entrypoint.sh /home/app/ && mv /tmp/command.sh /home/app/command.sh && chown -R app /bin/pocket  && mkdir -p /home/app/.pocket/config && chown -R app /home/app/.pocket
 USER app
 
