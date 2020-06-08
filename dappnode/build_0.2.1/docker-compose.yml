@@ -1,32 +1,21 @@
 version: '3.4'
 services:
   pocket-core.public.dappnode.eth:
-    image: 'pocket-core.public.dappnode.eth:0.3.0'
+    image: 'pocket-core.public.dappnode.eth:0.2.1'
     build: ./build/
     volumes:
       - 'data:/home/app/.pocket/'
-    expose:
-      - '8081'
-      - '26656'
-      - '26657'
     ports:
       - '8081:8081'
       - '26656:26656'
       - '26657:26657'
+      - '46656:46656'
     environment:
       - POCKET_CORE_KEY
       - POCKET_CORE_CONFIG
       - POCKET_CORE_GENESIS
       - POCKET_CORE_PASSPHRASE
       - POCKET_CORE_CHAINS
-      - TLS_OPTION
-      - COUNTRY
-      - STATE
-      - LOCALITY
-      - ORGANIZATION
-      - ORGANIZATIONAL_UNIT
-      - COMMON_NAME
-      - EMAIL
     restart: on-failure
 volumes:
   data: {}

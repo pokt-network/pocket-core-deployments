@@ -6,19 +6,19 @@
         "type": "string",
         "format": "data-url",
         "title": "Genesis",
-        "description": "The genesis.json is shared amongst all nodes and indicates the necessary information to start syncing the network (Learn more here: https://docs.pokt.network/docs/service-node-setup-binary#section--connecting-to-the-current-network-)"
+        "description": "The genesis.json is shared amongst all nodes and indicates the necessary information to start syncing the network (Learn more here: https://docs.pokt.network/docs/node-configuration#configure-your-genesis-file)"
       },
       "config": {
         "type": "string",
         "format": "data-url",
         "title": "Config",
-        "description": "The config.json is your configuration file"
+        "description": "The config.json file. (Learn more here: https://docs.pokt.network/docs/configuration-reference)"
       },
       "chains": {
         "type": "string",
         "format": "data-url",
         "title": "Chains",
-        "description": "Your chains.json file. https://docs.pokt.network/docs/connecting-your-service-node-to-a-blockchain"
+        "description": "Your chains.json file.(Learn more here: https://docs.pokt.network/docs/node-configuration#configure-your-chainsjson-manually)"
       },
       "password": {
         "type": "string",

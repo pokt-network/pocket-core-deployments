@@ -1,0 +1,22 @@
+{
+    "genesis": {
+      "type": "fileUpload",
+      "path": "/tmp/genesis.json"
+    },
+    "config": {
+      "type": "fileUpload",
+      "path": "/tmp/config.json"
+    },
+    "chains": {
+      "type": "fileUpload",
+      "path": "/tmp/chains.json"
+    },
+    "password": {
+      "type": "environment",
+      "name": "POCKET_CORE_PASSPHRASE"
+    },
+    "key": {
+      "type": "environment",
+      "name": "POCKET_CORE_KEY"
+    }
+  }

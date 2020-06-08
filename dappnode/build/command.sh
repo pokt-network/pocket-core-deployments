@@ -8,11 +8,12 @@ set timeout -1
 if { $command eq "" } {
     
     if { [info exists env(POCKET_CORE_KEY)] } {
+        log_user 0
         spawn sh -c "cp /tmp/*.json /home/app/.pocket/config/"
 
-        if { [file exists /home/app/.pocket/chains.json] } {
+        if { [file exists /home/app/.pocket/config/chains.json] } {
         } else {
-            puts [open /home/app/.pocket/chains.json w] {[{"id":"0021","url":"http://my.ethchain.dnp.dappnode.eth:8545"}]}
+            puts [open /home/app/.pocket/config/chains.json w] { [{"id":"0021","url":"http://my.ethchain.dnp.dappnode.eth:8545"}] }
         }
         spawn pocket accounts import-raw $env(POCKET_CORE_KEY)
         sleep 1
@@ -22,14 +23,24 @@ if { $command eq "" } {
         sleep 1
         send -- "$env(POCKET_CORE_PASSPHRASE)\n"
         expect eof
+        log_user 1
         spawn pocket start
     } else {
-        spawn pocket start 
+        spawn pocket start
+        sleep 1
+        send -- "$env(POCKET_CORE_PASSPHRASE)\n"
     } 
 
 } elseif { $command ne "" } {
     
     if  { [info exists env(POCKET_CORE_KEY)] } {
+        log_user 0
+        spawn sh -c "cp /tmp/*.json /home/app/.pocket/config/"
+
+        if { [file exists /home/app/.pocket/config/chains.json] } {
+        } else {
+            puts [open /home/app/.pocket/config/chains.json w] {[{"id":"0021","url":"http://my.ethchain.dnp.dappnode.eth:8545"}]}
+        }
         spawn pocket accounts import-raw $env(POCKET_CORE_KEY)
         sleep 1
         send -- "$env(POCKET_CORE_PASSPHRASE)\n"
@@ -38,16 +49,17 @@ if { $command eq "" } {
         sleep 1
         send -- "$env(POCKET_CORE_PASSPHRASE)\n"
         expect eof
+        log_user 1
         # executes command passed by user 
         spawn sh -c "$command"
     } else {
         
         spawn sh -c "$command"
+        sleep 1
+        send -- "$env(POCKET_CORE_PASSPHRASE)\n"
     }
 }
 
-sleep 1
-send -- "$env(POCKET_CORE_PASSPHRASE)\n"
 
 expect eof
 

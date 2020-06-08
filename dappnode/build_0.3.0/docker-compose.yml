@@ -5,6 +5,7 @@ services:
     build: ./build/
     volumes:
       - 'data:/home/app/.pocket/'
+      - '/Users/juliojimenez/Desktop/dappnode:/tmp'
     expose:
       - '8081'
       - '26656'

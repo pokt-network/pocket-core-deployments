@@ -34,7 +34,7 @@ RUN mkdir -p ${POCKET_PATH}
 WORKDIR $POCKET_PATH
 
 # Creating the BRANCH_NAME variable
-ARG BRANCH_NAME="RC-0.3.1"
+ARG BRANCH_NAME="RC-0.4.0"
 
 # Copying deps sh to tmp folder
 COPY deps.sh /tmp/
@@ -54,17 +54,20 @@ COPY . .
 RUN go build -tags cleveldb -o ${GOBIN}/bin/pocket ./app/cmd/pocket_core/main.go
 
 # Second build step: reduce image size to only use app binary
-FROM alpine:3.10
+FROM envoyproxy/envoy-alpine:v1.14.1
 
 COPY --from=builder /bin/pocket /bin/pocket
 COPY entrypoint.sh /tmp/
 COPY command.sh /tmp/
-RUN apk add --update --no-cache expect bash leveldb-dev
+COPY envoy/envoy.yaml /etc/envoy/envoy.yaml
+COPY envoy/certificate.sh ./
+COPY envoy/entrypoint.sh ./
+RUN apk add --update --no-cache expect bash leveldb-dev openssl
 # Create app user and add permissions
-RUN addgroup -S app \
-	&& adduser -S -G app app
-RUN mv /tmp/entrypoint.sh /home/app/ && mv /tmp/command.sh /home/app/command.sh && chown -R app /bin/pocket  && mkdir -p /home/app/.pocket/config && chown -R app /home/app/.pocket
+RUN addgroup --gid 1001 -S app \
+	&& adduser --uid 1005 -S -G app app
+RUN mv /tmp/entrypoint.sh /home/app/ && chown -R app /etc/envoy && mv /tmp/command.sh /home/app/command.sh && chown -R app /bin/pocket  && mkdir -p /home/app/.pocket/config && chown -R app /home/app/.pocket
 USER app
 
 # Setup the WORKDIR with app user
-ENTRYPOINT ["/home/app/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
