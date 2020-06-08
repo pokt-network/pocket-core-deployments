@@ -1,0 +1,6 @@
+{
+    "ui:order": ["password", "genesis", "config", "chains", "key"],
+    "password": {
+      "ui:widget": "password"
+    }
+  }
