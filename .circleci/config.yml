@@ -27,7 +27,7 @@ jobs:
                         # Setup the Docker daemon for this job
                         - setup_remote_docker
                         # Build the local docker image using the parameters from the pipeline
-                        - run: sh docker/build.sh << pipeline.parameters.golang-version >> ${CIRCLE_BRANCH} || ${CIRCLE_TAG} || << pipeline.parameters.branch-name >>  "" ""
+                        - run: sh docker/build.sh << pipeline.parameters.golang-version >> [[ ${CIRCLE_BRANCH} || ${CIRCLE_TAG} || << pipeline.parameters.branch-name >> ]] "" ""
         # Job to scan the image for vulnerabilities using Anchore with an image build from a pocket core branch
         docker_image_anchore_scan:
                 executor: anchore/anchore_engine
