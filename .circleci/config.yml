@@ -27,7 +27,7 @@ jobs:
                         # Setup the Docker daemon for this job
                         - setup_remote_docker
                         # Build the local docker image using the parameters from the pipeline
-                        - run: sh docker/build.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
+                        - run: sh docker/build.sh << pipeline.parameters.golang-version >> ${CIRCLE_BRANCH} || ${CIRCLE_TAG} || << pipeline.parameters.branch-name >>  "" ""
         # Job to scan the image for vulnerabilities using Anchore with an image build from a pocket core branch
         docker_image_anchore_scan:
                 executor: anchore/anchore_engine
@@ -57,7 +57,7 @@ jobs:
                         # Login to Docker HUB
                         - run: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
                         # Push the image!
-                        - run: sh docker/push.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
+                        - run: sh docker/push.sh << pipeline.parameters.golang-version >> ${CIRCLE_BRANCH} || ${CIRCLE_TAG} || << pipeline.parameters.branch-name >>  "" ""
 workflows:
         version: 2
         # Workflow that builds, tests and pushes docker images based on parameters
