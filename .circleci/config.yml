@@ -13,13 +13,13 @@ parameters:
                 default: "staging"
         golang-version:
                 type: string
-                default: "1.13-alpine"
+                default: "1.13"
 # Global jobs
 jobs:
         # Build docker image from pocket core branch
         build_docker_image:
                 docker:
-                        - image: golang:<< pipeline.parameters.golang-version >>
+                        - image: circleci/golang:<< pipeline.parameters.golang-version >>-alpine
                 working_directory: /go/src/github.com/pokt-network/pocket-core-deployments
                 steps:
                         # Checkout the deployment artifacts code
