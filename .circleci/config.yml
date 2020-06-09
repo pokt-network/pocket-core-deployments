@@ -19,7 +19,7 @@ jobs:
         # Build docker image from pocket core branch
         build_docker_image:
                 docker:
-                        - image: circleci/golang:<< pipeline.parameters.golang-version >>
+                        - image: golang:<< pipeline.parameters.golang-version >>
                 working_directory: /go/src/github.com/pokt-network/pocket-core-deployments
                 steps:
                         # Checkout the deployment artifacts code
