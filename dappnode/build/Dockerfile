@@ -12,8 +12,6 @@ FROM ${GOLANG_IMAGE_VERSION} AS builder
 RUN apk -v --update --no-cache add \
 	curl \
 	git \
-	python \
-	py-pip \
 	groff \
 	less \
 	mailcap \
@@ -21,8 +19,6 @@ RUN apk -v --update --no-cache add \
 	libc-dev \
 	bash  \
 	leveldb-dev && \
-	pip install --upgrade --no-cache awscli s3cmd python-magic && \
-	apk -v --purge del py-pip && \
 	rm /var/cache/apk/* || true
 
 # Environment and system dependencies setup

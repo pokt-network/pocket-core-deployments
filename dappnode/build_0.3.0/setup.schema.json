@@ -23,12 +23,12 @@
     "password": {
       "type": "string",
       "title": "Password",
-      "description": "Enter the password that will be used to encrypt your coinbase account. (Learn more here: https://docs.pokt.network/docs/faq-for-nodes#section--what-is-a-coinbase-account-)"
+      "description": "This will be use to encrypt your private key on your dappnode"
     },
     "key": {
       "type": "string",
       "title": "Node Private Key",
-      "description": "The private key of the account that will be used to identify the node. (Learn more here: https://docs.pokt.network/docs/faq-for-nodes#section--what-is-a-coinbase-account-)"
+      "description": "The private key of the account that will be used to identify the node. (Learn more here:  https://docs.pokt.network/docs/dappnode-setup#node-private-key)"
     },
     "tls": {
       "type": "string",
