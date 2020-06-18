@@ -1,0 +1,62 @@
+{
+    "genesis": {
+      "type": "fileUpload",
+      "path": "/tmp/genesis.json"
+    },
+    "config": {
+      "type": "fileUpload",
+      "path": "/tmp/config.json"
+    },
+    "chains": {
+      "type": "fileUpload",
+      "path": "/tmp/chains.json"
+    },
+    "password": {
+      "type": "environment",
+      "name": "POCKET_CORE_PASSPHRASE"
+    },
+    "key": {
+      "type": "environment",
+      "name": "POCKET_CORE_KEY"
+    },
+    "tls": {
+      "type": "environment",
+      "name": "TLS_OPTION"
+    },
+    "cert": {
+      "type": "fileUpload",
+      "path": "/tmp/certificate.crt"
+    },
+    "cert_key": {
+      "type": "fileUpload",
+      "path": "/tmp/key.key"
+    },
+    "C": {
+      "type": "environment",
+      "name": "COUNTRY"
+    },
+    "ST": {
+      "type": "environment",
+      "name": "STATE"
+    },
+    "L": {
+      "type": "environment",
+      "name": "LOCALITY"
+    },
+    "O": {
+      "type": "environment",
+      "name": "ORGANIZATION"
+    },
+    "OU": {
+      "type": "environment",
+      "name": "ORAGANIZATIONAL_UNIT"
+    },
+    "CN": {
+      "type": "environment",
+      "name": "COMMON_NAME"
+    },
+    "E": {
+      "type": "environment",
+      "name": "EMAIL"
+    }
+  }
