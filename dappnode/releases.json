@@ -50,5 +50,13 @@
     "uploadedTo": {
       "dappnode": "Thu, 11 Jun 2020 03:59:36 GMT"
     }
+  },
+  "0.3.1": {
+    "hash": "/ipfs/QmPKiseoLswty5UYpoRbY8TRkYoTjENEP58tTBuCABTtFY",
+    "type": "directory",
+    "uploadedTo": {
+      "dappnode": "Thu, 18 Jun 2020 16:56:00 GMT"
+    },
+    "link": "http://my.dappnode/#/sdk/publish/r=pocket-core.public.dappnode.eth&v=0.3.1&h=%2Fipfs%2FQmPKiseoLswty5UYpoRbY8TRkYoTjENEP58tTBuCABTtFY"
   }
 }
