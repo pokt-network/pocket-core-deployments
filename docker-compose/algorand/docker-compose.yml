@@ -46,8 +46,8 @@ services:
       - 8081
     command: pocket start
     environment:
-      POCKET_CORE_KEY: b8a56dead392e2b57eaba988068d0cedc0a11b9a16ca9610b094ec31a9cbc06650220553e5ccf56a863eaed88ebf1487e1dcb20e7fffbe0fb841cab1bb76af4d
-      POCKET_CORE_PASSPHRASE: yo 
+      POCKET_CORE_KEY: <private key>
+      POCKET_CORE_PASSPHRASE: <passphrase>
     volumes:
       - ../configs:/home/app/.pocket/config
       - ./chains.json:/home/app/.pocket/config/chains.json
