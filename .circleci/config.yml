@@ -4,7 +4,7 @@ version: 2.1
 
 # Orb definitions
 orbs:
-  anchore: anchore/anchore-engine@1.6.0
+        anchore: anchore/anchore-engine@1.6.0
 
 # Parameters definition for triggers
 parameters:
@@ -36,16 +36,16 @@ jobs:
                         - setup_remote_docker
                         - checkout
                         - run:
-                        #     command: 'sh docker/build.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> pocket-core ${CIRCLE_JOB}'
-                            command: 'docker build --no-cache --build-arg GOLANG_IMAGE_VERSION=golang:1.13-alpine --build-arg BRANCH_NAME=${BRANCH_NAME} -t pocket-core:analysis -f docker/Dockerfile docker/.'
-                            name: build container
+                                  #     command: 'sh docker/build.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> pocket-core ${CIRCLE_JOB}'
+                                  command: "docker build --no-cache --build-arg GOLANG_IMAGE_VERSION=golang:1.13-alpine --build-arg BRANCH_NAME=${BRANCH_NAME} -t pocket-core:analysis -f docker/Dockerfile docker/."
+                                  name: build container
                         - anchore/analyze_local_image:
-                            dockerfile_path:  docker/Dockerfile
-                            image_name: 'pocket-core:analysis'
-                            timeout: '600'
+                                  dockerfile_path: docker/Dockerfile
+                                  image_name: "pocket-core:analysis"
+                                  timeout: "600"
                         - anchore/parse_reports
                         - store_artifacts:
-                            path: anchore-reports
+                                  path: anchore-reports
         # Job to push the docker image to the repository
         push_docker_image:
                 docker:
@@ -58,6 +58,7 @@ jobs:
                         - run: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
                         # Push the image!
                         - run: sh docker/push.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
+                        - run: sh .circleci/homebrew-trigger.sh $API_TOKEN << pipeline.parameters.branch-name >>
 workflows:
         version: 2
         # Workflow that builds, tests and pushes docker images based on parameters
@@ -67,13 +68,9 @@ workflows:
                         - build_docker_image
                         # Tests the docker image from a branch
                         - docker_image_anchore_scan:
-                                requires:
-                                        - build_docker_image
+                                  requires:
+                                          - build_docker_image
                         # Pushes the docker image from a branch
                         - push_docker_image:
-                                requires:
-                                        - docker_image_anchore_scan
-
-                        
-
-        
+                                  requires:
+                                          - docker_image_anchore_scan
