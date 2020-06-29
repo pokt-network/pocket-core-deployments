@@ -15,7 +15,7 @@ services:
       - "26656"
       - "46656" #  Tendermint Peers
     environment:
-      POCKET_CORE_KEY: "b8a56dead392e2b57eaba988068d0cedc0a11b9a16ca9610b094ec31a9cbc06650220553e5ccf56a863eaed88ebf1487e1dcb20e7fffbe0fb841cab1bb76af4d"
+      POCKET_CORE_KEY: "<private key>"
       POCKET_CORE_SEEDS: "3c4ce33e68a726bca3801e99e24f80c10eaf343c@pocket-core-testnet2:26656,  4bcb7b0e9c3fc3343905260bf36d40979be524cd@pocket-core-testnet3:26656, e1ec5fbe826bb6dd3ceb04b33bbf221e611c601e@pocket-core-testnet4:26656, 8ed7a41b06ea855ff4ba3ee630688b73499626ae@pocket-core-testnet5:26656"
     networks:
       - pocket
