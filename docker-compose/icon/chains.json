@@ -1,6 +1,6 @@
-{
-    "d9d77bce50d80e70026bd240fb0759f08aab7aee63d0a6d98c545f2b5ae0a0b8": {
-        "addr": "d9d77bce50d80e70026bd240fb0759f08aab7aee63d0a6d98c545f2b5ae0a0b8",
-        "url": "http://50.92.182.26:9000"
+[
+    {
+      "id": "0031",
+      "url": "http://prep-node:9000"
     }
-}
+]

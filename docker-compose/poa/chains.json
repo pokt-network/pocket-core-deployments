@@ -1,0 +1,19 @@
+[
+    {
+        "addr": "0045",
+        "url": "POA-xdai:8545"
+    },
+    {
+        "addr": "0044",
+        "url": "POA-testnet:8545"
+    },
+    {
+        "addr": "0043",
+        "url": "POA-kovan:8545"
+    },
+    {
+        "addr": "0042",
+        "url": "POA-mainnet:8545"
+    }
+
+]

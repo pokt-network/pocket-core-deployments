@@ -239,8 +239,6 @@ dist
 # TernJS port file
 .tern-port
 
-# PROJECT GITIGNORE
-dappnode/.*
 
 # GOLAND IDE
 .idea/*

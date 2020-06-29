@@ -26,13 +26,20 @@ services:
       - pocket
 
   pocket-service:
-    image: poktnetwork/pocket-core:mvp-1.7
+    image: poktnetwork/pocket-core:stagenet-latest
     ports:
       - "8081:8081"
-    command: --disip ${POCKET_DISPATCH_IP:-dispatch.staging.pokt.network} --gid ${POCKET_SERVICE_GID} --ip localhost --disrport 443 --port 8081 --requestTimeout 0 --datadirectory datadir
+      - "26656:26656"
+    expose:
+      - 26656
+      - 8081
+    command: pocket start --simulateRelay
     environment:
-      POCKET_CORE_START_DELAY: 30 
-      POCKET_CORE_CHAINS: '[ { "blockchain": { "name": "SUBSTRATE", "netid": "1", "version": "0" }, "url": "substrate-mainnet:9933"} ]'
+      POCKET_CORE_KEY: b8a56dead392e2b57eaba988068d0cedc0a11b9a16ca9610b094ec31a9cbc06650220553e5ccf56a863eaed88ebf1487e1dcb20e7fffbe0fb841cab1bb76af4d
+      POCKET_CORE_PASSPHRASE: yo 
+    volumes:
+      - ../configs:/home/app/.pocket/config
+      - ./chains.json:/home/app/.pocket/config/chains.json
     networks:
       - pocket
 

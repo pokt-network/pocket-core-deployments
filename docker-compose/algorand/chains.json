@@ -1,10 +1,10 @@
-{
-    "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8": {
-        "addr": "6d3ce011e06e27a74cfa7d774228c52597ef5ef26f4a4afa9ad3cebefb5f3ca8",
+[
+    {
+        "id": "0005",
         "url": "algorand-mainnet:8080"
     },
-    "49aff8a9f51b268f6fc485ec14fb08466c3ec68c8d86d9b5810ad80546b65f29": {
-        "addr": "49aff8a9f51b268f6fc485ec14fb08466c3ec68c8d86d9b5810ad80546b65f29",
+    {
+        "id": "0006",
         "url": "algorand-testnet:8080"
     }
-}
+]
