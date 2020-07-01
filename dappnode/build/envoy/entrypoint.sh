@@ -1,9 +1,14 @@
 #!/bin/sh
 case ${TLS_OPTION} in
 "I have a certificate")
-    cp /tmp/certificate.crt /tmp/key.key /etc/envoy/
-    /home/app/entrypoint.sh & envoy -c /etc/envoy/envoy.yaml --component-log-level upstream:debug,connection:trace
+    if test -f "/etc/envoy/certificate.crt" && test -f "/etc/envoy/key.key"; then
+        /home/app/entrypoint.sh & envoy -c /etc/envoy/envoy.yaml --component-log-level upstream:debug,connection:trace
+    else
+        cp /tmp/certificate.crt /tmp/key.key /etc/envoy/
+        /home/app/entrypoint.sh & envoy -c /etc/envoy/envoy.yaml --component-log-level upstream:debug,connection:trace
+    fi
     ;;
+
 "Do not use a certificate")
     /home/app/entrypoint.sh
     ;;

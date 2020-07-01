@@ -52,11 +52,19 @@
     }
   },
   "0.3.1": {
-    "hash": "/ipfs/QmPKiseoLswty5UYpoRbY8TRkYoTjENEP58tTBuCABTtFY",
+    "hash": "/ipfs/QmNgRjRCRfG8neFepgSRs8VVW1fPgKq5ccnVmeVg2CrfoG",
     "type": "directory",
     "uploadedTo": {
-      "dappnode": "Thu, 18 Jun 2020 16:56:00 GMT"
+      "dappnode": "Tue, 30 Jun 2020 14:04:22 GMT"
     },
     "link": "http://my.dappnode/#/sdk/publish/r=pocket-core.public.dappnode.eth&v=0.3.1&h=%2Fipfs%2FQmPKiseoLswty5UYpoRbY8TRkYoTjENEP58tTBuCABTtFY"
+  },
+  "0.3.2": {
+    "hash": "/ipfs/QmQRSXRyG5PaoXJJ8rKLR3J2R6VAE2ThDqb2HQy6Xf9qJ5",
+    "type": "directory",
+    "uploadedTo": {
+      "dappnode": "Tue, 30 Jun 2020 16:22:23 GMT"
+    },
+    "link": "http://my.dappnode/#/sdk/publish/r=pocket-core.public.dappnode.eth&v=0.3.2&h=%2Fipfs%2FQmQRSXRyG5PaoXJJ8rKLR3J2R6VAE2ThDqb2HQy6Xf9qJ5"
   }
 }

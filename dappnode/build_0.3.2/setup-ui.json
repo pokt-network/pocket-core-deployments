@@ -1,0 +1,6 @@
+{
+    "ui:order": ["key", "password", "genesis", "config", "chains", "tls","cert","cert_key","C","ST","L","O","OU","CN","E"],
+    "password": {
+      "ui:widget": "password"
+    }
+  }

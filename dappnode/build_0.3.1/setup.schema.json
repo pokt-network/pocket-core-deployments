@@ -28,7 +28,7 @@
     "key": {
       "type": "string",
       "title": "Node Private Key",
-      "description": "The private key of the account that will be used to identify the node. (Learn more here:  https://docs.pokt.network/docs/dappnode-setup#node-private-key)"
+      "description": "The private key of the account that will be used to identify the node. If you don't have one, you can create a new one at https://wallet.testnet.pokt.network. (Learn more here:  https://docs.pokt.network/docs/dappnode-setup#node-private-key)"
     },
     "tls": {
       "type": "string",
@@ -61,13 +61,13 @@
             "cert": {
               "type": "string",
               "format": "data-url",
-              "title": "Config",
+              "title": "Certificate",
               "description": "Your certificate file (.crt)"
             },
             "cert_key": {
               "type": "string",
               "format": "data-url",
-              "title": "Chains",
+              "title": "Key",
               "description": "Your certificate key (.key)"
             }
           },

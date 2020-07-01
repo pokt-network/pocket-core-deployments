@@ -5,6 +5,7 @@ services:
     build: ./build/
     volumes:
       - 'data:/home/app/.pocket/'
+      - 'certs:/etc/envoy/'
     expose:
       - '8081'
       - '26656'
@@ -30,3 +31,4 @@ services:
     restart: on-failure
 volumes:
   data: {}
+  certs: {}
