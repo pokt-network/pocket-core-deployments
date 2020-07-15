@@ -63,7 +63,7 @@ echo "Docker tag: $DOCKER_TAG"
 echo "Docker image name: $DOCKER_IMAGE_NAME"
 
 # Run docker build!
-BUILD_COMMAND="docker build --build-arg GOLANG_IMAGE_VERSION=golang:$GOLANG_VERSION-alpine --build-arg BRANCH_NAME=$BRANCH_NAME -t pocket-core-$DOCKER_TAG:$DOCKER_TAG docker-base/Dockerfile docker-base/."
+BUILD_COMMAND="docker build --build-arg GOLANG_IMAGE_VERSION=golang:$GOLANG_VERSION-alpine --build-arg BRANCH_NAME=$BRANCH_NAME -t pocket-core-$DOCKER_TAG:$DOCKER_TAG -f docker-base/Dockerfile docker-base/."
 eval $BUILD_COMMAND
 
 # Push image
