@@ -58,7 +58,7 @@ jobs:
                         - run: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
                         # Push the image!
                         - run: sh docker/push.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
-                        - run: sh .circleci/homebrew-trigger.sh $API_TOKEN << pipeline.parameters.branch-name >>
+                        - run: sh docker-base/push.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
 workflows:
         version: 2
         # Workflow that builds, tests and pushes docker images based on parameters
