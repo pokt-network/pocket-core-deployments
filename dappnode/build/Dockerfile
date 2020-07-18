@@ -30,7 +30,7 @@ RUN mkdir -p ${POCKET_PATH}
 WORKDIR $POCKET_PATH
 
 # Creating the BRANCH_NAME variable
-ARG BRANCH_NAME="RC-0.4.0"
+ARG BRANCH_NAME="RC-0.4.3"
 
 # Copying deps sh to tmp folder
 COPY deps.sh /tmp/

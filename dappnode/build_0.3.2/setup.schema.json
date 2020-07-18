@@ -61,13 +61,13 @@
             "cert": {
               "type": "string",
               "format": "data-url",
-              "title": "Certificate",
+              "title": "Config",
               "description": "Your certificate file (.crt)"
             },
             "cert_key": {
               "type": "string",
               "format": "data-url",
-              "title": "Key",
+              "title": "Chains",
               "description": "Your certificate key (.key)"
             }
           },

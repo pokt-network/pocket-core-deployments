@@ -1,7 +1,7 @@
 {
   "name": "pocket-core.public.dappnode.eth",
-  "version": "0.3.4",
-  "upstreamVersion": "0.3.2",
+  "version": "0.3.2",
+  "upstreamVersion": "0.3.1",
   "shortDescription": "A package to run a Pocket Core Service Node",
   "description": "A package to run a Pocket Core Service Node",
   "avatar": "/ipfs/QmPkJxCXN7joLVGzw1UfUwRAiCCCVSebQZKU5i17je8mZo",
