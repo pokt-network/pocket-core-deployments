@@ -70,7 +70,7 @@ BUILD_COMMAND="docker build --no-cache --build-arg GOLANG_IMAGE_VERSION=golang:$
 eval $BUILD_COMMAND
 
 # Tagging or image!
-TAG_COMMAND="docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$DOCKER_TAG"
+TAG_COMMAND="docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$DOCKER_TAG-$CIRCLE_BUILD_NUM"
 eval $TAG_COMMAND
 
 # Push the image
@@ -86,6 +86,6 @@ if [ "$BRANCH_NAME" = "staging" ]; then
 fi
 
 
-PUSH_COMMAND="docker push $DOCKER_IMAGE_NAME:$DOCKER_TAG"
+PUSH_COMMAND="docker push $DOCKER_IMAGE_NAME:$DOCKER_TAG-$CIRCLE_BUILD_NUM"
 echo "$PUSH_COMMAND"
 eval $PUSH_COMMAND
