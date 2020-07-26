@@ -23,7 +23,7 @@ fi
 
 if [ ! -n "$BRANCH_NAME" ]
 then
-    BRANCH_NAME="staging"
+    BRANCH_NAME="issue-#1057"
 fi
 
 if [ ! -n "$DOCKER_IMAGE_NAME" ]
