@@ -81,20 +81,20 @@ RC-*)
     eval "docker push $DOCKER_IMAGE_NAME:$BRANCH_NAME"
     echo RC
     ;;
-*)
-    if [[ $BRANCH_NAME =~ ^[0-9]\.[0-9]|[0-9][0-9]\.[0-9]|[0-9][0-9] ]]; then
-        IFS=. version=($BRANCH_NAME)
-        MAYOR=${version[0]}
-        MINOR="${version[0]}.${version[1]}"
-        for i in "$MAYOR" "$MINOR" "$BRANCH_NAME" "latest"
-        do
-            echo $i
-            eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$i"
-            eval "docker push $DOCKER_IMAGE_NAME:$i"
-        done
-        exit 0
-    fi
-    ;;
+# *)
+#     if [[ $BRANCH_NAME =~ ^[0-9]\.[0-9]|[0-9][0-9]\.[0-9]|[0-9][0-9] ]]; then
+#         IFS=. version=($BRANCH_NAME)
+#         MAYOR=${version[0]}
+#         MINOR="${version[0]}.${version[1]}"
+#         for i in "$MAYOR" "$MINOR" "$BRANCH_NAME" "latest"
+#         do
+#             echo $i
+#             eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$i"
+#             eval "docker push $DOCKER_IMAGE_NAME:$i"
+#         done
+#         exit 0
+#     fi
+#     ;;
 esac
 
 
