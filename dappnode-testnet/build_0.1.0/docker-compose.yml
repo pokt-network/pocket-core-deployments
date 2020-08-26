@@ -1,11 +1,10 @@
 version: '3.4'
 services:
-  pocket-core.public.dappnode.eth:
-    image: 'pocket-core.public.dappnode.eth:0.5.0'
+  pocket-core-testnet.public.dappnode.eth:
+    image: 'pocket-core-testnet.public.dappnode.eth:0.1.0'
     build: ./build/
     volumes:
       - 'data:/home/app/.pocket/'
-      - 'cert:/etc/envoy'
     expose:
       - '8081'
       - '26656'
@@ -28,4 +27,3 @@ services:
     restart: on-failure
 volumes:
   data: {}
-  cert: {}

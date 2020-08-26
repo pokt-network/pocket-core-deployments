@@ -1,5 +1,5 @@
 {
-  "description": "Pocket Node installation",
+  "description": "Pocket Node Testnet installation",
   "type": "object",
   "properties": {
     "seeds": {
@@ -29,11 +29,15 @@
       "type": "string",
       "title": "Chains",
       "description": "Select which blockchains do you want to serve.",
-      "default": "Only Ethereum Mainnet",
+      "default": "Pocket Testnet",
       "enum": [
         "Select one",
-        "Only Ethereum Mainnet",
-        "Ethereum mainnet and Pocket mainnet"
+        "Pocket Testnet",
+        "Rinkeby",
+        "Ethereum Mainnet",
+        "Rinkeby and Pocket Testnet",
+        "Ethereum Mainnet and Pocket Testnet",
+        "Upload chains.json"
       ]
     },
     "account": {
@@ -115,7 +119,7 @@
           "properties": {
             "chains": {
               "enum": [
-                "Only Ethereum Mainnet"
+                "Rinkeby and Pocket Testnet"
               ]
             }
           },
@@ -125,8 +129,54 @@
           "properties": {
             "chains": {
               "enum": [
-                "Ethereum mainnet and Pocket mainnet"
+                "Rinkeby"
               ]
+            }
+          },
+          "required": []
+        },
+        {
+          "properties": {
+            "chains": {
+              "enum": [
+                "Pocket Testnet"
+              ]
+            }
+          },
+          "required": []
+        },
+        {
+          "properties": {
+            "chains": {
+              "enum": [
+                "Ethereum Mainnet"
+              ]
+            }
+          },
+          "required": []
+        },
+        {
+          "properties": {
+            "chains": {
+              "enum": [
+                "Ethereum Mainnet and Pocket Testnet"
+              ]
+            }
+          },
+          "required": []
+        },
+        {
+          "properties": {
+            "chains": {
+              "enum": [
+                "Upload chains.json"
+              ]
+            },
+            "chains_file": {
+              "type": "string",
+              "format": "data-url",
+              "title": "Chains",
+              "description": "The chains.json file. (Learn more here: https://docs.pokt.network/docs/create-validator-node#generate-chainsjson)"
             }
           },
           "required": []

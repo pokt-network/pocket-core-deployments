@@ -5,7 +5,7 @@
 </div>
 <h1 align="left">Pocket Core DNP (DAppNode Package)</h1>
 
-Official Pocket Core DAppNode Package to run a Pocket Core MVP Service Node from your DAppNode instances.
+Official Pocket Core DAppNode Package to run a Pocket Core Service Node from your DAppNode instances.
 
 <h1 align="left">Overview</h1>
 
@@ -14,7 +14,7 @@ Official Pocket Core DAppNode Package to run a Pocket Core MVP Service Node from
       <img src="https://img.shields.io/badge/dappnode-reference-green.svg"/>
     </a>
     <a  href="https://github.com/pokt-network/pocket-js/releases">
-      <img src="https://img.shields.io/badge/version-0.2.0-blue.svg"/>
+      <img src="https://img.shields.io/badge/version-0.5.0-blue.svg"/>
     </a>
     <a href="https://opensource.org/licenses/MIT">
       <img src="https://img.shields.io/badge/License-MIT-blue.svg"/>
@@ -25,11 +25,31 @@ This tutorial is for those who wish to use [DAppNode](https://dappnode.io) to de
 
 ### See below for the latest Pocket Core DNP specifications:
 *   Name: `pocket-core.public.dappnode.eth`
-*   Version: `0.3.1`
-*   Pocket Core Version: `0.4.0`
-*   IPFS Hash: ` /ipfs/QmPKiseoLswty5UYpoRbY8TRkYoTjENEP58tTBuCABTtFY`
+*   Version: `0.5.0`
+*   Pocket Core Version: `0.5.0`
+*   IPFS Hash: ` /ipfs/QmNRopirw5q3LiLJwzXG9yTVhYEjHsquf6T9RsRPn6yzxE`
 
 ### Previous versions:
+*   Name: `pocket-core.public.dappnode.eth`
+*   Version: `0.4.0`
+*   Pocket Core Version: `0.5.0`
+*   IPFS Hash: ` /ipfs/QmTaPQS5eZAmYxWY6tAQPayJCdeRCEnM2Wd5ZyjkSWqhCv`
+---
+*   Name: `pocket-core.public.dappnode.eth`
+*   Version: `0.3.4`
+*   Pocket Core Version: `0.4.3`
+*   IPFS Hash: ` /ipfs/QmPKiseoLswty5UYpoRbY8TRkYoTjENEP58tTBuCABTtFY`
+---
+*   Name: `pocket-core.public.dappnode.eth`
+*   Version: `0.3.3`
+*   Pocket Core Version: `0.4.2`
+*   IPFS Hash: ` /ipfs/QmeG1tX7Bbo9XW8gEsNFhBbjLHqHLNYgWw9Rpj9HBwNXgT`
+---
+*   Name: `pocket-core.public.dappnode.eth`
+*   Version: `0.3.1`
+*   Pocket Core Version: `0.4.1`
+*   IPFS Hash: ` /ipfs/QmPKiseoLswty5UYpoRbY8TRkYoTjENEP58tTBuCABTtFY`
+---
 *   Name: `pocket-core.public.dappnode.eth`
 *   Version: `0.3.0`
 *   Pocket Core Version: `0.4.0`

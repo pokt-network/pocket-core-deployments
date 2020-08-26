@@ -3,48 +3,19 @@
 # is part of the $PATH
 
 # Dynamically pull Go-lang version for the image
-ARG GOLANG_IMAGE_VERSION=golang:1.13-alpine
+ARG DOCKER_TAG
 
 # First build step to build the app binary
-FROM ${GOLANG_IMAGE_VERSION} AS builder
+FROM poktnetwork/pocket-core:$DOCKER_TAG AS builder
 
-# Install dependencies
-RUN apk -v --update --no-cache add \
-	git \
-	groff \
-	gcc \
-	libc-dev \
-	bash  \
-	leveldb-dev && \
-	rm /var/cache/apk/* || true
+# Second build step: reduce image size to only use app binary
+FROM alpine:3.10
 
-# Environment and system dependencies setup
-ENV POCKET_PATH=/go/src/github.com/pokt-network/pocket-core/
-ENV GO111MODULE="on"
+COPY --from=builder /bin/pocket /bin/pocket
+COPY entrypoint.sh entrypoint.sh
+RUN apk add --update --no-cache expect leveldb-dev
+# Create app user and add permissions
 
-# Create node root directory
-RUN mkdir -p ${POCKET_PATH}
-WORKDIR $POCKET_PATH
 
-# Creating the BRANCH_NAME variable
-ARG BRANCH_NAME="staging"
-
-# Copying deps sh to tmp folder
-COPY deps.sh /tmp/
-
-# Clone the repository
-RUN git clone --branch ${BRANCH_NAME} https://github.com/pokt-network/pocket-core.git ${POCKET_PATH}
-
-# Install rest of source code
-
-# Run tests
-# As the tests were removed recently for the fact that most of them were broken, I commented this line,
-# It should be uncommented as soon as the new tests are available.
-#RUN go test ./tests/...
-
-# Install project dependencies and builds the binary
-RUN go build -tags cleveldb -o ${GOBIN}/bin/pocket ./app/cmd/pocket_core/main.go
-COPY ./entrypoint.sh /entrypoint.sh
-WORKDIR /
 # Setup the WORKDIR with app user
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["pocket", "start"]

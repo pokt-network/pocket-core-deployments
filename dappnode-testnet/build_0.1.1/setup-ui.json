@@ -10,6 +10,7 @@
     "config",
     "config_file",
     "chains",
+    "chains_file",
     "tls",
     "cert",
     "cert_key"

@@ -7,6 +7,10 @@
       "type": "fileUpload",
       "path": "/tmp/config.json"
     },
+    "chains_file": {
+      "type": "fileUpload",
+      "path": "/tmp/chains.json"
+    },
     "chains": {
       "type": "environment",
       "name": "CHAINS"
