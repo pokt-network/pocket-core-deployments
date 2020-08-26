@@ -25,7 +25,7 @@ if [ ! -n "$BRANCH_NAME" ]; then
 fi
 
 if [ ! -n "$DOCKER_IMAGE_NAME" ]; then
-    DOCKER_IMAGE_NAME="poktnetwork/pocket-core"
+    DOCKER_IMAGE_NAME="poktnetwork/pocket"
 fi
 
 if [ ! -n "$DOCKER_TAG" ]; then
@@ -37,12 +37,12 @@ if [ ! -n "$DOCKER_TAG" ]; then
         ;;
     RC-*)
         echo "It's stagenet!"
-        DOCKER_TAG="testnet-latest"
+        DOCKER_TAG="stagenet-latest"
         ;;
     *)
         if [[ $BRANCH_NAME =~ [0-9]\.[0-9]|[0-9][0-9]\.[0-9]|[0-9][0-9] ]]; then
             echo "It's prod!"
-            DOCKER_TAG=$BRANCH_NAME
+            DOCKER_TAG="$BRANCH_NAME"
         fi
         ;;
     esac
@@ -63,18 +63,21 @@ echo "Docker tag: $DOCKER_TAG"
 echo "Docker image name: $DOCKER_IMAGE_NAME"
 
 # Run docker build!
-BUILD_COMMAND="docker build --build-arg GOLANG_IMAGE_VERSION=golang:$GOLANG_VERSION-alpine --build-arg BRANCH_NAME=$BRANCH_NAME -t pocket-core-$DOCKER_TAG:$DOCKER_TAG -f docker-base/Dockerfile docker-base/."
+BUILD_COMMAND="docker build --build-arg DOCKER_TAG=$DOCKER_TAG --build-arg BRANCH_NAME=$BRANCH_NAME -t pocket-core-$DOCKER_TAG -f docker-base/Dockerfile docker-base/."
 eval $BUILD_COMMAND
+
+TAG_COMMAND="docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$DOCKER_TAG"
+eval $TAG_COMMAND
 
 # Push image
 case $BRANCH_NAME in
 staging)
-    eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:dev-$CIRCLE_BUILD_NUM-base"
+    eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:devnet-$CIRCLE_BUILD_NUM"
     eval "docker push $DOCKER_IMAGE_NAME:devnet-$CIRCLE_BUILD_NUM"
     echo staging
     ;;
 RC-*)
-    eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$BRANCH_NAME-base"
+    eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$BRANCH_NAME"
     eval "docker push $DOCKER_IMAGE_NAME:$BRANCH_NAME"
     echo RC
     ;;
@@ -91,6 +94,7 @@ RC-*)
         done
         exit 0
     fi
+    ;;
 esac
 
 

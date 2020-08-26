@@ -1,15 +1,15 @@
 {
-    "config": {
-      "type": "environment",
-      "name": "CONFIG"
+    "genesis": {
+      "type": "fileUpload",
+      "path": "/tmp/genesis.json"
     },
-    "config_file": {
+    "config": {
       "type": "fileUpload",
       "path": "/tmp/config.json"
     },
     "chains": {
-      "type": "environment",
-      "name": "CHAINS"
+      "type": "fileUpload",
+      "path": "/tmp/chains.json"
     },
     "password": {
       "type": "environment",
@@ -31,24 +31,32 @@
       "type": "fileUpload",
       "path": "/tmp/key.key"
     },
-    "shielded_key": {
-      "type": "fileUpload",
-      "path": "/tmp/shielded_key.json"
-    },
-    "account": {
+    "C": {
       "type": "environment",
-      "name": "ACCOUNT"
+      "name": "COUNTRY"
     },
-    "shielded_pass": {
+    "ST": {
       "type": "environment",
-      "name": "SHIELDED_PASSPHRASE"
+      "name": "STATE"
     },
-    "seeds": {
+    "L": {
       "type": "environment",
-      "name": "SEEDS"
+      "name": "LOCALITY"
     },
-    "seeds_custom": {
+    "O": {
       "type": "environment",
-      "name": "CUSTOM_SEEDS"
+      "name": "ORGANIZATION"
+    },
+    "OU": {
+      "type": "environment",
+      "name": "ORAGANIZATIONAL_UNIT"
+    },
+    "CN": {
+      "type": "environment",
+      "name": "COMMON_NAME"
+    },
+    "E": {
+      "type": "environment",
+      "name": "EMAIL"
     }
   }

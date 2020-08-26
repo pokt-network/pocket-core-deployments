@@ -20,7 +20,19 @@ static_resources:
               - "*"
               routes:
               - match:
-                  prefix: /
+                  prefix: /v1/client/relay
+                route:
+                  cluster: pocket-core
+              - match:
+                  prefix: /v1/client/dispatch
+                route:
+                  cluster: pocket-core
+              - match:
+                  prefix: /v1/client/challenge
+                route:
+                  cluster: pocket-core
+              - match:
+                  prefix: /v1
                 route:
                   cluster: pocket-core
           http_filters:

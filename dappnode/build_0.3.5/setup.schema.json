@@ -1,0 +1,145 @@
+{
+  "description": "Pocket Node installation",
+  "type": "object",
+  "properties": {
+    "genesis": {
+      "type": "string",
+      "format": "data-url",
+      "title": "Genesis",
+      "description": "The genesis.json is shared amongst all nodes and indicates the necessary information to start syncing the network. (Learn more here: https://docs.pokt.network/docs/node-configuration#configure-your-genesis-file)"
+    },
+    "config": {
+      "type": "string",
+      "format": "data-url",
+      "title": "Config",
+      "description": "The config.json file. (Learn more here: https://docs.pokt.network/docs/configuration-reference)"
+    },
+    "chains": {
+      "type": "string",
+      "format": "data-url",
+      "title": "Chains",
+      "description": "Your chains.json file. (Learn more here: https://docs.pokt.network/docs/node-configuration#configure-your-chainsjson-manually)"
+    },
+    "password": {
+      "type": "string",
+      "title": "Password",
+      "description": "This will be use to encrypt your private key on your dappnode"
+    },
+    "key": {
+      "type": "string",
+      "title": "Node Private Key",
+      "description": "The private key of the account that will be used to identify the node. (Learn more here:  https://docs.pokt.network/docs/dappnode-setup#node-private-key)"
+    },
+    "tls": {
+      "type": "string",
+      "title": "Certificate",
+      "description": "You must provide ssl for your service URL",
+      "default": "Do not use a certificate",
+      "enum": [
+        "Select one",
+        "Do not use a certificate",
+        "I have a certificate",
+        "Provide a selfsigned certificate for me"
+      ]
+    }
+  },
+  "required": [
+    "password",
+    "config",
+    "tls"
+  ],
+  "dependencies": {
+    "tls": {
+      "oneOf": [
+        {
+          "properties": {
+            "tls": {
+              "enum": [
+                "I have a certificate"
+              ]
+            },
+            "cert": {
+              "type": "string",
+              "format": "data-url",
+              "title": "Certificate",
+              "description": "Your certificate file (.crt)"
+            },
+            "cert_key": {
+              "type": "string",
+              "format": "data-url",
+              "title": "Key",
+              "description": "Your certificate key (.key)"
+            }
+          },
+          "required": [
+            "cert_key",
+            "cert"
+          ]
+        },
+        {
+          "properties": {
+            "tls": {
+              "enum": [
+                "Do not use a certificate"
+              ]
+            }
+          },
+          "required": []
+        },
+        {
+          "properties": {
+            "tls": {
+              "enum": [
+                "Provide a selfsigned certificate for me"
+              ]
+            },
+            "C": {
+              "type": "string",
+              "title": "Country",
+              "description": "Country code (alpha-2). Ex: United States = US, France = FR, Dominican Republic = DO"
+            },
+            "ST": {
+              "type": "string",
+              "title": "State",
+              "description": "State"
+            },
+            "L": {
+              "type": "string",
+              "title": "Locality",
+              "description": "Locality"
+            },
+            "O": {
+              "type": "string",
+              "title": "Organization",
+              "description": "Organization"
+            },
+            "OU": {
+              "type": "string",
+              "title": "Organizational Unit",
+              "description": "Organizational Unit"
+            },
+            "CN": {
+              "type": "string",
+              "title": "Common Name",
+              "description": "Your hostname, domain name or public IP"
+            },
+            "E": {
+              "type": "string",
+              "title": "Email",
+              "description": "Your email address"
+            }
+          },
+          "required": [
+            "E",
+            "CN",
+            "OU",
+            "O",
+            "L",
+            "ST",
+            "C"
+          ]
+        }
+      ]
+    }
+  }
+}

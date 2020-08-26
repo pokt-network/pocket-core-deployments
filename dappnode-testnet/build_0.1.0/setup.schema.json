@@ -1,5 +1,5 @@
 {
-  "description": "Pocket Node installation",
+  "description": "Pocket Node Testnet installation",
   "type": "object",
   "properties": {
     "seeds": {
@@ -10,8 +10,7 @@
       "enum": [
         "Select one",
         "Default",
-        "Enter seeds",
-        "Seed in config.json"
+        "Enter seeds"
       ]
     },
     "config": {
@@ -54,7 +53,6 @@
       "default": "Do not use a certificate",
       "enum": [
         "Select one",
-        "Already uploaded certificate",
         "Do not use a certificate",
         "I have a certificate"
       ]
@@ -92,16 +90,6 @@
             "seeds": {
               "enum": [
                 "Default"
-              ]
-            }
-          },
-          "required": []
-        },
-        {
-          "properties": {
-            "seeds": {
-              "enum": [
-                "Seed in config.json"
               ]
             }
           },
@@ -235,7 +223,7 @@
               "type": "string",
               "format": "data-url",
               "title": "Key",
-              "description": "Your certificate key (.key, .pem)"
+              "description": "Your certificate key (.key)"
             }
           },
           "required": [
@@ -248,16 +236,6 @@
             "tls": {
               "enum": [
                 "Do not use a certificate"
-              ]
-            }
-          },
-          "required": []
-        },
-        {
-          "properties": {
-            "tls": {
-              "enum": [
-                "Already uploaded certificate"
               ]
             }
           },

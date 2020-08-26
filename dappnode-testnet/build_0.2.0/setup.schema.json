@@ -1,5 +1,5 @@
 {
-  "description": "Pocket Node installation",
+  "description": "Pocket Node Testnet installation",
   "type": "object",
   "properties": {
     "seeds": {
@@ -33,7 +33,8 @@
       "enum": [
         "Select one",
         "Only Ethereum Mainnet",
-        "Ethereum mainnet and Pocket mainnet"
+        "Ethereum mainnet and Pocket testnet",
+        "Upload chains.json"
       ]
     },
     "account": {
@@ -127,6 +128,22 @@
               "enum": [
                 "Ethereum mainnet and Pocket mainnet"
               ]
+            }
+          },
+          "required": []
+        },
+        {
+          "properties": {
+            "chains": {
+              "enum": [
+                "Upload chains.json"
+              ]
+            },
+            "chains_file": {
+              "type": "string",
+              "format": "data-url",
+              "title": "Chains",
+              "description": "The chains.json file. (Learn more here: https://docs.pokt.network/docs/create-validator-node#generate-chainsjson)"
             }
           },
           "required": []

@@ -1,66 +1,68 @@
-#!/usr/bin/expect
-set command $argv;
-set timeout -1
-# Default testnet seeds
+#!/bin/bash
+
+default_seeds=03b74fa3c68356bb40d58ecc10129479b159a145@seed1.mainnet.pokt.network:20656,64c91701ea98440bc3674fdb9a99311461cdfd6f@seed2.mainnet.pokt.network:21656
+expect /home/app/account.sh
 
 
-# checks if a command was passed
-if { $command eq "" } {
-    
-    if { [info exists env(POCKET_CORE_KEY)] } {
-        log_user 0
-        spawn sh -c "cp /tmp/*.json /home/app/.pocket/config/"
-
-        if { [file exists /home/app/.pocket/config/chains.json] } {
-        } else {
-            puts [open /home/app/.pocket/config/chains.json w] { [{"id":"0021","url":"http://my.ethchain.dnp.dappnode.eth:8545"}] }
-        }
-        spawn pocket accounts import-raw $env(POCKET_CORE_KEY)
-        sleep 1
-        send -- "$env(POCKET_CORE_PASSPHRASE)\n"
-        expect eof
-        spawn sh -c "pocket accounts set-validator `pocket accounts list | cut -d' ' -f2- `"
-        sleep 1
-        send -- "$env(POCKET_CORE_PASSPHRASE)\n"
-        expect eof
-        log_user 1
-        spawn pocket start
-    } else {
-        spawn pocket start
-        sleep 1
-        send -- "$env(POCKET_CORE_PASSPHRASE)\n"
-    } 
-
-} elseif { $command ne "" } {
-    
-    if  { [info exists env(POCKET_CORE_KEY)] } {
-        log_user 0
-        spawn sh -c "cp /tmp/*.json /home/app/.pocket/config/"
-
-        if { [file exists /home/app/.pocket/config/chains.json] } {
-        } else {
-            puts [open /home/app/.pocket/config/chains.json w] {[{"id":"0021","url":"http://my.ethchain.dnp.dappnode.eth:8545"}]}
-        }
-        spawn pocket accounts import-raw $env(POCKET_CORE_KEY)
-        sleep 1
-        send -- "$env(POCKET_CORE_PASSPHRASE)\n"
-        expect eof
-        spawn sh -c "pocket accounts set-validator `pocket accounts list | cut -d' ' -f2- `"
-        sleep 1
-        send -- "$env(POCKET_CORE_PASSPHRASE)\n"
-        expect eof
-        log_user 1
-        # executes command passed by user 
-        spawn sh -c "$command"
-    } else {
-        
-        spawn sh -c "$command"
-        sleep 1
-        send -- "$env(POCKET_CORE_PASSPHRASE)\n"
-    }
-}
+if [[ "${CONFIG}" == "Default" ]]
+    then
+        cp /home/app/config.json /home/app/.pocket/config/config.json
+        sed -ie s/\"Moniker\"\.\*/\"Moniker\"\:\ \"$RANDOM\",/ /home/app/.pocket/config/config.json
+    else
+        cp /tmp/config.json /home/app/.pocket/config/config.json
+fi
 
 
-expect eof
+if [[ "${SEEDS}" == "Enter seeds" ]]
+    then
+        sed -ie s/\"Seeds\"\.\*/\"Seeds\"\:\ \"$CUSTOM_SEEDS\",/ /home/app/.pocket/config/config.json
+elif [[ "${SEEDS}" == "Default" ]]
+    then
+        sed -ie s/\"Seeds\"\.\*/\"Seeds\"\:\ \"$default_seeds\",/ /home/app/.pocket/config/config.json
+fi
 
-exit
+
+case ${CHAINS} in
+"Only Ethereum Mainnet")
+    cat > /home/app/.pocket/config/chains.json << EOF
+    [{
+        "id": "0021",
+        "url": "http://my.ethchain.dnp.dappnode.eth:8545"
+    }]
+EOF
+
+    ;;
+"Ethereum mainnet and Pocket mainnet")
+
+    if [[ "${TLS_OPTION}" == "Do not use a certificate" ]]
+    then
+        cat > /home/app/.pocket/config/chains.json << EOF
+        [{
+            "id": "0001",
+            "url": "http://localhost:8081"
+        }, {
+            "id": "0021",
+            "url": "http://my.ethchain.dnp.dappnode.eth:8545"
+        }]
+EOF
+        sed -ie s/\"rpc_port\"\.\*/\"rpc_port\"\:\ \"8081\",/ /home/app/.pocket/config/config.json
+    else
+        cat > /home/app/.pocket/config/chains.json << EOF
+        [{
+            "id": "0001",
+            "url": "http://localhost:8082"
+        }, {
+            "id": "0021",
+            "url": "http://my.ethchain.dnp.dappnode.eth:8545"
+        }]
+EOF
+    fi
+
+
+
+
+
+    ;;
+esac
+
+pocket start --mainnet

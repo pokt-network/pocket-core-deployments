@@ -58,5 +58,37 @@
       "dappnode": "Thu, 18 Jun 2020 16:56:00 GMT"
     },
     "link": "http://my.dappnode/#/sdk/publish/r=pocket-core.public.dappnode.eth&v=0.3.1&h=%2Fipfs%2FQmPKiseoLswty5UYpoRbY8TRkYoTjENEP58tTBuCABTtFY"
+  },
+  "0.3.5": {
+    "hash": "/ipfs/QmSwgJ6aAY5LBQbL8K85EKDALsRS4B7X2VSs32oyFQqMX3",
+    "type": "directory",
+    "uploadedTo": {
+      "dappnode": "Tue, 28 Jul 2020 14:02:40 GMT"
+    },
+    "link": "http://my.dappnode/#/sdk/publish/r=pocket-core.public.dappnode.eth&v=0.3.5&h=%2Fipfs%2FQmSwgJ6aAY5LBQbL8K85EKDALsRS4B7X2VSs32oyFQqMX3"
+  },
+  "0.4.0": {
+    "hash": "/ipfs/QmTaPQS5eZAmYxWY6tAQPayJCdeRCEnM2Wd5ZyjkSWqhCv",
+    "type": "directory",
+    "uploadedTo": {
+      "dappnode": "Wed, 29 Jul 2020 14:49:38 GMT"
+    },
+    "link": "http://my.dappnode/#/sdk/publish/r=pocket-core.public.dappnode.eth&v=0.4.0&h=%2Fipfs%2FQmTaPQS5eZAmYxWY6tAQPayJCdeRCEnM2Wd5ZyjkSWqhCv"
+  },
+  "0.5.0": {
+    "hash": "/ipfs/QmNRopirw5q3LiLJwzXG9yTVhYEjHsquf6T9RsRPn6yzxE",
+    "type": "directory",
+    "uploadedTo": {
+      "dappnode": "Wed, 19 Aug 2020 18:45:41 GMT"
+    },
+    "link": "http://my.dappnode/#/sdk/publish/r=pocket-core.public.dappnode.eth&v=0.5.0&h=%2Fipfs%2FQmNRopirw5q3LiLJwzXG9yTVhYEjHsquf6T9RsRPn6yzxE"
+  },
+  "0.4.1": {
+    "hash": "/ipfs/QmVrWXPLHg2vXkwPh4aVCBTGrhtAs4avZcsqqZLaPR5rgY",
+    "type": "directory",
+    "uploadedTo": {
+      "dappnode": "Wed, 19 Aug 2020 17:35:30 GMT"
+    },
+    "link": "http://my.dappnode/#/sdk/publish/r=pocket-core.public.dappnode.eth&v=0.4.1&h=%2Fipfs%2FQmVrWXPLHg2vXkwPh4aVCBTGrhtAs4avZcsqqZLaPR5rgY"
   }
 }
