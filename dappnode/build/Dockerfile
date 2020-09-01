@@ -3,10 +3,9 @@
 # is part of the $PATH
 
 # Dynamically pull Go-lang version for the image
-ARG GOLANG_IMAGE_VERSION=golang:1.13-alpine
-
+ARG IMAGE_NAME=RC-0.5.1
 # First build step to build the app binary
-FROM poktnetwork/pocket-core:RC-0.5.0 AS builder
+FROM poktnetwork/pocket-core:$IMAGE_NAME AS builder
 
 # Second build step: reduce image size to only use app binary
 FROM envoyproxy/envoy-alpine:v1.14.1
