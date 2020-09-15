@@ -79,7 +79,8 @@
     "hash": "/ipfs/QmUiDQiPFgTZJJV8BqeVLTVRRUKDR9apexeA4PJYomuhyY",
     "type": "directory",
     "uploadedTo": {
-      "dappnode": "Fri, 04 Sep 2020 17:02:00 GMT"
+      "dappnode": "Fri, 04 Sep 2020 17:02:00 GMT",
+      "http://172.33.1.5": "Wed, 09 Sep 2020 20:37:21 GMT"
     },
     "link": "https://dappnode.github.io/sdk-publish/?r=pocket-core.public.dappnode.eth&v=0.5.0&h=%2Fipfs%2FQmUiDQiPFgTZJJV8BqeVLTVRRUKDR9apexeA4PJYomuhyY"
   },

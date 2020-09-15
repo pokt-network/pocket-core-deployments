@@ -8,12 +8,12 @@
     "link": "http://my.dappnode/#/sdk/publish/r=pocket-core-testnet.public.dappnode.eth&v=0.1.0&h=%2Fipfs%2FQmSRDHxbE1Lt8PND2m6wQ9obrAAa7CSGoe1ir5HE8eg3W1&d=0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B"
   },
   "0.1.1": {
-    "hash": "/ipfs/QmQGjrhs3FaDSBZyc6rifgKAgPGN9yPoQYDMuKxrMPC6Hp",
+    "hash": "/ipfs/QmWME2TZiSXR97VnrnTHBXTr5xfiTy3DbiYfNb7XBwuJhh",
     "type": "directory",
     "uploadedTo": {
-      "dappnode": "Thu, 20 Aug 2020 17:04:17 GMT"
+      "dappnode": "Sat, 05 Sep 2020 15:37:04 GMT"
     },
-    "link": "http://my.dappnode/#/sdk/publish/r=pocket-core-testnet.public.dappnode.eth&v=0.1.1&h=%2Fipfs%2FQmQGjrhs3FaDSBZyc6rifgKAgPGN9yPoQYDMuKxrMPC6Hp"
+    "link": "https://dappnode.github.io/sdk-publish/?r=pocket-core-testnet.public.dappnode.eth&v=0.1.1&h=%2Fipfs%2FQmWME2TZiSXR97VnrnTHBXTr5xfiTy3DbiYfNb7XBwuJhh"
   },
   "0.2.0": {
     "hash": "/ipfs/QmVAytP616yJhdTkVfCAX1djGL8yNCuVcajVEPbMWXp2hf",

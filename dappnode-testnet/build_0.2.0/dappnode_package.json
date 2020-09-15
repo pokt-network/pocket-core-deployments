@@ -1,10 +1,12 @@
 {
   "name": "pocket-core-testnet.public.dappnode.eth",
   "version": "0.2.0",
-  "upstreamVersion": "0.0.0",
+  "upstreamVersion": "0.1.0",
   "shortDescription": "A package to run a Pocket Core Testnet Service Node",
   "description": "A package to run a Pocket Core Testnet Service Node",
-  "avatar": "/ipfs/QmPkJxCXN7joLVGzw1UfUwRAiCCCVSebQZKU5i17je8mZo",
+  "requirements": {
+    "minimumDappnodeVersion": "0.2.37"
+  },
   "type": "service",
   "author": "Luis C. de Leon <luis@pokt.network>",
   "license": "MIT",

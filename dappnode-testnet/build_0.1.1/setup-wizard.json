@@ -1,0 +1,171 @@
+version: "2"
+fields:
+  # Account
+  - title: Node Private Key
+    description: >-
+      The private key of the account that will be used to identify the node.
+      (Learn more here: 
+      https://docs.pokt.network/docs/dappnode-setup#node-private-key)
+    id: account
+    target:
+      type: environment
+      name: ACCOUNT
+    enum:
+      - Shielded Key
+      - Raw Private Key
+    required: true
+
+  - title: Shielded Key
+    description: Your shielded key file (.json)
+    id: shielded_key
+    target:
+      type: fileUpload
+      path: /tmp/shielded_key.json
+    required: true
+    if:
+      account:
+        enum:
+          - "Shielded Key"
+
+  - title: Password
+    description: Password to encrypt your private key on your DAppNode
+    id: shielded_pass
+    target:
+      type: environment
+      name: SHIELDED_PASSPHRASE
+    required: true
+    secret: true
+    if:
+      account:
+        enum:
+          - "Shielded Key"
+
+  - title: Node Private Key
+    description: >-
+      The private key of the account that will be used to identify the node. (Learn more here:  https://docs.pokt.network/docs/dappnode-setup#node-private-key)
+    id: privateKey
+    target:
+      type: environment
+      name: POCKET_CORE_KEY
+    required: true
+    secret: true
+    if:
+      account:
+        enum:
+          - "Raw Private Key"
+
+  - title: Node Private Key Password
+    description: Password to encrypt your private key on your DAppNode
+    id: privateKeyPassword
+    target:
+      type: environment
+      name: POCKET_CORE_PASSPHRASE
+    required: true
+    secret: true
+    if:
+      account:
+        enum:
+          - "Raw Private Key"
+
+
+  # Seed
+  - title: Seed source
+    description: Choose to enter seeds or use default seeds
+    id: seedSource
+    target:
+      type: environment
+      name: SEEDS
+    enum:
+      - Default
+      - Enter seeds
+      - Seed in config.json
+    required: true
+
+  - title: Custom seeds
+    description: Enter custom seeds
+    id: customSeeds
+    target:
+      type: environment
+      name: CUSTOM_SEEDS
+    required: true
+    secret: true
+    if:
+      seedSource:
+        enum:
+          - "Enter seeds"
+
+  # Config
+  - title: Config
+    description: Choose to upload config.json or use default config file
+    id: config
+    target:
+      type: environment
+      name: CONFIG
+    enum:
+      - Default
+      - Upload config.json
+    required: true
+
+  - title: Config file
+    description: >-
+      The config.json file. (Learn more here: https://docs.pokt.network/docs/configuration-reference)
+    id: configFile
+    target:
+      type: fileUpload
+      path: /tmp/config.json
+    required: true
+    if:
+      config:
+        enum:
+          - "Upload config.json"
+
+  # Chains
+  - title: Chains
+    description: Select which blockchains do you want to serve.
+    id: chains
+    target:
+      type: environment
+      name: CHAINS
+    enum:
+      - Only Ethereum Mainnet
+      - Ethereum mainnet and Pocket mainnet
+    required: true
+
+  # Certificate
+  - title: Certificate
+    description: >-
+      You must provide a valid certificate for your node. (Learn more here:
+      https://docs.pokt.network/docs/setup-your-env#ssl-certificate)
+    id: tls
+    target:
+      type: environment
+      name: TLS_OPTION
+    enum:
+      - Do not use a certificate
+      - Already uploaded certificate
+      - I have a certificate
+    required: true
+
+  - title: Certificate file
+    description: Your certificate file (.crt, .pem)
+    id: certFile
+    target:
+      type: fileUpload
+      path: /tmp/certificate.crt
+    required: true
+    if:
+      tls:
+        enum:
+          - "I have a certificate"
+
+  - title: Certificate key
+    description: Your certificate key (.key, .pem)
+    id: certKey
+    target:
+      type: fileUpload
+      path: /tmp/key.key
+    required: true
+    if:
+      tls:
+        enum:
+          - "I have a certificate"
