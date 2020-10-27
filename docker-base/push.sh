@@ -39,6 +39,10 @@ if [ ! -n "$DOCKER_TAG" ]; then
         echo "It's stagenet!"
         DOCKER_TAG="stagenet-latest"
         ;;
+    Beta-*)
+        echo "It's beta!"
+        DOCKER_TAG="beta-latest"
+        ;;
     *)
         if [[ $BRANCH_NAME =~ [0-9]\.[0-9]|[0-9][0-9]\.[0-9]|[0-9][0-9] ]]; then
             echo "It's prod!"
@@ -80,6 +84,11 @@ RC-*)
     eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$BRANCH_NAME"
     eval "docker push $DOCKER_IMAGE_NAME:$BRANCH_NAME"
     echo RC
+    ;;
+Beta-*)
+    eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$BRANCH_NAME"
+    eval "docker push $DOCKER_IMAGE_NAME:$BRANCH_NAME"
+    echo Beta
     ;;
 # *)
 #     if [[ $BRANCH_NAME =~ ^[0-9]\.[0-9]|[0-9][0-9]\.[0-9]|[0-9][0-9] ]]; then
