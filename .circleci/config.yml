@@ -59,6 +59,7 @@ jobs:
                         # Push the image!
                         - run: sh docker/push.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
                         - run: sh docker-base/push.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
+                        - run: "if echo << pipeline.parameters.branch-name >> | grep -q \"Beta-*\"; then curl -u $API_KEY_IMAGE_: -X POST -H \"Content-Type: application/json\" -d '{\"branch\": \"$IMAGE_BRANCH\",\"parameters\":{\"tag\":\"<< pipeline.parameters.branch-name >>\"}}' https://circleci.com/api/v2/project/github/pokt-network/pocket-core-deployments/pipeline; else exit 0; fi"
 workflows:
         version: 2
         # Workflow that builds, tests and pushes docker images based on parameters

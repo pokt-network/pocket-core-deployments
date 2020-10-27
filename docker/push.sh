@@ -44,6 +44,11 @@ then
         # Handle master branch
         echo "It's stagenet!"
         DOCKER_TAG="stagenet-latest"
+    elif echo "$BRANCH_NAME" | grep -q "Beta-"*
+    then
+        # Handle master branch
+        echo "It's beta!"
+        DOCKER_TAG="beta-latest"
     else
         # It's a tag!
         echo "It's a tag!"
@@ -74,6 +79,11 @@ TAG_COMMAND="docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$DOCKE
 eval $TAG_COMMAND
 
 # Push the image
+
+if echo "$BRANCH_NAME" | grep -q "Beta-"*; then
+    eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$BRANCH_NAME"
+    eval "docker push $DOCKER_IMAGE_NAME:$BRANCH_NAME"
+fi
 
 if echo "$BRANCH_NAME" | grep -q "RC-"*; then
     eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$BRANCH_NAME"
