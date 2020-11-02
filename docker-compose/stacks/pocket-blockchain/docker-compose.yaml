@@ -41,7 +41,7 @@ services:
       - web
 
   node1:
-    image: poktnetwork/pocket:RC-0.5.1
+    image: poktnetwork/pocket-core:Beta-0.5.2.3
     container_name: node1 
     command: ["pocket", "start", "--keybase=false", "--mainnet", "--datadir=/home/app/.pocket/"]
     ports: 
