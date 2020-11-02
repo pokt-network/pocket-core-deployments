@@ -1,5 +1,4 @@
 # Create docker dependencies
-docker network create blockchains
 docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
 
 

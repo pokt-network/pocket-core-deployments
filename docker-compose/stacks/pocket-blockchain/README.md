@@ -42,4 +42,11 @@ NOTE: In case you are not able to get the certificate be sure to give more time 
 7. After your certificate is issued you can uncomment the lines 21-78 on `proxy/conf.d/https.conf.templates`
 
 
-8. Just do `docker-compose.yaml` and you will be up & running! 
+8. Just do `docker-compose down && docker-compose up -d ` and you will be up & running! 
+
+
+*Troubleshooting notes*
+
+- It's very possible that when you stop your pocket container or while doing docker-compose down your container get's stuck stoppping. In this case you need to stop the daemon and run the stack again as follows:
+
+> sudo systemctl restart docker && docker-compoes down && docker-compose up -d
