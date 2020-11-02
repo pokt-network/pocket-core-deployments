@@ -56,8 +56,8 @@ services:
       - ${PWD}/node1/data/:/home/app/.pocket/data/                                         # Blockchain data
     logging:
       driver: loki
-        options:
-          loki-url: "http://localhost:3100/loki/api/v1/push"
+      options:
+        loki-url: "http://localhost:3100/loki/api/v1/push"
 
   loki:
     image: grafana/loki:latest
