@@ -51,7 +51,6 @@ services:
       - "26656"
       - "26660"
     volumes:
-      - ${PWD}/node1/genesis.json:/home/app/.pocket/config/genesis.json                    # Genesis 
       - ${PWD}/node1/config.json:/home/app/.pocket/config/config.json                      # Pocket Configuration file 
       - ${PWD}/node1/data/:/home/app/.pocket/data/                                         # Blockchain data
     logging:
