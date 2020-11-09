@@ -1,0 +1,143 @@
+version: "3.8"
+
+# REF: https://www.cloudbooklet.com/how-to-install-nginx-and-lets-encrypt-with-docker-ubuntu-20-04/
+
+services:
+  web: 
+    image: nginx:alpine
+    restart: always
+    environment:
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - ${PWD}/proxy/conf.d:/etc/nginx/templates
+      - ${PWD}/proxy/nginx.conf:/etc/nginx/nginx.conf
+      - ${PWD}/proxy/certbot/conf:/etc/nginx/ssl
+      - ${PWD}/proxy/certbot/data:/var/www/certbot
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - prometheus
+      - grafana
+      - node1   
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --email ${EMAIL} --agree-tos --no-eff-email -d node1.${DOMAIN} -d monitoring.${DOMAIN}
+    environment:
+      - DOMAIN=${DOMAIN}
+      - EMAIL=${EMAIL}
+
+    volumes:
+      - ${PWD}/proxy/certbot/conf:/etc/letsencrypt
+      - ${PWD}/proxy/certbot/logs:/var/log/letsencrypt
+      - ${PWD}/proxy/certbot/data:/var/www/certbot
+
+    depends_on:
+      - prometheus
+      - grafana
+      - node1
+      - web
+
+  node1:
+    image: poktnetwork/pocket-core:Beta-0.5.2.3
+    container_name: node1 
+    command: ["pocket", "start", "--keybase=false", "--mainnet", "--datadir=/home/app/.pocket/"]
+    ports: 
+      - "26656:26656"
+    expose:
+      - "8081"
+      - "26656"
+      - "26660"
+    volumes:
+      - ${PWD}/node1/config.json:/home/app/.pocket/config/config.json                      # Pocket Configuration file 
+      - ${PWD}/node1/priv_val_key.json:/home/app/.pocket/priv_val_key.json                 # Pocket validator private key 
+      - ${PWD}/node1/node_key.json:/home/app/.pocket/node_key.json                         # Pocket node key 
+    
+      - ${PWD}/node1/:/home/app/.pocket/config/                                            # Pocket Datadir 
+      - ${PWD}/node1/data/:/home/app/.pocket/data/                                         # Blockchain data
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://localhost:3100/loki/api/v1/push"
+
+  loki:
+    image: grafana/loki:latest
+    container_name:  loki 
+    volumes:
+      - ${PWD}/monitoring/loki/config.yaml:/etc/loki/local-config.yaml
+    expose:
+      - 3100
+    ports:
+      - "3100:3100"
+    command: --config.file=/etc/loki/local-config.yaml
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus 
+    user: "1000"
+    restart: unless-stopped
+    volumes:
+      - ${PWD}/monitoring/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
+      - ${PWD}/monitoring/prometheus/data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+    expose:
+      - 9090
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana 
+    user: "104"
+    expose:
+    - 3000
+    restart: unless-stopped
+    volumes:
+      - ${PWD}/monitoring/grafana/data:/var/lib/grafana
+      - ${PWD}/monitoring/grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
+      - ${PWD}/monitoring/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=YOURADMINPASSWORD
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning/dashboards
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_DATABASE_TYPE=sqlite3
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_SERVER_DOMAIN=monitoring.${DOMAIN} 
+      - GF_USERS_DEFAULT_THEME=dark
+      - GF_SMTP_ENABLED=false
+      - GF_SMTP_HOST=smtp.gmail.com:587
+      - GF_SMTP_USER=myadrress@gmail.com
+      - GF_SMTP_PASSWORD=mypassword
+      - GF_SMTP_FROM_ADDRESS=myaddress@gmail.com
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter 
+    restart: unless-stopped
+    expose:
+      - 9100
+
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor 
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    expose:
+      - 8080
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    expose:
+      - 9093
+    volumes:
+      - ${PWD}/monitoring/alertmanager/:/etc/alertmanager/
+    restart: always
+    command:
+      - '--config.file=/etc/alertmanager/config.yaml'
+      - '--storage.path=/alertmanager'
