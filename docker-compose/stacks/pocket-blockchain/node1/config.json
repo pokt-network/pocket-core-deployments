@@ -6,7 +6,7 @@
         "FastSyncMode": true,
         "DBBackend": "cleveldb",
         "DBPath": "data",
-        "LogLevel": "*:info, *:error",
+        "LogLevel": "*:error",
         "LogFormat": "plain",
         "Genesis": "config/genesis.json",
         "PrivValidatorKey": "priv_val_key.json",
