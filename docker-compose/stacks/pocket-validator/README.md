@@ -9,6 +9,15 @@ Contains a docker-compose.yaml with:
 - Grafana/prometheus/loki/cadvisor/alertmanager for monitoring/metrics
 - Reverse nginx proxy and certbot auto certificate
 
+### Hardware requirements
+
+CPU: 4 CPU’s (or vCPU’s)
+Memory: 8 GB RAM
+Disk: 100GB is the minimum HDD requirement
+
+For more information, see: 
+https://docs.pokt.network/docs/before-you-dive-in#hardware-requirements
+
 
 ## Instructions 
 
@@ -70,7 +79,6 @@ Now copy the content of `priv_val_key.json` and `node_key.json` to node1
 ### References
 
 - [Create a pocket validator node](https://docs.pokt.network/docs/create-validator-node)
-
 
 ### Troubleshooting notes
 

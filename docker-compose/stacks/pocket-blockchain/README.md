@@ -9,6 +9,15 @@ Contains a docker-compose.yaml with:
 - Grafana/prometheus/loki/cadvisor/alertmanager for monitoring/metrics
 - Reverse proxy and certbot auto certificate
 
+### Hardware requirements
+
+CPU: 4 CPU’s (or vCPU’s)
+Memory: 8 GB RAM
+Disk: 100GB is the minimum HDD requirement
+
+For more information, see: 
+https://docs.pokt.network/docs/before-you-dive-in#hardware-requirements
+
 
 ## Instructions 
 
@@ -58,7 +67,7 @@ NOTE: In case you are not able to get the certificate be sure to give more time 
 
 ### References
 
-- [Create a pocket node](https://docs.pokt.network/docs/create-validator-node)
+- [Create a pocket node](https://docs.pokt.network/docs/create-pocket-node)
 
 
 ### Troubleshooting notes
