@@ -50,11 +50,15 @@ NOTE: In case you are not able to get the certificate be sure to give more time 
 >  certonly --webroot --webroot-path=/var/www/certbot --email ${EMAIL} --agree-tos --no-eff-email --staging -d node1.${DOMAIN} -d monitoring.${DOMAIN}
 
 
-7. After your certificate is issued you can uncomment the lines 21-78 on `proxy/conf.d/https.conf.templates`
+7. After your certificate is issued uncomment all the lines with '#' on `proxy/conf.d/https.conf.templates`
 
 
 8. Just do `docker-compose down && docker-compose up -d ` and you will be up & running! 
 
+
+### References
+
+- [Create a pocket node](https://docs.pokt.network/docs/create-validator-node)
 
 
 ### Troubleshooting notes
@@ -71,6 +75,3 @@ NOTE: In case you are not able to get the certificate be sure to give more time 
 #### The cadvisor container is showing permission denied error
 
 - This particular error is related to the volume permission and it can vary by OS, you can see a fix here https://github.com/google/cadvisor/issues/2387#issuecomment-600840479
-
-
-- 
