@@ -10,6 +10,7 @@ server {
      location / {
        return 301 https://$host$request_uri;
        auth_basic off;
+       include  /etc/naxsi/naxsi_core.rules;
      }
  
      location ~ /.well-known/acme-challenge {
