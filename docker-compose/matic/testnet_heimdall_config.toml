@@ -1,0 +1,39 @@
+# This is a TOML config file.
+# For more information, see https://github.com/toml-lang/toml
+
+persistent_peers = "1f1b21cacf3ac8a1e1402646e023811b250e2d76@54.211.245.52:26656,e392af5733fd994a2d7efdb29a0000e039245b2a@54.84.215.227:26656,1089c4f55038382f2741fd480a828b4cf0b8712d@34.197.83.153:26656,149dbcc6faf267c426e0376749e3824e64f77066@54.237.61.33:26656,fbeddf0bc0f31aa55fc8d798b426385842c93ac7@18.214.246.244:26656"
+##### RPC and REST configs #####
+
+# RPC endpoint for ethereum chain
+eth_rpc_url = "http://geth-goerli.blockchain.svc.cluster.local:8545"
+
+# RPC endpoint for bor chain
+bor_rpc_url = "http://localhost:8545"
+
+# RPC endpoint for tendermint
+tendermint_rpc_url = "http://0.0.0.0:26657"
+
+# Heimdall REST server endpoint
+heimdall_rest_server = "http://0.0.0.0:1317" 
+
+#### Bridge configs ####
+
+# MQTT endpoint
+amqp_url = "amqp://guest:guest@localhost:5672/" 
+
+##### Intervals #####
+child_chain_block_interval = "10000"
+
+## Bridge Poll Intervals 
+checkpoint_poll_interval = "5m0s" 
+syncer_poll_interval = "1m0s"
+noack_poll_interval = "16m50s"
+clerk_poll_interval = "10s" 
+span_poll_interval = "1m0s"
+
+#### gas limits ####
+main_chain_gas_limit = "5000000"
+
+##### Timeout Config #####
+no_ack_wait_time = "30m0s"
+
