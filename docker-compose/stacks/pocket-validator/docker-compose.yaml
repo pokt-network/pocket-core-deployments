@@ -5,17 +5,17 @@ version: "3.8"
 services:
   web:
     build: 
-      context: ${PWD}/../../nginx/
+      context: ./../../nginx/
       dockerfile: Dockerfile 
     restart: always
     environment:
       - DOMAIN=${DOMAIN}
     volumes:
-      - ${PWD}/proxy/conf.d:/etc/nginx/templates
-      - ${PWD}/proxy/nginx.conf:/etc/nginx/nginx.conf
-      - ${PWD}/proxy/certbot/conf:/etc/nginx/ssl
-      - ${PWD}/proxy/certbot/data:/var/www/certbot
-      - ${PWD}/proxy/rules/naxsi_core.rules:/etc/naxsi/naxsi_core.rules
+      - ./proxy/conf.d:/etc/nginx/templates
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
+      - ./proxy/certbot/conf:/etc/nginx/ssl
+      - ./proxy/certbot/data:/var/www/certbot
+      - ./proxy/rules/naxsi_core.rules:/etc/naxsi/naxsi_core.rules
     ports:
       - 80:80
       - 443:443
@@ -33,9 +33,9 @@ services:
       - EMAIL=${EMAIL}
 
     volumes:
-      - ${PWD}/proxy/certbot/conf:/etc/letsencrypt
-      - ${PWD}/proxy/certbot/logs:/var/log/letsencrypt
-      - ${PWD}/proxy/certbot/data:/var/www/certbot
+      - ./proxy/certbot/conf:/etc/letsencrypt
+      - ./proxy/certbot/logs:/var/log/letsencrypt
+      - ./proxy/certbot/data:/var/www/certbot
 
     depends_on:
       - prometheus
@@ -44,7 +44,7 @@ services:
       - web
 
   node1:
-    image: poktnetwork/pocket-core:Beta-0.5.2.3
+    image: poktnetwork/pocket-core:Beta-0.5.2.4
     container_name: node1 
     command: ["pocket", "start", "--keybase=false", "--mainnet", "--datadir=/home/app/.pocket/"]
     ports: 
@@ -54,12 +54,12 @@ services:
       - "26656"
       - "26660"
     volumes:
-      - ${PWD}/node1/config.json:/home/app/.pocket/config/config.json                      # Pocket Configuration file 
-      - ${PWD}/node1/priv_val_key.json:/home/app/.pocket/priv_val_key.json                 # Pocket validator private key 
-      - ${PWD}/node1/node_key.json:/home/app/.pocket/node_key.json                         # Pocket node key 
+      - ./node1/config.json:/home/app/.pocket/config/config.json                      # Pocket Configuration file 
+      - ./node1/priv_val_key.json:/home/app/.pocket/priv_val_key.json                 # Pocket validator private key 
+      - ./node1/node_key.json:/home/app/.pocket/node_key.json                         # Pocket node key 
     
-      - ${PWD}/node1/:/home/app/.pocket/config/                                            # Pocket Datadir 
-      - ${PWD}/node1/data/:/home/app/.pocket/data/                                         # Blockchain data
+      - ./node1/:/home/app/.pocket/config/                                            # Pocket Datadir 
+      - ./node1/data/:/home/app/.pocket/data/                                         # Blockchain data
     logging:
       driver: loki
       options:
@@ -69,7 +69,7 @@ services:
     image: grafana/loki:latest
     container_name:  loki 
     volumes:
-      - ${PWD}/monitoring/loki/config.yaml:/etc/loki/local-config.yaml
+      - ./monitoring/loki/config.yaml:/etc/loki/local-config.yaml
     expose:
       - 3100
     ports:
@@ -82,8 +82,8 @@ services:
     user: "1000"
     restart: unless-stopped
     volumes:
-      - ${PWD}/monitoring/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
-      - ${PWD}/monitoring/prometheus/data:/prometheus
+      - ./monitoring/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
+      - ./monitoring/prometheus/data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yaml'
     expose:
@@ -97,9 +97,9 @@ services:
     - 3000
     restart: unless-stopped
     volumes:
-      - ${PWD}/monitoring/grafana/data:/var/lib/grafana
-      - ${PWD}/monitoring/grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
-      - ${PWD}/monitoring/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./monitoring/grafana/data:/var/lib/grafana
+      - ./monitoring/grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
+      - ./monitoring/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=YOURADMINPASSWORD
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning/dashboards
@@ -139,7 +139,7 @@ services:
     expose:
       - 9093
     volumes:
-      - ${PWD}/monitoring/alertmanager/:/etc/alertmanager/
+      - ./monitoring/alertmanager/:/etc/alertmanager/
     restart: always
     command:
       - '--config.file=/etc/alertmanager/config.yaml'
