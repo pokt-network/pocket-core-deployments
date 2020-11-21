@@ -19,7 +19,7 @@ We packed basics of security and other configurations. Security and server harde
 - 15,200 POKT (15,100 for stake and 100 at least for the transactions operations like unjail, stake)
 - Your own domain
 - A pocket wallet with the quantity mentioned above, you can create one at https://wallet.pokt.network/ or using the cli (make sure you download the keyfile.json for later)
-
+- docker (19.03.0+) and docker-compose(1.27.4+) installed on the system 
 
 ### Hardware requirements 
 

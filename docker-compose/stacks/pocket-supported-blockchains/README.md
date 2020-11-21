@@ -20,6 +20,7 @@ We packed basics of security and other configurations. Security and server harde
 ## Requirements
 
 - Your own domain
+- docker (19.03.0+) and docker-compose(1.27.4+) installed on the system 
 
 ## Hardware requirements
 
