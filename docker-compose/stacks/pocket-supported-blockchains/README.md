@@ -26,7 +26,6 @@ We packed basics of security and other configurations. Security and server harde
 
 ### Pocket node
 
-
 - CPU: 2 CPUs
 - Memory: 4 GB RAM
 - Disk: 60GB SSD 
@@ -113,7 +112,6 @@ You can verify if domain are correctly configured by checking with nslookup that
  nslookup eth-mainnet.${DOMAIN}
 
  nslookup monitoring.${DOMAIN}
- 
 ```
 
 ### Create and validate your SSL certificate 
@@ -236,7 +234,6 @@ Just do `docker-compose down && docker-compose up -d ` and you will be up & runn
 
 
 - [Create a pocket node](https://docs.pokt.network/docs/create-pocket-node)
-
 
 
 ### Troubleshooting notes
