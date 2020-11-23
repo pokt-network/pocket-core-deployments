@@ -153,13 +153,21 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8\
 	&& apk del .brotli-build-deps \
 	&& apk del .gettext \
 	&& mv /tmp/envsubst /usr/local/bin/ \
-	\
 	# forward request and error logs to docker log collector
 	&& ln -sf /dev/stdout /var/log/nginx/access.log \
-	&& ln -sf /dev/stderr /var/log/nginx/error.log
+	&& ln -sf /dev/stderr /var/log/nginx/error.log \
+        # create a docker-entrypoint.d directory
+    	&& mkdir /docker-entrypoint.d
+
+COPY nginx-entrypoint.sh /
+COPY 10-listen-on-ipv6-by-default.sh /docker-entrypoint.d
+COPY 20-envsubst-on-templates.sh /docker-entrypoint.d
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
 
 EXPOSE 80 443
 
 STOPSIGNAL SIGTERM
+
 
 CMD ["nginx", "-g", "daemon off;"]
