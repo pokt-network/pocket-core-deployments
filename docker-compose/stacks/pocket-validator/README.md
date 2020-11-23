@@ -83,18 +83,29 @@ After you finish, wait 5-10 mins or the time required given by your DNS until th
 You can verify if domain are correctly configured by checking with nslookup that the domains return your IP: 
 
 ```
- nslookup pocket-mainnet.${DOMAIN}
-
- nslookup eth-mainnet.${DOMAIN}
+ nslookup node1.${DOMAIN}
 
  nslookup monitoring.${DOMAIN}
 ```
 
+
+#### Install loki driver and set grafana/prometheus permissions 
+
+
+The following script will install the loki driver for sending blockchain node logs to loki and grant file permissions needed for grafana and prometheus 
+
+```
+sudo bash install.sh
+```
+
+
 #### Create and validate your SSL certificate 
 
 
-- The env variable `DOMAIN` and `EMAIL` in the file `.env` used in docker-compose web, certbot services. Which indicates to nginx proxy what domain to use and certbot for generating the certificates
-      For more info about the proxy configuration, you can see the (conf.d/https.conf.template)[] 
+Edit the env variables `DOMAIN` and `EMAIL` in the file `.env` with the values for your setup. 
+Those variables are used in docker-compose web, certbot services. Which indicates to nginx proxy what domain to use and certbot for generating the certificates
+
+For more info about the proxy configuration, you can see the conf.d/https.conf.template
 
 
 After setting up your domain A records, let's now generate our SSL certificates by doing: 
@@ -129,15 +140,6 @@ We use nginx for the web proxy and (loki/grafana/prometheus) stack for the monit
 
 You can see their configurations in the docker-compose volume mappings and their respective folders if you wish to customize then for yourself
  
-
-#### Configure loki driver and grafana/prometheus permissions 
-
-
-The following script will install the loki driver for sending blockchain node logs to loki and grant file permissions needed for grafana and prometheus 
-
-```
-sudo bash install.sh
-```
 
 #### Set your domain and configure grafana access 
  
