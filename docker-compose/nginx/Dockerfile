@@ -159,7 +159,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8\
         # create a docker-entrypoint.d directory
     	&& mkdir /docker-entrypoint.d
 
-COPY nginx-entrypoint.sh /
+COPY docker-entrypoint.sh /
 COPY 10-listen-on-ipv6-by-default.sh /docker-entrypoint.d
 COPY 20-envsubst-on-templates.sh /docker-entrypoint.d
 ENTRYPOINT ["/docker-entrypoint.sh"]
