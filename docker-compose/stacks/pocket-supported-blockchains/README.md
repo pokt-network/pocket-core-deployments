@@ -262,7 +262,7 @@ Just do `docker-compose down && docker-compose up -d ` and you will be up & runn
 
 
 ```
- sudo systemctl restart docker && docker-compoes down && docker-compose up -d
+ sudo systemctl restart docker && docker-compose down && docker-compose up -d
 ```
 
 

@@ -315,7 +315,7 @@ For additional information you can see [Staking your node](https://docs.pokt.net
 
 
 ```
-> sudo systemctl restart docker && docker-compoes down && docker-compose up -d
+> sudo systemctl restart docker && docker-compose down && docker-compose up -d
 ```
 
 #### The cadvisor container is showing permission denied error
