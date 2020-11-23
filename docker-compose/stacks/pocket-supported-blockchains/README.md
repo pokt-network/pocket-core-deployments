@@ -115,11 +115,25 @@ You can verify if domain are correctly configured by checking with nslookup that
  nslookup monitoring.${DOMAIN}
 ```
 
-### Create and validate your SSL certificate 
+
+#### Install loki driver and set grafana/prometheus permissions 
 
 
-- The env variable `DOMAIN` and `EMAIL` in the file `.env` used in docker-compose web, certbot services. Which indicates to nginx proxy what domain to use and certbot for generating the certificates
-      For more info about the proxy configuration, you can see the (conf.d/https.conf.template)[] 
+The following script will install the loki driver for sending blockchain node logs to loki and grant file permissions needed for grafana and prometheus 
+
+```
+sudo bash install.sh
+```
+
+
+#### Create and validate your SSL certificate 
+
+
+Edit the env variables `DOMAIN` and `EMAIL` in the file `.env` with the values for your setup. 
+
+Those variables are used in docker-compose web, certbot services. Which indicates to nginx proxy what domain to use and certbot for generating the certificates
+
+For more info about the proxy configuration, you can see the conf.d/https.conf.template
 
 
 After setting up your domain A records, let's now generate our SSL certificates by doing: 
