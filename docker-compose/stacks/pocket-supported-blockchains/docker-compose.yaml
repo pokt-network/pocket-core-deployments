@@ -54,6 +54,9 @@ services:
     volumes:
       - ./pocket-mainnet/config.json:/home/app/.pocket/config/config.json                      # Pocket Configuration file 
       - ./pocket-mainnet/data/:/home/app/.pocket/data/                                         # Blockchain data
+    environment:
+      - POCKET_CORE_PASSPHRASE=''
+      - POCKET_CORE_KEY=''
     logging:
       driver: loki
       options:
