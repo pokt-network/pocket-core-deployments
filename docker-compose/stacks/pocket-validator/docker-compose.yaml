@@ -47,6 +47,9 @@ services:
     image: poktnetwork/pocket-core:Beta-0.5.2.4
     container_name: node1 
     command: ["pocket", "start", "--keybase=false", "--mainnet", "--datadir=/home/app/.pocket/"]
+    environment:
+     - POCKET_CORE_PASSPHRASE=${POCKET_CORE_PASSPHRASE_NODE}
+     - POCKET_CORE_KEY=''
     ports: 
       - "26656:26656"
     expose:
