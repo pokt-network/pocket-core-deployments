@@ -221,7 +221,7 @@ Change the following settings according your setup:
     - The env variable `DOMAIN` and `EMAIL` in the file `.env` used in docker-compose web, certbot services. Which indicates to nginx proxy what domain to use and certbot for generating the certificates
         For more info about the proxy configuration, you can see the (conf.d/https.conf.template)[]
  
-    - The env variable `GF_SECURITY_ADMIN_PASSWORD` in docker-compose grafana service. Which is the grafana login password 
+    - The env variable `GF_SECURITY_ADMIN_PASSWORD` in docker-compose grafana service. Which is the grafana login password. The default login user is admin 
 
 
 ### Customizing blockchains configuration 

@@ -148,7 +148,7 @@ Change the following settings according your setup:
     - The env variable `DOMAIN` and `EMAIL` in the file `.env` used in docker-compose web, certbot services. Which indicates to nginx proxy what domain to use and certbot for generating the certificates
         For more info about the proxy configuration, you can see the (conf.d/https.conf.template)[]
  
-    - The env variable `GF_SECURITY_ADMIN_PASSWORD` in docker-compose grafana service. Which is the grafana login password 
+    - The env variable `GF_SECURITY_ADMIN_PASSWORD` in docker-compose grafana service. Which is the grafana login password on monitoring.{DOMAIN}. The default login user is admin 
 
 
 ### Configuring your validator
@@ -232,7 +232,7 @@ In case you don't have the files mentioned.  Assuming you have your keyfile.json
  
 > echo '${KEYFILE}' > keyfile.json # Or just copy and paste your keyfile content using nano or vim
 
-> pocket accounts import-raw keyfile.json # Enter your pass
+> pocket accounts import-armored keyfile.json # Enter your passphrase
 
 > pocket accounts set-validator {YOURADDRESS}
 ```
@@ -247,6 +247,10 @@ Now copy the content of `priv_val_key.json` and `node_key.json` from your node1 
 > cp /root/.pocket/node_key.json  /home/app/.pocket 
 
 ```
+
+#### Set your POCKET_CORE_PASSPHRASE for this node
+
+Inside the `.env` file. Fill the env variable with your node passphrase (same used in the step while importing account before `pocket accounts import-armored keyfile.json` 
 
 
 ##### Sync/stake your node 
