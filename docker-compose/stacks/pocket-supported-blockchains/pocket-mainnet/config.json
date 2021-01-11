@@ -4,9 +4,17 @@
         "ProxyApp": "tcp://127.0.0.1:26658",
         "Moniker": "CustomMoniker",
         "FastSyncMode": true,
-        "DBBackend": "cleveldb",
+        "DBBackend": "goleveldb",
+        "LevelDBOptions": {
+            "block_cache_capacity": 83886,
+            "block_cache_evict_removed": false,
+            "block_size": 4096,
+            "disable_buffer_pool": true,
+            "open_files_cache_capacity": -1,
+            "write_buffer": 838860
+        },
         "DBPath": "data",
-        "LogLevel": "*:error",
+        "LogLevel": "*:info, *:error",
         "LogFormat": "plain",
         "Genesis": "config/genesis.json",
         "PrivValidatorKey": "priv_val_key.json",
@@ -33,28 +41,30 @@
                 "X-Server-Time"
             ],
             "GRPCListenAddress": "",
-            "GRPCMaxOpenConnections": 5000,
+            "GRPCMaxOpenConnections": 2500,
             "Unsafe": false,
-            "MaxOpenConnections": 5000,
-            "MaxSubscriptionClients": 1000,
-            "MaxSubscriptionsPerClient": 1000,
+            "MaxOpenConnections": 2500,
+            "MaxSubscriptionClients": 100,
+            "MaxSubscriptionsPerClient": 5,
             "TimeoutBroadcastTxCommit": 10000000000,
             "MaxBodyBytes": 1000000,
-            "MaxHeaderBytes": 10485760,
+            "MaxHeaderBytes": 1048576,
             "TLSCertFile": "",
             "TLSKeyFile": ""
         },
         "P2P": {
             "RootDir": "/home/app/.pocket",
             "ListenAddress": "tcp://0.0.0.0:26656",
-            "ExternalAddress": "tcp://node1.YOURDOMAIN:26656",
-            "Seeds": "",
-            "PersistentPeers": "8dd722c42425783b50db707995f841b3c7ccc827@node2.mainnet.pokt.network:23656,8afc6b4195e3fd59fa3aa8bab65b2b7c497cedf9@node3.mainnet.pokt.network:24656,d46556719200aee73fc7446731ae58496978548d@node4.mainnet.pokt.network:25656,5bcae50364952a5fa3a8363f93f2adffc9eff42e@node5.mainnet.pokt.network:26656,a8943929b30cbc3e7a30c2de06b385bcf874134b@node6.mainnet.pokt.network:27656,c6dfe12a4ff2bc2b44c83c791853b6edb6c5eb58@node7.mainnet.pokt.network:28656,913fed2298bc8af74989bc56d94e2e4ca95a6519@node8.mainnet.pokt.network:29656,40c8973967b8d6b1123029819cad20fd44580e9e@node9.mainnet.pokt.network:20756,e74727d0ba34d9f7f6f583cb4a87dbe91d692c5f@node10.mainnet.pokt.network:21756,46ed186385df21121ea279aef2094d2fea79235b@node12.mainnet.pokt.network:23756, 0a9001ee20f796a6f794f882287c032ea8549c3b@node13.mainnet.pokt.network:24756, 32aa0d57bf341b517a5947731b99f4d9387d7d3e@node14.mainnet.pokt.network:25756, a1726dd9509e741169b912675cbfa8de2fe8113c@node15.mainnet.pokt.network:26756, c2c6fb35d9f3f2ea0bc6faa641acf8d348d0fb9e@node16.mainnet.pokt.network:27756, 4dbf149b73dbb3451e4c5b1dab6d1da9bb4086fc@node17.mainnet.pokt.network:21756, 9b95a90092c787f88f06311a3073a9212a610fb6@node18.mainnet.pokt.network:29756, 79d807fdf03c2776082da65f275a610ad1ba2862@node19.mainnet.pokt.network:20856, e2df8f63be18d37cf8258a2bb6800811196a1931@node20.mainnet.pokt.network:21856",
-            "UPNP": true,
+            "ExternalAddress": "tcp://pocket-mainnet.YOURDOMAIN:26656",
+            "Seeds": "03b74fa3c68356bb40d58ecc10129479b159a145@seed1.mainnet.pokt.network:20656,64c91701ea98440bc3674fdb9a99311461cdfd6f@seed2.mainnet.pokt.network:21656",
+            "PersistentPeers": "bf214ae424a4bd698972e4f4fda97939e9909bdd@node11.mainnet.pokt.network:22756, e74727d0ba34d9f7f6f583cb4a87dbe91d692c5f@node10.mainnet.pokt.network:21756",
+            "UPNP": false,
             "AddrBook": "config/addrbook.json",
             "AddrBookStrict": false,
-            "MaxNumInboundPeers": 1000,
-            "MaxNumOutboundPeers": 1000,
+            "MaxNumInboundPeers": 10,
+            "MaxNumOutboundPeers": 10,
+            "UnconditionalPeerIDs": "",
+            "PersistentPeersMaxDialPeriod": 0,
             "FlushThrottleTimeout": 100000000,
             "MaxPacketMsgPayloadSize": 1024,
             "SendRate": 5120000,
@@ -86,7 +96,7 @@
             "MaxTxBytes": 1048576
         },
         "FastSync": {
-            "Version": "v0"
+            "Version": "v1"
         },
         "Consensus": {
             "RootDir": "/home/app/.pocket",
@@ -101,13 +111,13 @@
             "SkipTimeoutCommit": false,
             "CreateEmptyBlocks": true,
             "CreateEmptyBlocksInterval": 900000000000,
-            "PeerGossipSleepDuration": 100000000,
-            "PeerQueryMaj23SleepDuration": 2000000000
+            "PeerGossipSleepDuration": 100000000000,
+            "PeerQueryMaj23SleepDuration": 200000000000
         },
         "TxIndex": {
             "Indexer": "kv",
-            "IndexTags": "tx.hash,tx.height,message.sender,transfer.recipient",
-            "IndexAllTags": false
+            "IndexKeys": "tx.hash,tx.height,message.sender,transfer.recipient",
+            "IndexAllKeys": false
         },
         "Instrumentation": {
             "Prometheus": true,
@@ -120,9 +130,7 @@
         "data_dir": "/home/app/.pocket",
         "genesis_file": "genesis.json",
         "chains_name": "chains.json",
-        "session_db_type": "cleveldb",
         "session_db_name": "session",
-        "evidence_db_type": "cleveldb",
         "evidence_db_name": "pocket_evidence",
         "tendermint_uri": "tcp://localhost:26657",
         "keybase_name": "pocket-keybase",
@@ -130,6 +138,18 @@
         "client_block_sync_allowance": 10,
         "max_evidence_cache_entries": 500,
         "max_session_cache_entries": 500,
-        "json_sort_relay_responses": true
+        "json_sort_relay_responses": true,
+        "remote_cli_url": "http://localhost:8081",
+        "user_agent": "",
+        "validator_cache_size": 100,
+        "application_cache_size": 100,
+        "rpc_timeout": 10000,
+        "pocket_prometheus_port": "8083",
+        "prometheus_max_open_files": 3,
+        "max_claim_age_for_proof_retry": 32,
+        "proof_prevalidation": false,
+        "ctx_cache_size": 20,
+        "abci_logging": false,
+        "show_relay_errors": true
     }
 }
