@@ -42,7 +42,7 @@ services:
 #### BLOCKCHAINS
 
   pocket-mainnet:
-    image: poktnetwork/pocket-core:Beta-0.5.2.4
+    image: poktnetwork/pocket:RC-0.5.2.9
     container_name: pocket-mainnet 
     command: ["pocket", "start", "--keybase=false", "--mainnet", "--datadir=/home/app/.pocket/"]
     ports: 
@@ -57,6 +57,7 @@ services:
     environment:
       - POCKET_CORE_PASSPHRASE=''
       - POCKET_CORE_KEY=''
+      - GODEBUG="madvdontneed=1"
     logging:
       driver: loki
       options:
