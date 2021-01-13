@@ -11,7 +11,9 @@ services:
     user: root
     volumes:
       - xdai:/home/openethereum/.xdai # Blockchain and config data
-    command: --base-path .xdai --chain xdai  --port 30303 --jsonrpc-hosts all --jsonrpc-cors all --jsonrpc-interface all --ipc-apis web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-interface all --ws-hosts all --ws-origins all --ws-apis web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub --interface all 
+        # We expose everything, remember to have this container under private network
+    command: --base-path .xdai --chain xdai  --port 30303 --jsonrpc-hosts all --jsonrpc-cors all --jsonrpc-interface all --ipc-apis web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub  --ws-interface all --ws-hosts all --ws-origins all --ws-apis web3,net,eth,pubsub,parity,parity_pubsub,traces,rpc,shh,shh_pubsub --interface all  
+
     networks:
       - pocket
 
