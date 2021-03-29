@@ -3,7 +3,7 @@
 # is part of the $PATH
 
 # Dynamically pull Go-lang version for the image
-ARG GOLANG_IMAGE_VERSION=golang:1.13-alpine
+ARG GOLANG_IMAGE_VERSION=golang:1.16.2-alpine3.13
 
 # First build step to build the app binary
 FROM ${GOLANG_IMAGE_VERSION} AS builder
@@ -50,7 +50,7 @@ COPY . .
 RUN go build -tags cleveldb -o ${GOBIN}/bin/pocket ./app/cmd/pocket_core/main.go
 
 # Second build step: reduce image size to only use app binary
-FROM alpine:3.10
+FROM alpine:3.13
 
 COPY --from=builder /bin/pocket /bin/pocket
 COPY entrypoint.sh /tmp/
