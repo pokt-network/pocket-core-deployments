@@ -2,7 +2,7 @@
     "tendermint_config": {
         "RootDir": "/home/app/.pocket",
         "ProxyApp": "tcp://127.0.0.1:26658",
-        "Moniker": "CustomMoniker",
+        "Moniker": "node1-yourdomain-validator",
         "FastSyncMode": true,
         "DBBackend": "goleveldb",
         "LevelDBOptions": {
@@ -14,7 +14,7 @@
             "write_buffer": 838860
         },
         "DBPath": "data",
-        "LogLevel": "*:info, *:error",
+        "LogLevel": "*:error",
         "LogFormat": "plain",
         "Genesis": "config/genesis.json",
         "PrivValidatorKey": "priv_val_key.json",
@@ -61,8 +61,8 @@
             "UPNP": false,
             "AddrBook": "config/addrbook.json",
             "AddrBookStrict": false,
-            "MaxNumInboundPeers": 10,
-            "MaxNumOutboundPeers": 10,
+            "MaxNumInboundPeers": 50,
+            "MaxNumOutboundPeers": 80,
             "UnconditionalPeerIDs": "",
             "PersistentPeersMaxDialPeriod": 0,
             "FlushThrottleTimeout": 100000000,
@@ -96,23 +96,23 @@
             "MaxTxBytes": 1048576
         },
         "FastSync": {
-            "Version": "v1"
+            "Version": "v0"
         },
         "Consensus": {
             "RootDir": "/home/app/.pocket",
             "WalPath": "data/cs.wal/wal",
-            "TimeoutPropose": 60000000000,
+            "TimeoutPropose": 120000000000,
             "TimeoutProposeDelta": 10000000000,
             "TimeoutPrevote": 60000000000,
             "TimeoutPrevoteDelta": 10000000000,
             "TimeoutPrecommit": 60000000000,
             "TimeoutPrecommitDelta": 10000000000,
-            "TimeoutCommit": 900000000000,
+            "TimeoutCommit": 780000000000,
             "SkipTimeoutCommit": false,
             "CreateEmptyBlocks": true,
             "CreateEmptyBlocksInterval": 900000000000,
-            "PeerGossipSleepDuration": 100000000000,
-            "PeerQueryMaj23SleepDuration": 200000000000
+            "PeerGossipSleepDuration": 30000000000,
+            "PeerQueryMaj23SleepDuration": 20000000000
         },
         "TxIndex": {
             "Indexer": "kv",
@@ -153,3 +153,4 @@
         "show_relay_errors": true
     }
 }
+

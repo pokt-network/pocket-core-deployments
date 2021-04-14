@@ -42,7 +42,8 @@ services:
 #### BLOCKCHAINS
 
   pocket-mainnet:
-    image: poktnetwork/pocket:RC-0.5.2.9
+    image: poktnetwork/pocket:RC-0.6.0 
+    user: root
     container_name: pocket-mainnet 
     command: ["pocket", "start", "--keybase=false", "--mainnet", "--datadir=/home/app/.pocket/"]
     ports: 
