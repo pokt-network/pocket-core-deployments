@@ -4,7 +4,7 @@ resolver 127.0.0.11 valid=10s; # 127.0.0.1 comes from /etc/resolv.conf on the ng
 server {
      listen [::]:80;
      listen 80 default_server;
-     server_name node1.${DOMAIN} node2.${DOMAIN} monitoring.${DOMAIN};
+     server_name node1.${DOMAIN} monitoring.${DOMAIN};
      
      location / {
        return 301 https://$host$request_uri;

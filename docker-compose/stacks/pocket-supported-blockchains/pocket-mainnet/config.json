@@ -2,7 +2,7 @@
     "tendermint_config": {
         "RootDir": "/home/app/.pocket",
         "ProxyApp": "tcp://127.0.0.1:26658",
-        "Moniker": "CustomMoniker",
+        "Moniker": "pocket-blockchain",
         "FastSyncMode": true,
         "DBBackend": "goleveldb",
         "LevelDBOptions": {
@@ -14,7 +14,7 @@
             "write_buffer": 838860
         },
         "DBPath": "data",
-        "LogLevel": "*:info, *:error",
+        "LogLevel": "*:error",
         "LogFormat": "plain",
         "Genesis": "config/genesis.json",
         "PrivValidatorKey": "priv_val_key.json",
@@ -55,14 +55,14 @@
         "P2P": {
             "RootDir": "/home/app/.pocket",
             "ListenAddress": "tcp://0.0.0.0:26656",
-            "ExternalAddress": "tcp://pocket-mainnet.YOURDOMAIN:26656",
+            "ExternalAddress": "",
             "Seeds": "03b74fa3c68356bb40d58ecc10129479b159a145@seed1.mainnet.pokt.network:20656,64c91701ea98440bc3674fdb9a99311461cdfd6f@seed2.mainnet.pokt.network:21656",
             "PersistentPeers": "bf214ae424a4bd698972e4f4fda97939e9909bdd@node11.mainnet.pokt.network:22756, e74727d0ba34d9f7f6f583cb4a87dbe91d692c5f@node10.mainnet.pokt.network:21756",
             "UPNP": false,
             "AddrBook": "config/addrbook.json",
             "AddrBookStrict": false,
-            "MaxNumInboundPeers": 10,
-            "MaxNumOutboundPeers": 10,
+            "MaxNumInboundPeers": 50,
+            "MaxNumOutboundPeers": 80,
             "UnconditionalPeerIDs": "",
             "PersistentPeersMaxDialPeriod": 0,
             "FlushThrottleTimeout": 100000000,
@@ -96,23 +96,23 @@
             "MaxTxBytes": 1048576
         },
         "FastSync": {
-            "Version": "v1"
+            "Version": "v0"
         },
         "Consensus": {
             "RootDir": "/home/app/.pocket",
             "WalPath": "data/cs.wal/wal",
-            "TimeoutPropose": 60000000000,
+            "TimeoutPropose": 120000000000,
             "TimeoutProposeDelta": 10000000000,
             "TimeoutPrevote": 60000000000,
             "TimeoutPrevoteDelta": 10000000000,
             "TimeoutPrecommit": 60000000000,
             "TimeoutPrecommitDelta": 10000000000,
-            "TimeoutCommit": 900000000000,
+            "TimeoutCommit": 780000000000,
             "SkipTimeoutCommit": false,
             "CreateEmptyBlocks": true,
             "CreateEmptyBlocksInterval": 900000000000,
-            "PeerGossipSleepDuration": 100000000000,
-            "PeerQueryMaj23SleepDuration": 200000000000
+            "PeerGossipSleepDuration": 30000000000,
+            "PeerQueryMaj23SleepDuration": 20000000000
         },
         "TxIndex": {
             "Indexer": "kv",
@@ -153,3 +153,4 @@
         "show_relay_errors": true
     }
 }
+

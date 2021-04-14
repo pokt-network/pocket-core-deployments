@@ -27,7 +27,7 @@ services:
   certbot:
     image: certbot/certbot:latest
     container_name: certbot
-    command: certonly --webroot --webroot-path=/var/www/certbot --email ${EMAIL} --agree-tos --no-eff-email -d node1.${DOMAIN} -d monitoring.${DOMAIN}
+    command: certonly --webroot --webroot-path=/var/www/certbot--email ${EMAIL} --force-renewal --expand --agree-tos --no-eff-email -d node1.${DOMAIN} -d monitoring.${DOMAIN}
     environment:
       - DOMAIN=${DOMAIN}
       - EMAIL=${EMAIL}
@@ -44,7 +44,7 @@ services:
       - web
 
   node1:
-    image: poktnetwork/pocket:RC-0.5.2.9
+    image: poktnetwork/pocket:RC-0.6.0 
     container_name: node1 
     command: ["pocket", "start", "--keybase=false", "--mainnet", "--datadir=/home/app/.pocket/"]
     environment:
