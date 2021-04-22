@@ -42,7 +42,7 @@ services:
 #### BLOCKCHAINS
 
   pocket-mainnet:
-    image: poktnetwork/pocket:RC-0.6.0 
+    image: poktnetwork/pocket:RC-0.6.1 
     user: root
     container_name: pocket-mainnet 
     command: ["pocket", "start", "--keybase=false", "--mainnet", "--datadir=/home/app/.pocket/"]
@@ -56,8 +56,7 @@ services:
       - ./pocket-mainnet/config.json:/home/app/.pocket/config/config.json                      # Pocket Configuration file 
       - ./pocket-mainnet/data/:/home/app/.pocket/data/                                         # Blockchain data
     environment:
-      - POCKET_CORE_PASSPHRASE=''
-      - POCKET_CORE_KEY=''
+      - POCKET_CORE_KEY=""
       - GODEBUG="madvdontneed=1"
     logging:
       driver: loki
