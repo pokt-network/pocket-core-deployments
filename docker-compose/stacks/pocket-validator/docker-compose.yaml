@@ -44,13 +44,13 @@ services:
       - web
 
   node1:
-    image: poktnetwork/pocket:RC-0.6.0 
+    image: poktnetwork/pocket:RC-0.6.1 
     container_name: node1 
     command: ["pocket", "start", "--keybase=false", "--mainnet", "--datadir=/home/app/.pocket/"]
     environment:
      - POCKET_CORE_PASSPHRASE=${POCKET_CORE_PASSPHRASE_NODE}
-     - POCKET_CORE_KEY=''
-      - GODEBUG="madvdontneed=1"
+     - POCKET_CORE_KEY=""
+     - GODEBUG="madvdontneed=1"
     ports: 
       - "26656:26656"
     expose:
@@ -61,7 +61,6 @@ services:
       - ./node1/config.json:/home/app/.pocket/config/config.json                      # Pocket Configuration file 
       - ./node1/priv_val_key.json:/home/app/.pocket/priv_val_key.json                 # Pocket validator private key 
       - ./node1/node_key.json:/home/app/.pocket/node_key.json                         # Pocket node key 
-    
       - ./node1/:/home/app/.pocket/                                                   # Pocket Datadir 
       - ./node1/data/:/home/app/.pocket/data/                                         # Blockchain data
     logging:
