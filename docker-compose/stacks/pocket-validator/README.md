@@ -2,7 +2,6 @@
 
 ## Overview
 
-
 This folder contains a docker-compose.yaml with:
 
 - Single pocket node validator
@@ -94,7 +93,6 @@ The following script will install the loki driver for sending blockchain node lo
 ```
 sudo bash install.sh
 ```
-
 
 #### Create and validate your SSL certificate 
 
@@ -196,18 +194,7 @@ In case you have your URLS protected by basic_auth as shown in the README tutori
 
 For more information about chains.json file, see:
 
-https://docs.pokt.network/changelog/chainsjs
-
-
-### Setting up pocket core node config.json 
-
-
-Configure your pocket node by editing on `pocket/config.json` the following variables:
-    -  "Moniker" - Use a custom Moniker name for your node, in this case can be `pocket-mainnet.${DOMAIN}`
-    -  "ExternalAddress" - point to your node address and port, in this case `pocket-mainnet.${DOMAIN}:26656`
-
-
-NOTE: in this case you need to manual replace ${DOMAIN} by your domain name
+https://docs.pokt.network/changelog/chainsjs 
 
 
 ### Obtaining your node_key.json and priv_val_key.json
@@ -221,24 +208,73 @@ In case you don't have the files mentioned. Assuming you have your keyfile.json.
 ```bash
 docker-compose up -d  # Run all services
 
-docker exec -it node1 sh # Enter your node1
+docker exec -it node1 sh # Enter to your node1 container
+
+# import account by using private key
+
+pocket accounts import-raw <YOUR PRIVATE_KEY> # Enter your password
+
+#  Or you can import by keyfile
 
 echo '${KEYFILE}' > keyfile.json # Or just copy and paste your keyfile content using nano or vim
 
-pocket accounts import-armored keyfile.json # Enter your passphrase
+pocket accounts import-armored keyfile.json # Enter your password 
 
 pocket accounts set-validator {YOURADDRESS}
 ```
 
-
-Now copy the content of `priv_val_key.json` and `node_key.json` from your node1 to node1 folder on your host
+Now, inside your container, copy the content of `priv_val_key.json` and `node_key.json` from your node1 to node1 folder on your host
 
 
 ```bash
 cp /root/.pocket/priv_val_key.json  /home/app/.pocket 
 
 cp /root/.pocket/node_key.json  /home/app/.pocket
+
+exit
 ```
+
+Restart you node for refreshing the changes:
+
+```bash
+docker stop node1 && docker rm node1 && docker-compose up -d
+```
+
+For verifying that your node is configured with your address you can do:
+
+```bash
+docker exec -it node1 sh
+
+apk add curl
+
+curl localhost:26657/status 
+``` 
+
+The output of the curl will get you the information of the node:
+
+```
+"validator_info": {
+      "address": "<ADDRESS>", # Address of the node
+      "pub_key": {
+        "type": "tendermint/PubKeyEd25519",
+        "value": "<key>"
+      },
+      "voting_power": "0"
+
+```
+
+Verify that the address in this node matches your Address, in case not retry the step and verify that you are creating your files correctly where you need to pass the node_key.json and priv_val_key.json  
+
+
+### Setting up pocket core node config.json 
+
+
+Configure your pocket node by editing on `node1/config.json` the following variables:
+    -  "Moniker" - Use a custom Moniker name for your node, in this case can be `node1-${DOMAIN}`
+    -  "ExternalAddress" - point to your node address and port, in this case `tcp://node1.${DOMAIN}:26656`
+
+NOTE: In this case you need to manual replace ${DOMAIN} by your domain name
+
 
 ### Set your POCKET_CORE_PASSPHRASE for this node
 
@@ -247,7 +283,6 @@ Inside the `.env` file. Fill the env variable with your node passphrase (same us
 
 ## Sync/stake your node 
 
-
 Restart your stack so it reflect the changes
 
 
@@ -255,9 +290,29 @@ Restart your stack so it reflect the changes
 docker-compose down && docker-compose up -d 
 ```
 
+Please verify that your container node is up and it's syncing
 
-Wait until sync. validate if you are in the latest block and that your key is correcly configured with your node by doing 
+While syncing, verify that your network proxy nginx and grafana stack is correctly configured by entering to the grafana login on:
 
+> http://monitoring.${DOMAIN} 
+
+Also, verify if your pocket node is correctly exposed by checking the pocket core ver on:
+
+> http://node1.${DOMAIN}/v1
+
+As last step, stake your node by doing the following commands inside your pocket node:
+
+```bash
+# Staking Command
+pocket nodes stake  <fromAddr> <amount in uPOKT> <chains> <serviceURI w/ rpc port> <chainID> <fees in Upokt> 
+
+# example with dummy values
+pocket nodes stake 45D50DB64E90C0109C778DAAB7EF36676FC03866 1510000000 0001,0021 https://my-pocket-url:<port> mainnet 100000
+``` 
+
+Wait one block (~15 mins) and your node should be ready to serve relays
+
+In case you want to verify. Please do:
 
 ```bash
 > docker exec -it node1 sh
@@ -268,34 +323,10 @@ Wait until sync. validate if you are in the latest block and that your key is co
 ```
 
 
-While syncing, verify that your network proxy nginx and grafana stack is correctly configured by entering to the grafana login on:
-
-
-> http://monitoring.${DOMAIN} 
-
-
-Also, verify if your pocket node is correctly exposed by checking the pocket core ver on:
-
-
-> http://node1.${DOMAIN}/v1
-
-
-As last step, stake your node by doing the following commands inside your pocket node:
-
-
-```bash
-# Staking Command
-pocket nodes stake  <fromAddr> <amount in uPOKT> <chains> <serviceURI w/ rpc port> <chainID> <fees in Upokt> 
-
-# example with dummy values
-pocket nodes stake 45D50DB64E90C0109C778DAAB7EF36676FC03866 1510000000 0001,0021 https://my-pocket-url:<port> mainnet 100000
-``` 
-
 For additional information you can see [Staking your node](https://docs.pokt.network/docs/create-validator-node#staking-your-node)
 
 
 ## References
-
 
 - [FAQ for nodes](https://docs.pokt.network/docs/faq-for-nodes)
 
