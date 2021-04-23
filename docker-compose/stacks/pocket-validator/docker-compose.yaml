@@ -4,9 +4,7 @@ version: "3.8"
 
 services:
   web:
-    build: 
-      context: ./../../nginx/
-      dockerfile: Dockerfile 
+    image: nginx:alpine
     restart: always
     environment:
       - DOMAIN=${DOMAIN}
