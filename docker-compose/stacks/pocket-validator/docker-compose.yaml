@@ -27,7 +27,7 @@ services:
   certbot:
     image: certbot/certbot:latest
     container_name: certbot
-    command: certonly --webroot --webroot-path=/var/www/certbot--email ${EMAIL} --force-renewal --expand --agree-tos --no-eff-email -d node1.${DOMAIN} -d monitoring.${DOMAIN}
+    command: certonly --webroot --webroot-path=/var/www/certbot --email ${EMAIL} --force-renewal --expand --agree-tos --no-eff-email -d node1.${DOMAIN} -d monitoring.${DOMAIN}
     environment:
       - DOMAIN=${DOMAIN}
       - EMAIL=${EMAIL}
