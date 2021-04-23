@@ -2,7 +2,7 @@
     "tendermint_config": {
         "RootDir": "/home/app/.pocket",
         "ProxyApp": "tcp://127.0.0.1:26658",
-        "Moniker": "node1-yourdomain-validator",
+        "Moniker": "node1-DOMAIN",
         "FastSyncMode": true,
         "DBBackend": "goleveldb",
         "LevelDBOptions": {
@@ -55,7 +55,7 @@
         "P2P": {
             "RootDir": "/home/app/.pocket",
             "ListenAddress": "tcp://0.0.0.0:26656",
-            "ExternalAddress": "tcp://node1.YOURDOMAIN:26656",
+            "ExternalAddress": "",
             "Seeds": "03b74fa3c68356bb40d58ecc10129479b159a145@seed1.mainnet.pokt.network:20656,64c91701ea98440bc3674fdb9a99311461cdfd6f@seed2.mainnet.pokt.network:21656",
             "PersistentPeers": "bf214ae424a4bd698972e4f4fda97939e9909bdd@node11.mainnet.pokt.network:22756, e74727d0ba34d9f7f6f583cb4a87dbe91d692c5f@node10.mainnet.pokt.network:21756",
             "UPNP": false,
