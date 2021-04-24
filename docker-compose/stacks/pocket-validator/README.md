@@ -333,6 +333,21 @@ For additional information you can see [Staking your node](https://docs.pokt.net
 - [Create a pocket validator node](https://docs.pokt.network/docs/create-validator-node)
 
 
+## IMPORTANT NOTE
+
+If you used this tutorial before and you staked your node with the RPC port 8081. Meaning that if your service URL looks like:
+
+"service_url": "https://node1.{DOMAIN}:8081"
+
+You need to:
+
+- Open the port 8081 in your firewall
+- Add 8081:8081 in the [ports for the web(nginx) container](https://github.com/pokt-network/pocket-core-deployments/blob/staging/docker-compose/stacks/pocket-validator/docker-compose.yaml#L17)
+- Change the listen address [from 443 ssl; to 8081 ssl; on the proxy https URLS](https://github.com/pokt-network/pocket-core-deployments/blob/staging/docker-compose/stacks/pocket-validator/proxy/conf.d/https.conf.template#L22)
+- Restart the containers with ``` docker-compose down && docker-compose up -d ```
+ 
+In any case, feel free to refer to our discord or create an issue for any questions
+
 ## Troubleshooting notes
 
 
