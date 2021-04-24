@@ -345,6 +345,8 @@ You need to:
 - Add 8081:8081 in the [ports for the web(nginx) container](https://github.com/pokt-network/pocket-core-deployments/blob/staging/docker-compose/stacks/pocket-validator/docker-compose.yaml#L17)
 - Change the listen address [from 443 ssl; to 8081 ssl; on the proxy https URLS](https://github.com/pokt-network/pocket-core-deployments/blob/staging/docker-compose/stacks/pocket-validator/proxy/conf.d/https.conf.template#L22)
 - Restart the containers with ``` docker-compose down && docker-compose up -d ```
+
+For verification you can check that your node is serving in this port by checking if https://node1.yourdomain:8081/v1 returns the pocket version
  
 In any case, feel free to refer to our discord or create an issue for any questions
 
