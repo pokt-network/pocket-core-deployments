@@ -42,7 +42,7 @@ services:
 #### BLOCKCHAINS
 
   pocket-mainnet:
-    image: poktnetwork/pocket:RC-0.6.1 
+    image: poktnetwork/pocket:RC-0.6.3 
     user: root
     container_name: pocket-mainnet 
     command: ["pocket", "start", "--keybase=false", "--mainnet", "--datadir=/home/app/.pocket/"]
