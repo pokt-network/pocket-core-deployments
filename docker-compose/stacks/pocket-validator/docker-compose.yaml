@@ -2,6 +2,15 @@ version: "3.8"
 
 # REF: https://www.cloudbooklet.com/how-to-install-nginx-and-lets-encrypt-with-docker-ubuntu-20-04/
 
+x-loki:
+  &loki-logging
+  driver: loki
+  options:
+    loki-url: "http://localhost:3100/loki/api/v1/push"
+    keep-file: "true"
+    max-size: '10m'
+    max-file: '3'
+
 services:
   web:
     image: nginx:alpine
@@ -20,6 +29,7 @@ services:
     depends_on:
       - prometheus
       - grafana
+    logging: *loki-logging
 
   certbot:
     image: certbot/certbot:latest
@@ -58,10 +68,8 @@ services:
       - ./node1/chains.json:/home/app/.pocket/config/chains.json                      # Pocket chains.json
       - ./node1/:/home/app/.pocket/                                                   # Pocket Datadir 
       - ./node1/data/:/home/app/.pocket/data/                                         # Blockchain data
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://localhost:3100/loki/api/v1/push"
+    logging: *loki-logging
+ 
 
   loki:
     image: grafana/loki:latest
@@ -73,6 +81,7 @@ services:
     ports:
       - "3100:3100"
     command: --config.file=/etc/loki/local-config.yaml
+    logging: *loki-logging
 
   prometheus:
     image: prom/prometheus:latest
@@ -86,6 +95,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yaml'
     expose:
       - 9090
+    logging: *loki-logging
 
   grafana:
     image: grafana/grafana:latest
@@ -111,6 +121,7 @@ services:
       - GF_SMTP_USER=myadrress@gmail.com
       - GF_SMTP_PASSWORD=mypassword
       - GF_SMTP_FROM_ADDRESS=myaddress@gmail.com
+    logging: *loki-logging
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -118,6 +129,7 @@ services:
     restart: unless-stopped
     expose:
       - 9100
+    logging: *loki-logging
 
   cadvisor:
     image: google/cadvisor:latest
@@ -130,6 +142,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     expose:
       - 8080
+    logging: *loki-logging
 
   alertmanager:
     image: prom/alertmanager:latest
@@ -142,3 +155,4 @@ services:
     command:
       - '--config.file=/etc/alertmanager/config.yaml'
       - '--storage.path=/alertmanager'
+    logging: *loki-logging

@@ -2,10 +2,17 @@ version: "3.8"
 
 # REF: https://www.cloudbooklet.com/how-to-install-nginx-and-lets-encrypt-with-docker-ubuntu-20-04/
 
+x-loki:
+  &loki-logging
+  driver: loki
+  options:
+    loki-url: "http://localhost:3100/loki/api/v1/push"
+    keep-file: "true"
+    max-size: '10m'
+    max-file: '3'
+
 services:
-
 #### PROXY
-
   web: 
     build: 
       context: ./../../nginx/
@@ -23,6 +30,7 @@ services:
     ports:
       - 80:80
       - 443:443
+    logging: *loki-logging
 
   certbot:
     image: certbot/certbot:latest
@@ -58,10 +66,7 @@ services:
     environment:
       - POCKET_CORE_KEY=""
       - GODEBUG="madvdontneed=1"
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://localhost:3100/loki/api/v1/push"
+    logging: *loki-logging
 
   geth-mainnet:
     image: ethereum/client-go:v1.9.24
@@ -74,10 +79,7 @@ services:
     volumes:
       - /root/blockchains/geth-mainnet/geth/:/.mainnet
     command: "--rpc  --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3"
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://localhost:3100/loki/api/v1/push"
+    logging: *loki-logging
 
 ### MONITORING 
   loki:
@@ -90,6 +92,7 @@ services:
     ports:
       - "3100:3100"
     command: --config.file=/etc/loki/local-config.yaml
+    logging: *loki-logging
 
   prometheus:
     image: prom/prometheus:latest
@@ -103,6 +106,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yaml'
     expose:
       - 9090
+    logging: *loki-logging
 
   grafana:
     image: grafana/grafana:latest
@@ -128,6 +132,7 @@ services:
       - GF_SMTP_USER=myadrress@gmail.com
       - GF_SMTP_PASSWORD=mypassword
       - GF_SMTP_FROM_ADDRESS=myaddress@gmail.com
+    logging: *loki-logging
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -135,6 +140,7 @@ services:
     restart: unless-stopped
     expose:
       - 9100
+    logging: *loki-logging
 
   cadvisor:
     image: google/cadvisor:latest
@@ -147,6 +153,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     expose:
       - 8080
+    logging: *loki-logging
 
   alertmanager:
     image: prom/alertmanager:latest
@@ -159,3 +166,4 @@ services:
     command:
       - '--config.file=/etc/alertmanager/config.yaml'
       - '--storage.path=/alertmanager'
+    logging: *loki-logging
