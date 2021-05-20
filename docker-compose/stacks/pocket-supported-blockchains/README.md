@@ -118,6 +118,13 @@ You can verify if domain are correctly configured by checking with nslookup that
 
 #### Install loki driver and set grafana/prometheus permissions 
 
+First, clone the repo and move to this directory in order to continue the tutorial
+
+```bash
+git clone https://github.com/pokt-network/pocket-core-deployments.git 
+cd pocket-core-deployments/docker-compose/stacks/pocket-supported-blockchains
+```
+
 
 The following script will install the loki driver for sending blockchain node logs to loki and grant file permissions needed for grafana and prometheus 
 
@@ -146,7 +153,7 @@ docker-compose up web certbot
 
 You should see a message from certbot about the HTTP challenge going on and then a "congratulations!" message for succesfully generating your SSL certificate
 
-When you generate your SSL certificate successfully you can stop the web and certbot service and continue the installation procedure 
+When you generate your SSL certificate successfully you can stop the web and certbot service with CTRL+C and continue the installation procedure 
 
 
 NOTE: In case you are not able to get the certificate be sure to give more time to the IP change to propagate or best test adding `--staging` This will prevent you from getting timeout or ratelimit from using certbot. Once you get it working, remember to remove the `--staging` parameter and remove the test certificate found at proxy/certbot/conf/live/node1.${DOMAIN}. The command looks like:
@@ -210,7 +217,7 @@ You can see their configurations in the docker-compose volume mappings and their
 
 The following script will install the loki driver for sending blockchain node logs to loki and grant file permissions needed for grafana and prometheus 
 
-```
+```bash
 sudo bash install.sh
 ```
 
@@ -221,7 +228,7 @@ Change the following settings according your setup:
     - The env variable `DOMAIN` and `EMAIL` in the file `.env` used in docker-compose web, certbot services. Which indicates to nginx proxy what domain to use and certbot for generating the certificates
         For more info about the proxy configuration, you can see the (conf.d/https.conf.template)[]
  
-    - The env variable `GF_SECURITY_ADMIN_PASSWORD` in docker-compose grafana service. Which is the grafana login password. The default login user is admin 
+    - The env variable `GRAFANA_ADMIN_PASS` in .env. Which is the grafana login password on monitoring.{DOMAIN}. The default login user is admin. 
 
 
 ### Customizing blockchains configuration 
@@ -241,9 +248,21 @@ NOTE: in this case you need to manual replace ${DOMAIN} by your domain name
 #### Running
 
 
-Just do `docker-compose down && docker-compose up -d ` and you will be up & running! 
+We'll provide a temporary backup in order to avoid syncing from scratch for the latest version. So let's stop our current stack and download/extract this backup
 
 
+```bash
+docker-compose down
+rm -rf node1/data/* # for deleting current datadir
+wget https://storage.googleapis.com/pocket-mainnet-data/25k_backup.tar.gz
+tar -xvf 25k_backup.tar.gz -C node1/ 
+```
+
+Restart your stack so it reflect the changes
+
+```bash
+docker-compose down && docker-compose up -d 
+```
 
 ### References
 
