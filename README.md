@@ -38,6 +38,7 @@ This repository contains deployment artifacts to orchestrate [Pocket Core](https
 ### <b>Docker<a name="docker"></a></b>
 #### <b>Requirements</b>
 - [Docker](https://docker.com/)
+- Pocket account
 
 #### <b>Usage</b>
 Pocket offers two images that could be used instead of building your own. These are [poktnetwork/pocket-core](https://hub.docker.com/r/poktnetwork/pocket-core/tags?page=1&ordering=last_updated) and [poktnetwork/pocket](https://hub.docker.com/r/poktnetwork/pocket/tags?page=1&ordering=last_updated). In order to use them you need to pull them from the docker registry using the following command:
@@ -71,6 +72,7 @@ For instance, if you want to add extra configuration to the container, you won't
 #### <b>Requirements</b>
 - [Docker](https://docker.com/)
 - [Docker compose](https://docs.docker.com/compose/)
+- Pocket account
 
 Docker compose is a tool used to run and manage multiple containers. Use docker compose when running more than one pocket node or you want to run a pocket node plus one or multiple blockachain nodes. Note that we also provide docker compose files for various blockchains. It can be found under the `blockchains` directory.
 
