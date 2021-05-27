@@ -7,54 +7,141 @@
 
 # Pocket Core Deployments
 
-Deployment artifacts for the [Pocket Network](https://pokt.network/).
+Deployment artifacts for [Pocket Network](https://pokt.network/).
+
+## Table of Contents
+1. [Overview](#Overview)
+2. [Documentation](#Documentation)
+    - [Docker](#docker)
+        - [Building](#docker-build)
+        - [Running](#docker-run)
+            - [Storage](#docker-run-volume)
+    - [Docker Compose](#compose)
+        - [Building](#compose-build)
+        - [Running](#compose-run)
+    - [Kubernetes](#k8s)
+        - [Deployment](#k8s-deployment)
+        - [Statefulset](#k8s-statefulset)
+    - [Hombrew](#homebrew)
+    - [FAQ](#faq)
+3. [Contributing](#contributing)
+4. [Support & Contact](#support)
+
+
 
 ## Overview
 
-Dockerfiles and Compose YAMLs to orchestrate development and production-level environments of [Pocket Core](https://github.com/pokt-network/pocket-core).
+This repository contains deployment artifacts to orchestrate [Pocket Core](https://github.com/pokt-network/pocket-core).
 
-## Documentation
+## <b>Documentation</b>
 
-The docker-compose folder contains all the different blockchains for running together with the Pocket Core service.
+### <b>Docker<a name="docker"></a></b>
+#### <b>Requirements</b>
+- [Docker](https://docker.com/)
 
-Every `docker-compose.yml` for every setup contains an additional `nginx` image optimized optimized with brotli and volumes for `persistent data` for the blockchains.
-
-Every `docker-compose.yml` also contains the value `POCKET_CORE_START_DELAY` on the `pocket-service` container which is a variable that puts a delay while starting the pocket-service giving more time for the blockchains to start before receiving an erroneous response from them.
-
-Before running, you need to define the three following environment variables:
-
-#### POCKET_SERVICE_GID
-
-This variable will be provided by the pocket team and then you need to export it in your environment.
+#### <b>Usage</b>
+Pocket offers two images that could be used instead of building your own. These are [poktnetwork/pocket-core](https://hub.docker.com/r/poktnetwork/pocket-core/tags?page=1&ordering=last_updated) and [poktnetwork/pocket](https://hub.docker.com/r/poktnetwork/pocket/tags?page=1&ordering=last_updated). In order to use them you need to pull them from the docker registry using the following command:
 ```
-> export POCKET_SERVICE_GID=XXX
+docker pull poktnetwork/pocket-core:<tag>
 ```
-#### ENV
-
-This variable will define the pocket core version to run. By default it will run `mvp-staging-latest`
+or
 ```
-> export ENV=mvp-master-latest
+docker pull poktnetwork/pocket:<tag>
 ```
-#### POCKET_DISPATCH_IP
+You must replace `<tag>` by the version of pocket you want to run. For example `RC-0.6.3`.
 
-This variable contains the address to the pocket dispatcher. It defaults to `dispatch.pokt.network` which is our current production dispatch.
+The main difference between `poktnetwork/pocket-core` and `poktnetwork/pocket` is that the later does not contain any scripts to help you start your node.  
 
-### Running
-
-For running the `pocket-core` setup you only need to run `docker-compose up` inside the desired stack. For example in the case of aion, you only need to:
+The `poktnetwork/pocket-core` image can be configured via environment variables. Here is the list of environment variables available:
 ```
-> `cd aion`
-> `docker-compose up`
+POCKET_CORE_KEY            Raw private key             
+POCKET_CORE_PASSPHRASE     Passphrase to add private key to keybase. Also used to set the validator 
+POCKET_CORE_CONFIG         Pocket configuration file (json between single quotes)
+POCKET_CORE_CHAINS         List of chains your node will server (json between single quotes)
 ```
-There's also a folder that contains all the deployments, if you want to run them all, do the same procedure as before.
 
-_NOTE: You need at least 16GB of RAM and at least 2TB of hard drive if you wish to run all in a standalone setup._
+You can start your node using the following command:  
+`
+docker run  poktnetwork/pocket-core:RC-0.6.3 pocket start --mainnet --datadir=/home/app/.pocket`
 
-## Contributing
+For instance, if you want to add extra configuration to the container, you won't be able to do so using the `poktnetwork/pocket-core`. In this case you want to use the `poktnetwork/pocket` image. It comes only with the pocket binary installed so you can add custom scripts and configurations.
+
+## <b>Docker Compose<a name="compose"></b></a>
+
+#### <b>Requirements</b>
+- [Docker](https://docker.com/)
+- [Docker compose](https://docs.docker.com/compose/)
+
+Docker compose is a tool used to run and manage multiple containers. Use docker compose when running more than one pocket node or you want to run a pocket node plus one or multiple blockachain nodes. Note that we also provide docker compose files for various blockchains. It can be found under the `blockchains` directory.
+
+To start your docker compose you must run `docker-compose up` from the directory containing your `docker-compose.yaml` file. This will start all services listed in your `docker-compose.yaml`. To restart the node run `docker-compose restart <service name>`. In case you want to stop the container use `docker-compose stop <service name>`, do not use `docker-compose down` unless you want to tear down your setup.
+
+This is what a docker-compose file would look like for running a pocket node using the `poktnetwork/pocket` image:
+
+```
+version: '3'
+services:
+  pocket:
+    image: poktnetwork/pocket:RC-0.6.3
+    command: pocket start --mainnet --keybase=false --datadir=/path/to/datadir
+    ports:
+      - "8081:8081"
+      - "26656:26656"
+    networks:
+      - pocket
+    volumes:
+      - pocket:/path/to/datadir
+      - /path/to/config.json:/home/app/.pocket/config/config.json
+      - /path/to/chains.json:/home/app/.pocket/config/chains.json
+      - /path/to/node_key.json:/home/app/.pocket/node_key.json
+      - /path/to/priv_val_key.json:/home/app/.pocket/priv_val_key.json
+volumes:
+  pocket:
+networks:
+  pocket:
+    driver: bridge
+```
+
+#### Fields
+
+```
+image       Select which pocket image you want to run. As stated above, officially we provide two image: poktnetwork/pocket and poktnetwork/pocket-core. 
+command     Which command the container will run when your node starts.
+ports       Port mapping to your pocket node and your local machine. You can specify more than one.
+volumes     Map volumes or bind local files to your node.
+```
+
+## <b>Kubernetes<a name="k8s"></b></a>
+Coming soon.
+
+## <b>Homebrew<a name="homebrew"></b></a>
+
+[Homebrew documentation.](https://github.com/pokt-network/homebrew-pocket-core)
+
+## <b>Stack<a name="stack"></b></a>
+[Stack documentation.](/stacks/pocket-validator)
+
+# FAQ<a name="faq"></a>
+## I get "sh: -c requires an argument" when I start the container.
+Make sure you pass a command to the container like: 
+```
+docker run poktnetwork/pocket-core:RC-0.6.3 pocket start --mainnet --datadir=/home/app/.pocket
+```
+Note that after the container image you have pass the pocket command to start running your node.
+
+### When I try to run the container I get "canot open/create json file: open /dir/path/auth.json: no such file or directory"
+Check if the datadir properties in your config.json are set to /home/app/.pocket or to the path specified when using the `--datadir` flag.
+
+### I cannot ctrl+c to exit the container
+Make sure when you started your container you added the `-ti` arguments. It will allow you to interact with the tty.
+
+
+
+## Contributing<a name="contributing"></a>
 
 Please read [CONTRIBUTING.md](https://github.com/pokt-network/pocket-core/blob/master/README.md) for details on contributions and the process of submitting pull requests.
 
-## Support & Contact
+## Support & Contact<a name="support"></a>
 
 <div>
   <a  href="https://twitter.com/poktnetwork" ><img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social"></a>

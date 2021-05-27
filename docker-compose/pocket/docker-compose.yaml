@@ -1,0 +1,22 @@
+version: '3'
+services:
+  pocket-service:
+    image: poktnetwork/pocket:RC-0.6.2
+    command: pocket start --mainnet --keybase=false --datadir=/home/app/.pocket
+    ports:
+      - "xxxx:8081"
+      - "xxxx:26657"
+      - "xxxx:26656"
+    networks:
+      - pocket
+    volumes:
+      - pocket:/home/app/.pocket
+      - /path/to/config.json:/home/app/.pocket/config/config.json
+      - /path/to/chains.json:/home/app/.pocket/config/chains.json
+      - /path/to/node_key.json:/home/app/.pocket/node_key.json
+      - /path/to/priv_val_key.json:/home/app/.pocket/priv_val_key.json
+volumes:
+  pocket:
+networks:
+  pocket:
+    driver: bridge

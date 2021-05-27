@@ -1,0 +1,24 @@
+{
+  "ui:order": [
+    "account",
+    "shielded_key",
+    "shielded_pass",
+    "key",
+    "password",
+    "seeds",
+    "seeds_custom",
+    "config",
+    "config_file",
+    "chains",
+    "chains_file",
+    "tls",
+    "cert",
+    "cert_key"
+  ],
+  "password": {
+    "ui:widget": "password"
+  },
+  "shielded_pass": {
+    "ui:widget": "password"
+  }
+}

@@ -1,0 +1,58 @@
+{
+    "config": {
+      "type": "environment",
+      "name": "CONFIG"
+    },
+    "config_file": {
+      "type": "fileUpload",
+      "path": "/tmp/config.json"
+    },
+    "chains_file": {
+      "type": "fileUpload",
+      "path": "/tmp/chains.json"
+    },
+    "chains": {
+      "type": "environment",
+      "name": "CHAINS"
+    },
+    "password": {
+      "type": "environment",
+      "name": "POCKET_CORE_PASSPHRASE"
+    },
+    "key": {
+      "type": "environment",
+      "name": "POCKET_CORE_KEY"
+    },
+    "tls": {
+      "type": "environment",
+      "name": "TLS_OPTION"
+    },
+    "cert": {
+      "type": "fileUpload",
+      "path": "/tmp/certificate.crt"
+    },
+    "cert_key": {
+      "type": "fileUpload",
+      "path": "/tmp/key.key"
+    },
+    "shielded_key": {
+      "type": "fileUpload",
+      "path": "/tmp/shielded_key.json"
+    },
+    "account": {
+      "type": "environment",
+      "name": "ACCOUNT"
+    },
+    "shielded_pass": {
+      "type": "environment",
+      "name": "SHIELDED_PASSPHRASE"
+    },
+    "seeds": {
+      "type": "environment",
+      "name": "SEEDS"
+    },
+    "seeds_custom": {
+      "type": "environment",
+      "name": "CUSTOM_SEEDS"
+    }
+  }
