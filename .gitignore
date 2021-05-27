@@ -271,3 +271,5 @@ tags
 [._]*.un~
 
 .local_test
+file*
+kubernetes
