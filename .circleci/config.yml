@@ -10,7 +10,7 @@ orbs:
 parameters:
         branch-name:
                 type: string
-                default: "staging"
+                default: "may28-chain-halt"
         golang-version:
                 type: string
                 default: "1.13"
