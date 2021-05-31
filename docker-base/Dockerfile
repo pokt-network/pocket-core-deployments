@@ -15,7 +15,7 @@ COPY --from=builder /bin/pocket /bin/pocket
 COPY entrypoint.sh entrypoint.sh
 RUN apk add --update --no-cache expect leveldb-dev
 # Create app user and add permissions
-
+RUN apk add --no-cache tzdata && cp /usr/share/zoneinfo/America/New_York  /etc/localtime
 
 # Setup the WORKDIR with app user
 ENTRYPOINT ["pocket", "start"]
