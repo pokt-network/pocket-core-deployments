@@ -30,7 +30,7 @@ RUN mkdir -p ${POCKET_PATH}
 WORKDIR $POCKET_PATH
 
 # Creating the BRANCH_NAME variable
-ARG BRANCH_NAME="RC-0.6.3.1"
+ARG BRANCH_NAME="staging"
 
 # Copying deps sh to tmp folder
 COPY deps.sh /tmp/
@@ -57,7 +57,6 @@ COPY entrypoint.sh /tmp/
 COPY command.sh /tmp/
 RUN apk add --update --no-cache expect bash leveldb-dev
 RUN apk add --no-cache tzdata && cp /usr/share/zoneinfo/America/New_York  /etc/localtime
-
 # Create app user and add permissions
 RUN addgroup --gid 1001 -S app \
 	&& adduser --uid 1005 -S -G app app
