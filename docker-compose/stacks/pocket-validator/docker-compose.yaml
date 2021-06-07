@@ -22,7 +22,6 @@ services:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf
       - ./proxy/certbot/conf:/etc/nginx/ssl
       - ./proxy/certbot/data:/var/www/certbot
-      - ./proxy/rules/naxsi_core.rules:/etc/naxsi/naxsi_core.rules
     ports:
       - 80:80
       - 443:443
