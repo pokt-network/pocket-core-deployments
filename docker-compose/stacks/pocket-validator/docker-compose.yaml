@@ -14,7 +14,6 @@ x-loki:
 services:
   web:
     image: nginx:alpine
-    restart: always
     environment:
       - DOMAIN=${DOMAIN}
     volumes:
@@ -28,6 +27,7 @@ services:
     depends_on:
       - prometheus
       - grafana
+    restart: unless-stopped
     logging: *loki-logging
 
   certbot:
@@ -37,12 +37,10 @@ services:
     environment:
       - DOMAIN=${DOMAIN}
       - EMAIL=${EMAIL}
-
     volumes:
       - ./proxy/certbot/conf:/etc/letsencrypt
       - ./proxy/certbot/logs:/var/log/letsencrypt
       - ./proxy/certbot/data:/var/www/certbot
-
     depends_on:
       - prometheus
       - grafana
@@ -67,8 +65,8 @@ services:
       - ./node1/chains.json:/home/app/.pocket/config/chains.json                      # Pocket chains.json
       - ./node1/:/home/app/.pocket/                                                   # Pocket Datadir 
       - ./node1/data/:/home/app/.pocket/data/                                         # Blockchain data
+    restart: unless-stopped
     logging: *loki-logging
- 
 
   loki:
     image: grafana/loki:latest
@@ -80,13 +78,13 @@ services:
     ports:
       - "3100:3100"
     command: --config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
     logging: *loki-logging
 
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus 
     user: "1000"
-    restart: unless-stopped
     volumes:
       - ./monitoring/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
       - ./monitoring/prometheus/data:/prometheus
@@ -94,6 +92,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yaml'
     expose:
       - 9090
+    restart: unless-stopped
     logging: *loki-logging
 
   grafana:
@@ -120,20 +119,20 @@ services:
       - GF_SMTP_USER=myadrress@gmail.com
       - GF_SMTP_PASSWORD=mypassword
       - GF_SMTP_FROM_ADDRESS=myaddress@gmail.com
+    restart: unless-stopped
     logging: *loki-logging
 
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter 
-    restart: unless-stopped
     expose:
       - 9100
+    restart: unless-stopped
     logging: *loki-logging
 
   cadvisor:
     image: google/cadvisor:latest
     container_name: cadvisor 
-    restart: unless-stopped
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -141,6 +140,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     expose:
       - 8080
+    restart: unless-stopped
     logging: *loki-logging
 
   alertmanager:
@@ -150,8 +150,8 @@ services:
       - 9093
     volumes:
       - ./monitoring/alertmanager/:/etc/alertmanager/
-    restart: always
     command:
       - '--config.file=/etc/alertmanager/config.yaml'
       - '--storage.path=/alertmanager'
+    restart: unless-stopped
     logging: *loki-logging
