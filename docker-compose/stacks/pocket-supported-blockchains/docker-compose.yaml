@@ -18,7 +18,6 @@ services:
       context: ./../../nginx/
       dockerfile: Dockerfile 
     image: poktnetwork/nginx
-    restart: always
     environment:
       - DOMAIN=${DOMAIN}
     volumes:
@@ -29,6 +28,7 @@ services:
     ports:
       - 80:80
       - 443:443
+    restart: unless-stopped
     logging: *loki-logging
 
   certbot:
@@ -65,6 +65,7 @@ services:
     environment:
       - POCKET_CORE_KEY=""
       - GODEBUG="madvdontneed=1"
+    restart: unless-stopped
     logging: *loki-logging
 
   geth-mainnet:
@@ -78,6 +79,7 @@ services:
     volumes:
       - /root/blockchains/geth-mainnet/geth/:/.mainnet
     command: "--rpc  --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3"
+    restart: unless-stopped
     logging: *loki-logging
 
 ### MONITORING 
@@ -91,13 +93,13 @@ services:
     ports:
       - "3100:3100"
     command: --config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
     logging: *loki-logging
 
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus 
     user: "1000"
-    restart: unless-stopped
     volumes:
       - ./monitoring/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
       - ./monitoring/prometheus/data:/prometheus
@@ -105,6 +107,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yaml'
     expose:
       - 9090
+    restart: unless-stopped
     logging: *loki-logging
 
   grafana:
@@ -113,7 +116,6 @@ services:
     user: "104"
     expose:
     - 3000
-    restart: unless-stopped
     volumes:
       - ./monitoring/grafana/data:/var/lib/grafana
       - ./monitoring/grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
@@ -131,20 +133,20 @@ services:
       - GF_SMTP_USER=myadrress@gmail.com
       - GF_SMTP_PASSWORD=mypassword
       - GF_SMTP_FROM_ADDRESS=myaddress@gmail.com
+    restart: unless-stopped
     logging: *loki-logging
 
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter 
-    restart: unless-stopped
     expose:
       - 9100
+    restart: unless-stopped
     logging: *loki-logging
 
   cadvisor:
     image: google/cadvisor:latest
     container_name: cadvisor 
-    restart: unless-stopped
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -152,6 +154,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     expose:
       - 8080
+    restart: unless-stopped
     logging: *loki-logging
 
   alertmanager:
@@ -161,8 +164,8 @@ services:
       - 9093
     volumes:
       - ./monitoring/alertmanager/:/etc/alertmanager/
-    restart: always
     command:
       - '--config.file=/etc/alertmanager/config.yaml'
       - '--storage.path=/alertmanager'
+    restart: unless-stopped 
     logging: *loki-logging
