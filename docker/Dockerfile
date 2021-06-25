@@ -64,5 +64,4 @@ RUN mv /tmp/entrypoint.sh /home/app/ && mv /tmp/command.sh /home/app/command.sh 
 
 USER app
 
-# Setup the WORKDIR with app user
-ENTRYPOINT ["/home/app/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/expect", "/home/app/entrypoint.sh"]
