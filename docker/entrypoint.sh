@@ -12,6 +12,10 @@ trap graceful_exit {SIGINT SIGTERM}
 set command $argv
 set timeout -1
 
+# Create work dir
+spawn sh -c "mkdir -p /home/app/.pocket/config"
+expect eof
+
 # Pull variables from env if set
 set genesis ""
 catch {set genesis $env(POCKET_CORE_GENESIS)}
