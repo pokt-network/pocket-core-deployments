@@ -1,4 +1,4 @@
-#!/usr/bin/expect -f
+#!/usr/bin/expect
 
 # Send `pocket stop` when interrupted to prevent corruption
 proc graceful_exit {} {
@@ -21,10 +21,6 @@ catch {set chains $env(POCKET_CORE_CHAINS)}
 
 set config ""
 catch {set config $env(POCKET_CORE_CONFIG)}
-
-# Create work dir
-spawn sh -c "mkdir -p /home/app/.pocket/config"
-expect eof
 
 # Create dynamic config files
 if {$genesis != ""} {
@@ -52,11 +48,10 @@ if { $env(POCKET_CORE_KEY) eq "" }  {
     spawn sh -c "$command"
     send -- "$env(POCKET_CORE_PASSPHRASE)\n"
     log_user 1
-
 } else {
 # If key is passed in, load it into the local accounts
     log_user 0
-    spawn sh -c "pocket accounts import-raw $env(POCKET_CORE_KEY)"
+    spawn pocket accounts import-raw $env(POCKET_CORE_KEY)
     sleep 1
     send -- "$env(POCKET_CORE_PASSPHRASE)\n"
     expect eof
