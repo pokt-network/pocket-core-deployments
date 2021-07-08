@@ -1,0 +1,55 @@
+version: '2.1'
+
+services:
+
+  matic-testnet:
+    image: poktnetwork/matic:testnet
+    build:
+      context: . 
+      dockerfile: Dockerfile.testnet 
+      args:
+        - HEIMDALL_VER=v0.2.0-mumbai-42a1beac
+        - BOR_VER=v0.2.1
+        - NETWORK_VER=testnet-v4
+        - NODE_TYPE=sentry/sentry
+
+    expose:
+      - "1317"
+      - "26656"
+      - "26657"
+    volumes:
+      - ${PWD}/config.toml:/root/.heimdalld/config/config-testnet.toml
+      - ${PWD}/heimdall-config.toml:/root/.heimdalld/config/heimdall-config-testnet.toml
+      - ${PWD}/start.sh:/root/node/bor/start-testnet.sh
+      - ${PWD}/entrypoint.sh:/root/entrypoint.sh
+      - ${PWD}/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+      - /var/log/docker/matic/:/var/log/supervisord/
+      - matic-testnet:/root/node/.data/
+
+  matic-mainnet:
+    image: poktnetwork/matic:mainnet 
+    build:
+      context: . 
+      dockerfile: Dockerfile.mainnet 
+      args:
+        - HEIMDALL_VER=v0.2.0
+        - BOR_VER=v0.2.1
+        - NETWORK_VER=mainnet-v1
+        - NODE_TYPE=sentry/sentry
+
+    expose:
+      - "1317"
+      - "26656"
+      - "26657"
+    volumes:
+      - ${PWD}/config.toml:/root/.heimdalld/config/config.toml
+      - ${PWD}/heimdall-config.toml:/root/.heimdalld/config/heimdall-config.toml
+      - ${PWD}/start.sh:/root/node/bor/start.sh
+      - ${PWD}/entrypoint.sh:/root/entrypoint.sh
+      - ${PWD}/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+      - /var/log/docker/matic/:/var/log/supervisord/
+      - matic-mainnet:/root/node/.data/
+
+volumes:
+  matic-testnet:
+  matic-mainnet:

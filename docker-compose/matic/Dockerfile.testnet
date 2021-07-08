@@ -1,0 +1,58 @@
+FROM golang:latest 
+
+# Procedure taken from https://docs.matic.network/docs/validate/counter-stake-stage-2/linux-package-installation/ 
+
+ARG BOR_VER
+ARG HEIMDALL_VER 
+ARG NETWORK_VER 
+ARG NODE_TYPE 
+
+
+
+# Installs rabbitmq-server and build tools
+# https://github.com/maticnetwork/node-ansible/blob/master/roles/install-dependencies/tasks/main.yml
+RUN apt-get update \ 
+	&& apt-get install -y build-essential rabbitmq-server bash jq supervisor 
+
+
+# installs heimdall 
+# https://github.com/maticnetwork/node-ansible/tree/master/roles/install-heimdall 
+RUN mkdir -p $GOPATH/src/github.com/maticnetwork \
+	&& cd $GOPATH/src/github.com/maticnetwork \ 
+        && git clone https://github.com/maticnetwork/heimdall \ 
+	&& cd heimdall \ 
+	&& git checkout $HEIMDALL_VER \ 
+        && make install \
+#	&& ln -s ~/go/bin/heimdalld /usr/bin/heimdalld \
+	&& ln -s ~/go/bin/heimdallcli /usr/bin/heimdalld \
+	&& ln -s ~/go/bin/bridge /usr/bin/bridge 
+
+
+# install bors
+# https://github.com/maticnetwork/node-ansible/tree/master/roles/install-bor
+RUN cd ~/ && git clone https://github.com/maticnetwork/bor \ 
+	&& cd bor \ 
+	&& git checkout $BOR_VER \ 
+	&& make all \
+	&& ln -s ./build/bin/bor /usr/bin/bor \
+	&& ln -s ./build/bin/bootnode /usr/bin/bootnode 
+
+# Setting up network
+# https://github.com/maticnetwork/node-ansible/blob/master/roles/setup-network/tasks/setup.yml
+RUN cd ~ && git clone https://github.com/maticnetwork/launch.git \
+        && mkdir ~/node \
+	&& cp -rf ~/launch/$NETWORK_VER/$NODE_TYPE/* ~/node/ \
+	&& cd ~/node/heimdall \
+	&& bash setup.sh \ 
+	&& cd ~/node/bor \
+	&& bash setup.sh \
+        && cd ~/launch/$NETWORK_VER/ \
+        && bash service.sh  \
+
+
+# Create empty folders
+RUN mkdir /root/.heimdalld/config/
+
+RUN mkdir -p /var/log/supervisord
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
