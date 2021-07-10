@@ -340,11 +340,18 @@ As last step, stake your node by doing the following commands inside your pocket
 
 
 ```bash
+# Import your account using private key
+pocket accounts import-raw <privatel_key>
+
+# or
+import your account import-armored keyfile.json
+
+
 # Staking Command
 pocket nodes stake  <fromAddr> <amount in uPOKT> <chains> <serviceURI w/443> <chainID> <fees in Upokt> <legacy flag> 
 
 # example with dummy values
-pocket nodes stake 45D50DB64E90C0109C778DAAB7EF36676FC03866 1510000000 0001,0021 https://my-pocket-url:443 mainnet 10000 true 
+pocket nodes stake 45D50DB64E90C0109C778DAAB7EF36676FC03866 1510000000 0001,0021 https://my-pocket-url:443 mainnet 10000 false 
 ``` 
 
 Wait one block (~15 mins) and your node should be ready to serve relays
