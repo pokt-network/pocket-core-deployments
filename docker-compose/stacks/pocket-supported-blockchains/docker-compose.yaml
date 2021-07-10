@@ -12,18 +12,16 @@ x-loki:
     keep-file: 'false'
 
 services:
-#### PROXY
-  web: 
-    build: 
-      context: ./../../nginx/
-      dockerfile: Dockerfile 
-    image: poktnetwork/nginx
+
+  proxy:
+    image: nginx:alpine
+    container_name: proxy
     environment:
       - DOMAIN=${DOMAIN}
     volumes:
       - ./proxy/conf.d:/etc/nginx/templates
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf
-      - ./proxy/certbot/conf:/etc/nginx/ssl
+      - /etc/letsencrypt/:/etc/nginx/ssl
       - ./proxy/certbot/data:/var/www/certbot
     ports:
       - 80:80
@@ -31,25 +29,20 @@ services:
     restart: unless-stopped
     logging: *loki-logging
 
-  certbot:
-    image: certbot/certbot:latest
-    container_name: certbot
-    command: certonly --webroot --webroot-path=/var/www/certbot --email ${EMAIL} --agree-tos --no-eff-email -d pocket-mainnet.${DOMAIN} -d eth-mainnet.${DOMAIN}  -d monitoring.${DOMAIN}
-    environment:
-      - DOMAIN=${DOMAIN}
-      - EMAIL=${EMAIL}
+  certbot-renew:
+    image: certbot-renew
     volumes:
-      - ./proxy/certbot/conf:/etc/letsencrypt
-      - ./proxy/certbot/logs:/var/log/letsencrypt
-      - ./proxy/certbot/data:/var/www/certbot
+      - /etc/letsencrypt/:/etc/letsencrypt/
+    build: 
+     context: certbot/
+     dockerfile: Dockerfile 
+    container_name: certbot-renew
 
-    depends_on:
-      - web
 
 #### BLOCKCHAINS
 
   pocket-mainnet:
-    image: poktnetwork/pocket:RC-0.6.3 
+    image: poktnetwork/pocket:RC-0.6.3.6 
     user: root
     container_name: pocket-mainnet 
     command: ["pocket", "start", "--keybase=false", "--mainnet", "--datadir=/home/app/.pocket/"]

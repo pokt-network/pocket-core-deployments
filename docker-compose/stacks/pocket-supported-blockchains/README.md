@@ -135,32 +135,42 @@ sudo bash install.sh
 
 #### Create and validate your SSL certificate 
 
-
-Edit the env variables `DOMAIN` and `EMAIL` in the file `.env` with the values for your setup. 
-
-Those variables are used in docker-compose web, certbot services. Which indicates to nginx proxy what domain to use and certbot for generating the certificates
-
-For more info about the proxy configuration, you can see the conf.d/https.conf.template
+After setting up your domain A records, let's now generate our SSL domain certificate for the entire domain (*.yourdomain.com) by doing: 
 
 
-After setting up your domain A records, let's now generate our SSL certificates by doing: 
-
-
-```
-docker-compose up web certbot 
+```bash
+docker run --volume /etc/letsencrypt/:/etc/letsencrypt/  -it certbot/certbot:latest certonly --manual --agree-tos --no-eff-email --preferred-challenges=dns -d \*.yourdomain.com -d yourdomain.com
 ```
 
-
-You should see a message from certbot about the HTTP challenge going on and then a "congratulations!" message for succesfully generating your SSL certificate
-
-When you generate your SSL certificate successfully you can stop the web and certbot service with CTRL+C and continue the installation procedure 
+Certbot will tell you to create a DNS TXT record _acme-challenge.<yourdomain> with a provided TXT value, create it, wait 5-10m until it propagates and test with:
 
 
-NOTE: In case you are not able to get the certificate be sure to give more time to the IP change to propagate or best test adding `--staging` This will prevent you from getting timeout or ratelimit from using certbot. Once you get it working, remember to remove the `--staging` parameter and remove the test certificate found at proxy/certbot/conf/live/node1.${DOMAIN}. The command looks like:
-
+```bash
+nslookup -type=txt _acme-challenge.yourdomain.com
 ```
-certonly --webroot --webroot-path=/var/www/certbot --email ${EMAIL} --agree-tos --no-eff-email --staging -d node1.${DOMAIN} -d monitoring.${DOMAIN}
+
+Once this command shows you the TXT you entered for your domain, you can hit enter and proceed in the certbot window 
+
+> Note: In case you cannot verify. Retry the command and when you set the value of the TXT subdomain, wait a little bit longer 
+
+If you finished. you will have your certificate succesfully generated. which we will be used by the nginx proxy to server the web server and by the certbot-renew service to be renewed automatically
+
+
+### Certbot-renew containner
+
+
+This is an alpine image with certbot and crond.  It works by trying to renew ssl certificate by domain level every hour. And if it's sucessful, it restart the nginnx proxy so the proxy refresh the ssl certificate data. 
+
+For checking the configuration file regarding certbot-renew functinoality you can see the [certbot folder](./certbot/) and [certbot docker](./certbot/Dockerfile)
+ 
+For changing the renew periodicity you can modify this file [certbot/certbot-renew](./certbot/certbot-renew) 
+
+If you did any important change on building files, remember to build
+
+```bash
+docker-compose down && docker-compose build certbot-renew && docker-compose up certbot-renew
 ```
+
 
 ####  Create basic auth for proxy access
 
@@ -194,14 +204,9 @@ Then, in your chains.json of your pocket-validator point to your pocket blockcha
 ]
 ``` 
 
-generate more information about chains.json file, see:
+For more information about chains, please see:
 
-https://docs.pokt.network/changelog/chainsjs
-
-
-#### Uncomment proxy routes
-
-After your certbot certificate is issued, you can stop uncomment all the '#' on the file `proxy/conf.d/https.conf.templates`
+- [New chains](https://forum.pokt.network/t/pip-6-2-settlers-of-new-chains/1027) 
 
 
 ### Setting up proxy and monitoring systems 
