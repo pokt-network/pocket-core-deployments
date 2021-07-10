@@ -6,9 +6,10 @@ This folder contains a docker-compose.yaml with:
 
 - Single pocket node validator
 - Grafana/prometheus/loki/cadvisor/alertmanager for monitoring logs/metrics
-- Reverse nginx proxy with basic WAF and certbot certificate generation
+- Reverse nginx proxy and certbot certificate generation
+- Automatic certificate generation
 
-The purpose is to provide a closest production-ready stack in order to serve traffic for your pocket-validator 
+The purpose is to provide a closest production-ready stack in order to serve traffic to your pocket-validator 
 
 We packed basics of security and other configurations. Security and server hardening it's up to the responsability of all node runners 
 
@@ -25,17 +26,17 @@ We packed basics of security and other configurations. Security and server harde
 
 ### Minimum requirements 
 
-
 - CPU: 2 CPUs
 - Memory: 4 GB RAM
-- Disk: 60GB SSD 
+- Disk: 80GB SSD 
+
 
 ### Recommended requirements 
 
-
 - CPU: 4 CPUs
 - Memory: 6 GB RAM
-- Disk: 100GB SSD 
+- Disk: 120GB SSD 
+
 
 _For more information, see [Pocket node hardware requirements](https://docs.pokt.network/docs/before-you-dive-in#hardware-requirements)_
 
@@ -56,11 +57,11 @@ In case you are running in public network. we included instructions for blocking
 
 Open the ports:
 
-* SSH 	 				
+* SSH (22/tcp) 	 				
     * Only accessed by your IP  (x.x.x.x/32)
-* HTTP/HTTPS for the nginx proxy  	
+* HTTP/HTTPS for the nginx proxy (80/TCP, 443/TCP)	
 	* Public access (0.0.0.0/0) needed for the grafana dashboard  
-* TCP/26656 for pocket peers
+* Pocket peers (TCP/26656)
 	* Public access (0.0.0.0/0)
 
 Verify to block all the other ports and harden the SSH access to only connect using your machine IP and a keypair 
@@ -74,7 +75,6 @@ Create the following domain A records pointing to your pocket-validator server I
 
 
 After you finish, wait 5-10 mins or the time required given by your DNS until the spread is over. 
-
 
 You can verify if domain are correctly configured by checking with nslookup that the domains return your IP: 
 
@@ -103,62 +103,47 @@ sudo bash install.sh
 
 #### Create and validate your SSL certificate 
 
-
-Edit the env variables `DOMAIN` and `EMAIL` in the file `.env` with the values for your setup. 
-Those variables are used in docker-compose web, certbot services. Which indicates to nginx proxy what domain to use and certbot for generating the certificates
-
-For more info about the proxy configuration, you can see the conf.d/https.conf.template
-
-
-After setting up your domain A records, let's now generate our SSL certificates by doing: 
+After setting up your domain A records, let's now generate our SSL domain certificate for the entire domain (*.yourdomain.com) by doing: 
 
 
 ```bash
-docker-compose up web certbot 
+docker run --volume /etc/letsencrypt/:/etc/letsencrypt/  -it certbot/certbot:latest certonly --manual --agree-tos --no-eff-email --preferred-challenges=dns -d \*.yourdomain.com -d yourdomain.com
 ```
 
+Certbot will tell you to create a DNS TXT record _acme-challenge.<yourdomain> with a provided TXT value, create it, wait 5-10m until it propagates and test with:
 
-You should see a message from certbot about the HTTP challenge going on and then a "congratulations!" message for succesfully generating your SSL certificate
-
-When you generate your SSL certificate successfully you can stop the web and certbot service with CTRL+C and continue the installation procedure 
-
-
-> Note: In case you are not able to get the certificate be sure to give more time to the IP change to propagate or best test adding `--staging` This will prevent you from getting timeout or ratelimit from using certbot. Once you get it working, remember to remove the `--staging` parameter and remove the test certificate found at proxy/certbot/conf/live/node1.${DOMAIN}. The command looks like:
 
 ```bash
-certonly --webroot --webroot-path=/var/www/certbot --email ${EMAIL} --agree-tos --no-eff-email --staging -d node1.${DOMAIN} -d monitoring.${DOMAIN}
+nslookup -type=txt _acme-challenge.yourdomain.com
 ```
 
-### Uncomment proxy routes
+Once this command shows you the TXT you entered for your domain, you can hit enter and proceed in the certbot window 
 
-After your certbot certificate is issued, you can stop all the lines starting with the character '#', in the file `proxy/conf.d/https.conf.templates`
+> Note: In case you cannot verify. Retry the command and when you set the value of the TXT subdomain, wait a little bit longer 
+
+If you finished. you will have your certificate succesfully generated. which we will be used by the nginx proxy to server the web server and by the certbot-renew service to be renewed automatically
 
 ### Setting up proxy and monitoring systems 
 
 We use nginx for the web proxy and (loki/grafana/prometheus) stack for the monitoring systems
 
-You can see their configurations in the docker-compose volume mappings and their respective folders if you wish to customize then for yourself
- 
+You can see their configurations in the docker-compose volume mappings and their respective folders if you wish to customize then for yourself 
 
 ### Set your domain and configure grafana access 
- 
 
 Change the following settings according your setup:
-    - The env variable `DOMAIN` and `EMAIL` in the file `.env` used in docker-compose web, certbot services. Which indicates to nginx proxy what domain to use and certbot for generating the certificates
+    - The env variable `DOMAIN`  in the file `.env` used in docker-compose web services. Which indicates to nginx proxy what domain to use and certbot for generating the certificates
         For more info about the proxy configuration, you can see the (conf.d/https.conf.template)[]
-
     - The env variable `GRAFANA_ADMIN_PASS` in .env. Which is the grafana login password on monitoring.{DOMAIN}. The default login user is admin. 
 
 
 ## Configuring your validator
-
 
 For more info. See: 
 https://docs.pokt.network/docs/create-validator-node#
 
 
 ### Configure your chains.json file
-
 
 Next step, configure your chains.json located in node1/chains.json serving your blockchains as follows:
 
@@ -173,7 +158,6 @@ Next step, configure your chains.json located in node1/chains.json serving your 
         "id": "0021",
         "url": "https://eth-mainnet.yourdomain/",
     }
-]
 ``` 
 
 In case you have your URLS protected by basic_auth as shown in the README tutorial in pocket-supported-blockchains folder, you need:
@@ -199,17 +183,16 @@ In case you have your URLS protected by basic_auth as shown in the README tutori
 ]
 ``` 
 
-For more information about chains.json file, see:
+For more information about chains, please see:
 
-https://docs.pokt.network/changelog/chainsjs 
-
+- [New chains](https://forum.pokt.network/t/pip-6-2-settlers-of-new-chains/1027) 
 
 ### Obtaining your node_key.json and priv_val_key.json
 
 
 If your have your `node_key.json` and `priv_val_key.json`, just move those files inside node1 and skip this step
 
-In case you don't have the files mentioned. Assuming you have your keyfile.json. Get your `node_key.json` and `priv_val_key.json` by executing those commands in the host machine:
+In case you don't have the files mentioned. Get your `node_key.json` and `priv_val_key.json` by executing the following commands in the host machine:
 
 
 ```bash
@@ -217,12 +200,17 @@ docker-compose up -d  # Run all services
 
 docker exec -it node1 sh # Enter to your node1 container
 
-# import account by using private key
 
+#### import account by using private key
+
+
+```bash
 pocket accounts import-raw <YOUR PRIVATE_KEY> # Enter your password
+```
 
-#  Or you can import by keyfile
+####  Or you can import by keyfile
 
+```bash
 echo '${KEYFILE}' > keyfile.json # Or just copy and paste your keyfile content using nano or vim
 
 pocket accounts import-armored keyfile.json # Enter your password 
@@ -241,7 +229,9 @@ cp /root/.pocket/node_key.json  /home/app/.pocket
 exit
 ```
 
+
 Restart you node for refreshing the changes:
+
 
 ```bash
 docker stop node1 && docker rm node1 && docker-compose up -d
@@ -292,14 +282,28 @@ Inside the `.env` file. Fill the env variable with your node passphrase (same us
 
 We'll provide a temporary backup in order to avoid syncing from scratch for the latest version. So let's stop our current stack and download/extract this backup
 
+
+### gsutil backup (recommended, no need to untar)
+
+Requires [gsutil installed](https://cloud.google.com/storage/docs/gsutil_install)
+
+
 ```bash
-docker-compose down
+docker-compose down # For stopping the nodes
+gsutil -m cp -r  gs://pocket-blockchain-backup-latest/* node1/data/
+```
+
+### tar backup (need 2x the blockchain space)
+
+```bash
+docker-compose down # For stopping the nodes
 rm -rf node1/data/* # for deleting current datadir
-wget https://storage.googleapis.com/pocket-mainnet-data/25k_backup.tar.gz
-tar -xvf 25k_backup.tar.gz -C node1/ 
+wget https://storage.googleapis.com/blockchains-data/pocket-network-mainnet-latest.tar 
+tar -xvf pocket-network-mainnet-latest.tar -C node1/ 
 ```
 
 Restart your stack so it reflect the changes
+
 
 ```bash
 docker-compose down && docker-compose up -d 
@@ -309,13 +313,14 @@ Please verify that your container node is up and it's syncing
 
 While syncing, verify that your network proxy nginx and grafana stack is correctly configured by entering to the grafana login on:
 
-> http://monitoring.${DOMAIN} 
+> https://monitoring.${DOMAIN} 
 
 Also, verify if your pocket node is correctly exposed by checking the pocket core ver on:
 
-> http://node1.${DOMAIN}/v1
+> https://node1.${DOMAIN}/v1
 
 As last step, stake your node by doing the following commands inside your pocket node:
+
 
 ```bash
 # Staking Command
@@ -330,11 +335,11 @@ Wait one block (~15 mins) and your node should be ready to serve relays
 In case you want to verify. Please do:
 
 ```bash
-> docker exec -it node1 sh
+docker exec -it node1 sh
 
-> pocket query node <youraddr> # It should show your addr and the domain of your node
+pocket query node <youraddr> # It should show your addr and the domain of your node
 
-> pocket query height # You should be in the latest height of the blockchain. See https://explorer.pokt.network/
+pocket query height # You should be in the latest height of the blockchain. See https://explorer.pokt.network/
 ```
 
 
