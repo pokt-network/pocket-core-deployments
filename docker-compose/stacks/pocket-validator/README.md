@@ -123,6 +123,23 @@ Once this command shows you the TXT you entered for your domain, you can hit ent
 
 If you finished. you will have your certificate succesfully generated. which we will be used by the nginx proxy to server the web server and by the certbot-renew service to be renewed automatically
 
+
+### Certbot-renew containner
+
+
+This is an alpine image with certbot and crond.  It works by trying to renew ssl certificate by domain level every hour. And if it's sucessful, it restart the nginnx proxy so the proxy refresh the ssl certificate data. 
+
+For checking the configuration file regarding certbot-renew functinoality you can see the [certbot folder](./certbot/) and [certbot docker](./certbot/Dockerfile)
+ 
+For changing the renew periodicity you can modify this file [certbot/certbot-renew](./certbot/certbot-renew) 
+
+If you did any important change on building files, remember to build
+
+```bash
+docker-compose down && docker-compose build certbot-renew && docker-compose up certbot-renew
+```
+
+ 
 ### Setting up proxy and monitoring systems 
 
 We use nginx for the web proxy and (loki/grafana/prometheus) stack for the monitoring systems
@@ -399,11 +416,4 @@ sudo systemctl restart docker && docker-compose down && docker-compose up -d
 docker images
 # Substitute the ${ID} variable below with the IMAGE ID you got from the last command
 docker run -it --entrypoint bash --user root -w '/root' ${ID}
-```
-
-### You get a permission error for the `priv_val_key.json`, `config.json` or `node_key.json` file inside the container.
-- To fix this case you can change the permission of the folder of node1 inside the host machine using:
-```bash
-## This will change the permission of the folder and its's content to be accessed by everyone.
-chmod 777 -R node1/
 ```
