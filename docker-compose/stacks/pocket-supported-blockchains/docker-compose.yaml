@@ -131,16 +131,6 @@ services:
       - ../../ethereum/erigon/goerli:/home/erigon/.local/share/erigon
     logging: *loki-logging
 
-  poa-kovan:
-    extends:
-      file: ../../ethereum/parity/docker-compose.yaml 
-      service: poa-kovan 
-    volumes:
-      - ../../ethereum/parity/kovan:/home/parity/.ethereum
-      - ../../ethereum/parity/kovan/poa-chain-spec:/home/parity/poa-chain-spec
-
-    logging: *loki-logging
-
   erigon-mainnet-rpc:
     container_name: erigon-mainnet-rpc
     extends:
