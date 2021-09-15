@@ -12,32 +12,39 @@ x-loki:
     keep-file: 'false'
 
 services:
-
+#### PROXY
   proxy:
+    container_name: proxy 
     image: nginx:alpine
-    container_name: proxy
+    restart: always
     environment:
       - DOMAIN=${DOMAIN}
     volumes:
       - ./proxy/conf.d:/etc/nginx/templates
+      - ./proxy/conf.d/.htpasswd:/etc/nginx/conf.d/.htpasswd
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf
-      - /etc/letsencrypt/:/etc/nginx/ssl
+      - ./proxy/certbot/conf:/etc/nginx/ssl
       - ./proxy/certbot/data:/var/www/certbot
+      - ./proxy/rules/naxsi_core.rules:/etc/naxsi/naxsi_core.rules
+      - ./proxy/streamconf:/etc/nginx/streamconf
+
     ports:
       - 80:80
       - 443:443
-    restart: unless-stopped
+      - 21056-21106:21056-21106
     logging: *loki-logging
 
-  certbot-renew:
-    image: certbot-renew
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --email ${EMAIL} --agree-tos --no-eff-email -d pocket-mainnet.${DOMAIN} -d eth-mainnet.${DOMAIN}  -d monitoring.${DOMAIN}
+    environment:
+      - DOMAIN=${DOMAIN}
+      - EMAIL=${EMAIL}
     volumes:
-      - /etc/letsencrypt/:/etc/letsencrypt/
-    build: 
-     context: certbot/
-     dockerfile: Dockerfile 
-    container_name: certbot-renew
-
+      - ./proxy/certbot/conf:/etc/letsencrypt
+      - ./proxy/certbot/logs:/var/log/letsencrypt
+      - ./proxy/certbot/data:/var/www/certbot
 
 #### BLOCKCHAINS
 
@@ -58,21 +65,134 @@ services:
     environment:
       - POCKET_CORE_KEY=""
       - GODEBUG="madvdontneed=1"
-    restart: unless-stopped
     logging: *loki-logging
 
-  geth-mainnet:
-    image: ethereum/client-go:v1.9.24
-    container_name: geth-mainnet-full-node
-    ports:
-      - "30303:30303"   # Eth peers
-    expose:
-      - "8545"
-      - "8546"
+# geth-mainnet:
+#   extends:
+#     file: ../../geth/docker-compose-local.yml 
+#     service: geth-mainnet
+#   volumes:
+#     - ../../geth/geth:/.mainnet
+#   logging: *loki-logging
+#
+# geth-rinkeby:
+#   extends: 
+#     file: ../../geth/docker-compose-local.yml 
+#     service: geth-rinkeby
+#   volumes:
+#     - ../../geth/rinkeby:/.rinkeby
+#   logging: *loki-logging
+#
+# geth-ropsten:
+#   extends: 
+#     file: ../../geth/docker-compose-local.yml 
+#     service: geth-ropsten
+#   volumes:
+#     - ../../geth/ropsten:/.ropsten
+#   logging: *loki-logging
+#
+  xdai-mainnet:
+    extends: 
+      file: ../../xdai/docker-compose.yml 
+      service: xdai-mainnet 
     volumes:
-      - /root/blockchains/geth-mainnet/geth/:/.mainnet
-    command: "--rpc  --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .mainnet --verbosity 3"
-    restart: unless-stopped
+      - ../../xdai/xdai:/.xdai
+    logging: *loki-logging
+
+  erigon-archival:
+    extends:
+      file: ../../ethereum/erigon/docker-compose.yaml 
+      service: erigon-archival 
+    volumes:
+      - ../../ethereum/erigon/archival:/home/erigon/.local/share/erigon
+    logging: *loki-logging
+
+  erigon-ropsten:
+    extends:
+      file: ../../ethereum/erigon/docker-compose.yaml 
+      service: erigon-ropsten 
+    volumes:
+      - ../../ethereum/erigon/ropsten:/home/erigon/.local/share/erigon
+    logging: *loki-logging
+
+  erigon-rinkeby:
+    extends:
+      file: ../../ethereum/erigon/docker-compose.yaml 
+      service: erigon-rinkeby
+    volumes:
+      - ../../ethereum/erigon/rinkeby:/home/erigon/.local/share/erigon
+    logging: *loki-logging
+
+  erigon-goerli:
+    extends:
+      file: ../../ethereum/erigon/docker-compose.yaml 
+      service: erigon-goerli 
+    volumes:
+      - ../../ethereum/erigon/goerli:/home/erigon/.local/share/erigon
+    logging: *loki-logging
+
+  poa-kovan:
+    extends:
+      file: ../../ethereum/parity/docker-compose.yaml 
+      service: poa-kovan 
+    volumes:
+      - ../../ethereum/parity/kovan:/home/parity/.ethereum
+      - ../../ethereum/parity/kovan/poa-chain-spec:/home/parity/poa-chain-spec
+
+    logging: *loki-logging
+
+  erigon-mainnet-rpc:
+    container_name: erigon-mainnet-rpc
+    extends:
+      file: ../../ethereum/erigon/docker-compose.yaml 
+      service: erigon-mainnet-rpc 
+    volumes:
+      - ../../ethereum/erigon/archival:/home/erigon/.local/share/erigon
+    logging: *loki-logging
+  
+  erigon-rinkeby-rpc:
+    container_name: erigon-rinkeby-rpc
+    extends:
+      file: ../../ethereum/erigon/docker-compose.yaml 
+      service: erigon-rinkeby-rpc 
+    volumes:
+      - ../../ethereum/erigon/rinkeby:/home/erigon/.local/share/erigon
+    logging: *loki-logging
+
+  erigon-goerli-rpc:
+    container_name: erigon-goerli-rpc
+    extends:
+      file: ../../ethereum/erigon/docker-compose.yaml 
+      service: erigon-goerli-rpc 
+    volumes:
+      - ../../ethereum/erigon/goerli:/home/erigon/.local/share/erigon
+    logging: *loki-logging
+  
+  erigon-ropsten-rpc:
+    container_name: erigon-ropsten-rpc
+    extends:
+      file: ../../ethereum/erigon/docker-compose.yaml 
+      service: erigon-ropsten-rpc
+    volumes:
+      - ../../ethereum/erigon/ropsten:/home/erigon/.local/share/erigon
+    logging: *loki-logging
+
+  ava1:
+    extends:
+      file: ../../avalanche/docker-compose.yaml 
+      service: ava1 
+    volumes:
+      - ../../avalanche:/root/.avalanchego
+      - ../../avalanche:/root/.cache
+    logging: *loki-logging
+
+  fuse-mainnet:
+    extends:
+      file: ../../fuse/docker-compose.yaml 
+      service: fuse-mainnet 
+    volumes:
+      - "../../fuse/config:/config/custom"
+      - "../../fuse/data:/data"
     logging: *loki-logging
 
 ### MONITORING 
@@ -86,13 +206,13 @@ services:
     ports:
       - "3100:3100"
     command: --config.file=/etc/loki/local-config.yaml
-    restart: unless-stopped
     logging: *loki-logging
 
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus 
     user: "1000"
+    restart: unless-stopped
     volumes:
       - ./monitoring/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
       - ./monitoring/prometheus/data:/prometheus
@@ -100,7 +220,6 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yaml'
     expose:
       - 9090
-    restart: unless-stopped
     logging: *loki-logging
 
   grafana:
@@ -109,9 +228,10 @@ services:
     user: "104"
     expose:
     - 3000
+    restart: unless-stopped
     volumes:
       - ./monitoring/grafana/data:/var/lib/grafana
-      - ./monitoring/grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
       - ./monitoring/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=YOURADMINPASSWORD
@@ -126,20 +246,20 @@ services:
       - GF_SMTP_USER=myadrress@gmail.com
       - GF_SMTP_PASSWORD=mypassword
       - GF_SMTP_FROM_ADDRESS=myaddress@gmail.com
-    restart: unless-stopped
     logging: *loki-logging
 
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter 
-    expose:
-      - 9100
     restart: unless-stopped
+    ports:
+      - 9101:9100
     logging: *loki-logging
 
   cadvisor:
     image: google/cadvisor:latest
     container_name: cadvisor 
+    restart: unless-stopped
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -147,7 +267,6 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     expose:
       - 8080
-    restart: unless-stopped
     logging: *loki-logging
 
   alertmanager:
@@ -157,8 +276,9 @@ services:
       - 9093
     volumes:
       - ./monitoring/alertmanager/:/etc/alertmanager/
+    restart: always
     command:
       - '--config.file=/etc/alertmanager/config.yaml'
       - '--storage.path=/alertmanager'
-    restart: unless-stopped 
     logging: *loki-logging
+

@@ -1,93 +1,107 @@
 resolver 127.0.0.11 valid=10s; # 127.0.0.1 comes from /etc/resolv.conf on the nginx container
 
-
 server {
-     listen [::]:80;
-     listen 80 default_server;
-      
-     server_name *.${DOMAIN};
+     listen  80 ;
+     resolver 127.0.0.11 ipv6=off valid=5s;
      
-     location / {
-       return 301 https://$host$request_uri;
-       auth_basic off;
+     # Proxy timeout for long running eth queries
+     proxy_read_timeout 260;
+     proxy_connect_timeout 260;
+     proxy_send_timeout 260; 
+     send_timeout 260;
+
+     server_name pocket-mainnet.${DOMAIN}; 
+
+     location /v1 {
+       auth_basic           "where you going?";
+       auth_basic_user_file /etc/nginx/conf.d/.htpasswd; 
+
+       set $pocket pocket-mainnet:8081;
+       proxy_pass http://$pocket;
+       proxy_redirect off;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection 'upgrade';
+       proxy_set_header Host $host;
+       proxy_cache_bypass $http_upgrade;
+       proxy_http_version 1.1;
+     }
+     
+     location /v1/client/relay {
+       auth_basic           "where you going?";
+       auth_basic_user_file /etc/nginx/conf.d/.htpasswd; 
+
+       set $pocket pocket-mainnet:8081;
+       proxy_pass http://$pocket/v1/client/relay$1;
+       proxy_redirect off;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection 'upgrade';
+       proxy_set_header Host $host;
+       proxy_cache_bypass $http_upgrade;
+       proxy_http_version 1.1;
+       # Proxy timeout
+       proxy_read_timeout 260;
+       proxy_connect_timeout 260;
+       proxy_send_timeout 260; 
+       send_timeout 260;
+     }
+     
+     location /v1/client/challenge {
+       auth_basic           "where you going?";
+       auth_basic_user_file /etc/nginx/conf.d/.htpasswd; 
+
+       set $pocket pocket-mainnet:8081;
+       proxy_pass http://$pocket/v1/client/challenge$1;
+       proxy_redirect off;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection 'upgrade';
+       proxy_set_header Host $host;
+       proxy_cache_bypass $http_upgrade;
+       proxy_http_version 1.1;
+     }
+     location /v1/client/dispatch {
+       auth_basic           "where you going?";
+       auth_basic_user_file /etc/nginx/conf.d/.htpasswd; 
+
+       set $pocket pocket-mainnet:8081;
+       proxy_pass http://$pocket/v1/client/dispatch$1;
+       proxy_redirect off;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection 'upgrade';
+       proxy_set_header Host $host;
+       proxy_cache_bypass $http_upgrade;
+       proxy_http_version 1.1;
 
      }
  
 } 
 
 server {
-     listen  443 ssl;
-     resolver 127.0.0.11 ipv6=off valid=5s;
-
-     server_name pocket-mainnet.${DOMAIN}; 
-
-     ssl_certificate /etc/nginx/ssl/live/${DOMAIN}/fullchain.pem;
-     ssl_certificate_key /etc/nginx/ssl/live/${DOMAIN}/privkey.pem;
-
-     ssl_buffer_size 8k;
-     ssl_protocols TLSv1.2 TLSv1.1 TLSv1;
-     ssl_prefer_server_ciphers on;
-     ssl_ciphers ECDH+AESGCM:ECDH+AES256:ECDH+AES128:DH+3DES:!ADH:!AECDH:!MD5;
-     ssl_ecdh_curve secp384r1;
-     ssl_session_tickets off;
-     
-     # OCSP stapling
-     ssl_stapling on;
-     ssl_stapling_verify on;
-
-     # BASIC AUTH
-     auth_basic           "You got the keys bro?";
-     auth_basic_user_file /etc/nginx/conf.d/.htpasswd; 
-
-     location / {
-       set $pocket pocket-core-full-node:8081;
-       proxy_pass http://$pocket;
-       proxy_set_header X-Real-IP $remote_addr;
-       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-       proxy_set_header Upgrade $http_upgrade;
-       proxy_set_header Connection 'upgrade';
-       proxy_set_header Host $host;
-       proxy_cache_bypass $http_upgrade;
-       proxy_http_version 1.1;
-
-
-     }     
-} 
-
-server {
-     listen  443 ssl;
+     listen  80;
      resolver 127.0.0.11 ipv6=off valid=5s;
 
      server_name eth-mainnet.${DOMAIN}; 
-
-     ssl_certificate /etc/nginx/ssl/live/${DOMAIN}/fullchain.pem;
-     ssl_certificate_key /etc/nginx/ssl/live/${DOMAIN}/privkey.pem;
-
-     ssl_buffer_size 8k;
-     ssl_protocols TLSv1.2 TLSv1.1 TLSv1;
-     ssl_prefer_server_ciphers on;
-     ssl_ciphers ECDH+AESGCM:ECDH+AES256:ECDH+AES128:DH+3DES:!ADH:!AECDH:!MD5;
-     ssl_ecdh_curve secp384r1;
-     ssl_session_tickets off;
      
-     # OCSP stapling
-     ssl_stapling on;
-     ssl_stapling_verify on;
-
-     # BASIC AUTH
-     auth_basic           "You got the keys bro?";
-     auth_basic_user_file /etc/nginx/conf.d/.htpasswd; 
-
-     # Proxy timeout for long running geth queries
+     # Proxy timeout for long running eth queries
      proxy_read_timeout 260;
      proxy_connect_timeout 260;
      proxy_send_timeout 260; 
      send_timeout 260;
 
-
      location / {
-       set $geth geth-mainnet-full-node:8545;
-       proxy_pass http://$geth;
+       # BASIC AUTH
+       auth_basic           "where you going?";
+       auth_basic_user_file /etc/nginx/conf.d/.htpasswd; 
+
+       set $eth erigon-mainnet-rpc:8545;
+       proxy_pass http://$eth;
        proxy_set_header X-Real-IP $remote_addr;
        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
        proxy_set_header Upgrade $http_upgrade;
@@ -99,26 +113,191 @@ server {
      
 } 
 
+server {
+     listen  80;
+     resolver 127.0.0.11 ipv6=off valid=5s;
+
+     server_name eth-ropsten.${DOMAIN}; 
+     
+     # Proxy timeout for long running eth queries
+     proxy_read_timeout 260;
+     proxy_connect_timeout 260;
+     proxy_send_timeout 260; 
+     send_timeout 260;
+
+     location / {
+       # BASIC AUTH
+       auth_basic           "where you going?";
+       auth_basic_user_file /etc/nginx/conf.d/.htpasswd; 
+
+       set $eth erigon-ropsten-rpc:8545;
+       proxy_pass http://$eth;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection 'upgrade';
+       proxy_set_header Host $host;
+       proxy_cache_bypass $http_upgrade;
+       proxy_http_version 1.1;
+     }
+     
+}
 
 server {
-     listen  443 ssl;
+     listen  80;
+     resolver 127.0.0.11 ipv6=off valid=5s;
+
+     server_name eth-rinkeby.${DOMAIN}; 
+     
+     # Proxy timeout for long running eth queries
+     proxy_read_timeout 260;
+     proxy_connect_timeout 260;
+     proxy_send_timeout 260; 
+     send_timeout 260;
+
+     location / {
+       # BASIC AUTH
+       auth_basic           "where you going?";
+       auth_basic_user_file /etc/nginx/conf.d/.htpasswd; 
+
+       set $eth erigon-rinkeby-rpc:8545;
+       proxy_pass http://$eth;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection 'upgrade';
+       proxy_set_header Host $host;
+       proxy_cache_bypass $http_upgrade;
+       proxy_http_version 1.1;
+     }
+     
+}
+
+server {
+     listen  80;
+     resolver 127.0.0.11 ipv6=off valid=5s;
+
+     server_name eth-goerli.${DOMAIN}; 
+     
+     # Proxy timeout for long running eth queries
+     proxy_read_timeout 260;
+     proxy_connect_timeout 260;
+     proxy_send_timeout 260; 
+     send_timeout 260;
+
+     location / {
+       # BASIC AUTH
+       auth_basic           "where you going?";
+       auth_basic_user_file /etc/nginx/conf.d/.htpasswd; 
+
+       set $eth erigon-goerli-rpc:8545;
+       proxy_pass http://$eth;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection 'upgrade';
+       proxy_set_header Host $host;
+       proxy_cache_bypass $http_upgrade;
+       proxy_http_version 1.1;
+     }
+     
+}
+
+server {
+     listen  80;
+     resolver 127.0.0.11 ipv6=off valid=5s;
+
+     server_name avax-mainnet.${DOMAIN}; 
+     
+     # Proxy timeout for long running eth queries
+     proxy_read_timeout 260;
+     proxy_connect_timeout 260;
+     proxy_send_timeout 260; 
+     send_timeout 260;
+
+     location / {
+       # BASIC AUTH
+       auth_basic           "where you going?";
+       auth_basic_user_file /etc/nginx/conf.d/.htpasswd; 
+
+       set $eth ava1:9650;
+       proxy_pass http://$eth;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection 'upgrade';
+       proxy_set_header Host $host;
+       proxy_cache_bypass $http_upgrade;
+       proxy_http_version 1.1;
+     }
+     
+}
+
+server {
+     listen  80;
+     resolver 127.0.0.11 ipv6=off valid=5s;
+
+     server_name xdai-mainnet.${DOMAIN}; 
+     
+     # Proxy timeout for long running eth queries
+     proxy_read_timeout 260;
+     proxy_connect_timeout 260;
+     proxy_send_timeout 260; 
+     send_timeout 260;
+
+     location / {
+       # BASIC AUTH
+       auth_basic           "where you going?";
+       auth_basic_user_file /etc/nginx/conf.d/.htpasswd; 
+
+       set $eth xdai-mainnet:8545;
+       proxy_pass http://$eth;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection 'upgrade';
+       proxy_set_header Host $host;
+       proxy_cache_bypass $http_upgrade;
+       proxy_http_version 1.1;
+     }
+     
+}
+
+server {
+     listen  80;
+     resolver 127.0.0.11 ipv6=off valid=5s;
+
+     server_name fuse-mainnet.${DOMAIN}; 
+     
+     # Proxy timeout for long running eth queries
+     proxy_read_timeout 260;
+     proxy_connect_timeout 260;
+     proxy_send_timeout 260; 
+     send_timeout 260;
+
+     location / {
+       # BASIC AUTH
+       auth_basic           "where you going?";
+       auth_basic_user_file /etc/nginx/conf.d/.htpasswd; 
+
+       set $eth fuse-mainnet:8545;
+       proxy_pass http://$eth;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection 'upgrade';
+       proxy_set_header Host $host;
+       proxy_cache_bypass $http_upgrade;
+       proxy_http_version 1.1;
+     }
+     
+}
+
+server {
+     listen  80;
      resolver 127.0.0.11 ipv6=off valid=5s;
 
      server_name monitoring.${DOMAIN}; 
-
-     ssl_certificate /etc/nginx/ssl/live/${DOMAIN}/fullchain.pem;
-     ssl_certificate_key /etc/nginx/ssl/live/${DOMAIN}/privkey.pem;
-
-     ssl_buffer_size 8k;
-     ssl_protocols TLSv1.2 TLSv1.1 TLSv1;
-     ssl_prefer_server_ciphers on;
-     ssl_ciphers ECDH+AESGCM:ECDH+AES256:ECDH+AES128:DH+3DES:!ADH:!AECDH:!MD5;
-     ssl_ecdh_curve secp384r1;
-     ssl_session_tickets off;
-     
-     # OCSP stapling
-     ssl_stapling on;
-     ssl_stapling_verify on;
 
      location / {
        set $backend_servers grafana:3000;
@@ -126,4 +305,5 @@ server {
        auth_basic off;
 
      }
+
 }

@@ -1,0 +1,25 @@
+version: '2.1'
+
+services:
+
+  ava1:
+    container_name: ava1
+    image: avaplatform/avalanchego:v1.5.2
+    command: "/avalanchego/build/avalanchego --dynamic-public-ip=opendns --http-host="
+    cpus: '4'
+    mem_limit: '8G'
+    restart: unless-stopped
+    expose:
+      - "9650"
+    ports:
+      - "9100:9100"
+      - "9651:9651"
+      - "9651:9651/udp"
+    volumes:
+      - ${PWD}/avalanche:/root/.avalanchego
+      - ${PWD}/avalanche:/root/.cache
+
+networks:
+  default:
+    external: 
+      name: nodes

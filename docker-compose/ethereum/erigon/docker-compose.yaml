@@ -1,0 +1,106 @@
+version: '2.1'
+
+services:
+  erigon-archival:
+    container_name: erigon-archival
+    image: pocketfoundation/erigon:2021.08.05-alpha
+    restart: unless-stopped
+    cpus: '4'
+    mem_limit: '28G'
+    command: erigon --metrics --metrics.addr="0.0.0.0" --metrics.port="6060" --private.api.addr="0.0.0.0:9090" --pprof --pprof.addr="0.0.0.0" --pprof.port="6061" 
+    volumes:
+      - ${PWD}/archival/:/home/erigon/.local/share/erigon
+    expose:
+      - 30303/tcp
+      - 30303/udp
+
+  erigon-ropsten:
+    container_name: erigon-ropsten
+    image: pocketfoundation/erigon:2021.08.05-alpha
+    restart: unless-stopped
+    cpus: '4'
+    mem_limit: '16G'
+    command: erigon --chain="ropsten" --metrics --metrics.addr="0.0.0.0" --metrics.port="6060" --private.api.addr="0.0.0.0:9090" --pprof --pprof.addr="0.0.0.0" --pprof.port="6061"
+    volumes:
+      - ${PWD}/ropsten/:/home/erigon/.local/share/erigon
+    expose:
+      - 30303/tcp
+      - 30303/udp
+
+  erigon-rinkeby:
+    container_name: erigon-rinkeby
+    image: pocketfoundation/erigon:2021.08.05-alpha
+    restart: unless-stopped
+    cpus: '6'
+    mem_limit: '30G'
+    command: erigon --chain="rinkeby" --metrics --metrics.addr="0.0.0.0" --metrics.port="6060" --private.api.addr="0.0.0.0:9090" --pprof --pprof.addr="0.0.0.0" --pprof.port="6061"
+    volumes:
+      - ${PWD}/rinkeby/:/home/erigon/.local/share/erigon
+    expose:
+      - 30303/tcp
+      - 30303/udp
+
+  erigon-goerli:
+    container_name: erigon-goerli
+    image: pocketfoundation/erigon:2021.08.05-alpha
+    restart: unless-stopped
+    cpus: '2'
+    mem_limit: '12G'
+    command: erigon --chain="goerli" --metrics --metrics.addr="0.0.0.0" --metrics.port="6060" --private.api.addr="0.0.0.0:9090" --pprof --pprof.addr="0.0.0.0" --pprof.port="6061"
+    volumes:
+      - ${PWD}/goerli/:/home/erigon/.local/share/erigon
+    expose:
+      - 30303/tcp
+      - 30303/udp
+
+  erigon-mainnet-rpc:
+    container_name: erigon-mainnet-rpc
+    image: pocketfoundation/erigon:2021.08.05-alpha
+    restart: unless-stopped
+    pid: service:erigon-archival
+    cpus: '1'
+    mem_limit: '2G'
+    command: rpcdaemon --datadir=/home/erigon/.local/share/erigon --ws --private.api.addr="erigon-archival:9090" --http.addr="0.0.0.0" --http.vhosts="*" --http.corsdomain="*" --http.api="eth,debug,net,trace" 
+    expose:
+      - 8545
+    volumes:
+      - ${PWD}/archival/:/home/erigon/.local/share/erigon
+
+  erigon-ropsten-rpc:
+    container_name: erigon-ropsten-rpc
+    image: pocketfoundation/erigon:2021.08.05-alpha
+    restart: unless-stopped
+    pid: service:erigon-ropsten
+    cpus: '1'
+    mem_limit: '2G'
+    command: rpcdaemon --datadir=/home/erigon/.local/share/erigon  --ws --private.api.addr="erigon-ropsten:9090" --http.addr="0.0.0.0" --http.vhosts="*" --http.corsdomain="*" --http.api="eth,debug,net,trace"
+    expose:
+      - 8545
+    volumes:
+      - ${PWD}/ropsten/:/home/erigon/.local/share/erigon
+
+  erigon-rinkeby-rpc:
+    container_name: erigon-rinkeby-rpc
+    image: pocketfoundation/erigon:2021.08.05-alpha
+    restart: unless-stopped
+    pid: service:erigon-rinkeby
+    cpus: '1'
+    mem_limit: '2G'
+    command: rpcdaemon --datadir=/home/erigon/.local/share/erigon/rinkeby --ws --private.api.addr="erigon-rinkeby:9090" --http.addr="0.0.0.0" --http.vhosts="*" --http.corsdomain="*" --http.api="eth,debug,net,trace"
+    expose:
+      - 8545
+    volumes:
+     - ${PWD}/rinkeby/:/home/erigon/.local/share/erigon
+ 
+  erigon-goerli-rpc:
+    container_name: erigon-goerli-rpc
+    image: pocketfoundation/erigon:2021.08.05-alpha
+    restart: unless-stopped
+    pid: service:erigon-goerli
+    cpus: '1'
+    mem_limit: '2G'
+    command: rpcdaemon --datadir=/home/erigon/.local/share/erigon --ws --private.api.addr="erigon-goerli:9090" --http.addr="0.0.0.0" --http.vhosts="*" --http.corsdomain="*" --http.api="eth,debug,net,trace"
+    expose:
+      - 8545
+    volumes:
+      - ${PWD}/goerli/:/home/erigon/.local/share/erigon

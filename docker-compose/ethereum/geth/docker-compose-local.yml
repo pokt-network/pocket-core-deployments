@@ -1,0 +1,45 @@
+version: '2.1'
+
+x-loki:
+  &loki-logging
+  driver: loki
+  options:
+    loki-url: "http://localhost:3100/loki/api/v1/push"
+    max-size: '5m'
+    max-file: '3'
+    keep-file: 'false'
+
+services:
+
+  geth-rinkeby:
+    image: ethereum/client-go:v1.10.8
+    expose:
+      - "8545"
+      - "8546"
+      - "30303"
+    volumes:
+      - ./rinkeby:/.rinkeby
+    command: "--rinkeby --rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .rinkeby --verbosity 3 --snapshot=false"
+
+  geth-mainnet:
+    image: ethereum/client-go:v1.10.8
+    expose:
+      - "8545"
+      - "8546"
+      - "30303"
+    volumes:
+      - ./geth/.mainnet
+    command: --rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --gcmode archive --datadir /.mainnet --verbosity 3 --snapshot=false --cache=8512
+
+  geth-ropsten:
+    image: ethereum/client-go:v1.10.8
+    container_name: geth-ropsten 
+    ports:
+      - "30305:30305"   # Eth peers
+    expose:
+      - "8545"
+      - "8546"
+    volumes:
+      - ./ropsten/:/.ropsten
+    command: "--ropsten --rpc --rpcapi eth,net --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts=* --syncmode fast --datadir .ropsten --verbosity 3 --snapshot=false"
+    logging: *loki-logging

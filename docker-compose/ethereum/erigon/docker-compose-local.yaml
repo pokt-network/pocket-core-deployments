@@ -1,0 +1,35 @@
+version: '2.1'
+
+services:
+
+  erigon:
+    container_name: eri1
+    image: pocketfoundation/erigon:2021.06.04-alpha
+    restart: unless-stopped
+    cpus: '14'
+    mem_limit: '28G'
+    command: erigon --metrics --metrics.addr="0.0.0.0" --metrics.port="6060" --private.api.addr="0.0.0.0:9090" --pprof --pprof.addr="0.0.0.0" --pprof.port="6061"
+    volumes:
+      - ${PWD}/erigon/:/root/.local/share/erigon
+    expose:
+      - 30303:30303/tcp
+      - 30303:30303/udp
+    networks:
+      - default
+
+  rpcdaemon:
+    container_name: eri-rpc1
+    image: pocketfoundation/erigon:2021.06.04-alpha
+    restart: unless-stopped
+    cpus: '2'
+    mem_limit: '4G'
+    command: rpcdaemon --private.api.addr="erigon:9090" --http.addr="0.0.0.0" --http.vhosts="*" --http.corsdomain="*" --http.api="eth,debug,net,trace"
+    ports:
+      - 8545:8545
+    networks:
+      - default
+      
+networks:
+  default:
+    external: 
+      name: nodes

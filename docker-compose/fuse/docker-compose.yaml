@@ -1,0 +1,25 @@
+version: '2.1'
+
+services:
+
+  fuse-mainnet:
+    container_name: fuse-mainnet 
+    image: fusenet/node:1.0.0
+    cpus: '4'
+    mem_limit: '8G'
+    command:
+      - '--role node'
+      - '--parity-args --no-warp --tracing on --pruning archive --port 30311'
+    expose:
+      - "8545"
+    ports:
+      - "30311:30311"
+      - "30311:30311/udp"
+    volumes:
+      - "${PWD}/config:/config/custom"
+      - "${PWD}/data:/data"
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
