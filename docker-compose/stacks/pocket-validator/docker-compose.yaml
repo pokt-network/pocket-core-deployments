@@ -41,7 +41,7 @@ services:
     container_name: certbot-renew
 
   node1:
-    image: poktnetwork/pocket:RC-0.6.3.6 
+    image: poktnetwork/pocket:RC-0.7.0.1 
     container_name: node1 
     command: ["pocket", "start", "--keybase=false", "--mainnet", "--datadir=/home/app/.pocket/"]
     environment:
