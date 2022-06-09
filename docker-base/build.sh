@@ -18,7 +18,7 @@ MASTER_BRANCH="master"
 # Parse parameters
 if [ ! -n "$GOLANG_VERSION" ]
 then
-    GOLANG_VERSION="1.13"
+    GOLANG_VERSION="1.16"
 fi
 
 if [ ! -n "$BRANCH_NAME" ]
@@ -44,7 +44,7 @@ then
         # Handle master branch
         echo "It's stagenet!"
         DOCKER_TAG="stagenet-latest"
-    elif echo "$BRANCH_NAME" | grep -q "Beta-"*
+    elif echo "$BRANCH_NAME" | grep -q "BETA-"*
     then
         # Handle master branch
         echo "It's beta!"

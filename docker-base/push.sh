@@ -17,7 +17,7 @@ MASTER_BRANCH="master"
 
 # Parse parameters
 if [ ! -n "$GOLANG_VERSION" ]; then
-    GOLANG_VERSION="1.13"
+    GOLANG_VERSION="1.16"
 fi
 
 if [ ! -n "$BRANCH_NAME" ]; then
@@ -32,23 +32,23 @@ if [ ! -n "$DOCKER_TAG" ]; then
     # Resolve DOCKER_TAG using the branch name
     case $BRANCH_NAME in
     staging)
-        echo "It's devnet!"
-        DOCKER_TAG="devnet-latest"
-        ;;
-    RC-*)
         echo "It's stagenet!"
         DOCKER_TAG="stagenet-latest"
         ;;
-    Beta-*)
+    RC-*)
         echo "It's beta!"
-        DOCKER_TAG="beta-latest"
+        DOCKER_TAG="$BRANCH_NAME"
         ;;
-    *)
-        if [[ $BRANCH_NAME =~ [0-9]\.[0-9]|[0-9][0-9]\.[0-9]|[0-9][0-9] ]]; then
-            echo "It's prod!"
-            DOCKER_TAG="$BRANCH_NAME"
-        fi
+    BETA-*)
+        echo "It's beta!"
+        DOCKER_TAG="$BRANCH_NAME"
         ;;
+#    *)
+#        if [[ $BRANCH_NAME =~ [0-9]\.[0-9]|[0-9][0-9]\.[0-9]|[0-9][0-9] ]]; then
+#            echo "It's prod!"
+#            DOCKER_TAG="$BRANCH_NAME"
+#        fi
+#        ;;
     esac
 
 
@@ -76,8 +76,8 @@ eval $TAG_COMMAND
 # Push image
 case $BRANCH_NAME in
 staging)
-    eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:devnet-$CIRCLE_BUILD_NUM"
-    eval "docker push $DOCKER_IMAGE_NAME:devnet-$CIRCLE_BUILD_NUM"
+    eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:staging-$CIRCLE_BUILD_NUM"
+    eval "docker push $DOCKER_IMAGE_NAME:staging-$CIRCLE_BUILD_NUM"
     echo staging
     ;;
 RC-*)
