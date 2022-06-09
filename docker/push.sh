@@ -37,18 +37,8 @@ then
     if [ "$BRANCH_NAME" = "$STAGING_BRANCH" ]
     then
         # Handle staging branch
-        echo "It's devnet!"
-        DOCKER_TAG="devnet-latest"
-    elif echo "$BRANCH_NAME" | grep -q "RC-"*
-    then
-        # Handle master branch
         echo "It's stagenet!"
         DOCKER_TAG="stagenet-latest"
-    elif echo "$BRANCH_NAME" | grep -q "Beta-"*
-    then
-        # Handle master branch
-        echo "It's beta!"
-        DOCKER_TAG="beta-latest"
     else
         # It's a tag!
         echo "It's a tag!"
@@ -80,7 +70,7 @@ eval $TAG_COMMAND
 
 # Push the image
 
-if echo "$BRANCH_NAME" | grep -q "Beta-"*; then
+if echo "$BRANCH_NAME" | grep -q "BETA-"*; then
     eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$BRANCH_NAME"
     eval "docker push $DOCKER_IMAGE_NAME:$BRANCH_NAME"
 fi
@@ -91,8 +81,8 @@ if echo "$BRANCH_NAME" | grep -q "RC-"*; then
 fi
 
 if [ "$BRANCH_NAME" = "staging" ]; then
-    eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:devnet-$CIRCLE_BUILD_NUM"
-    eval "docker push $DOCKER_IMAGE_NAME:devnet-$CIRCLE_BUILD_NUM"
+    eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:staging-$CIRCLE_BUILD_NUM"
+    eval "docker push $DOCKER_IMAGE_NAME:staging-$CIRCLE_BUILD_NUM"
 fi
 
 
