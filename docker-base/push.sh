@@ -36,12 +36,15 @@ if [ ! -n "$DOCKER_TAG" ]; then
         DOCKER_TAG="stagenet-latest"
         ;;
     RC-*)
-        echo "It's beta!"
-        DOCKER_TAG="$BRANCH_NAME"
+        echo "It's rc!"
+#        DOCKER_TAG="$BRANCH_NAME"
+         DOCKER_TAG="tagged-latest"
+
         ;;
     BETA-*)
         echo "It's beta!"
-        DOCKER_TAG="$BRANCH_NAME"
+#        DOCKER_TAG="$BRANCH_NAME"
+         DOCKER_TAG="tagged-latest"
         ;;
 #    *)
 #        if [[ $BRANCH_NAME =~ [0-9]\.[0-9]|[0-9][0-9]\.[0-9]|[0-9][0-9] ]]; then
