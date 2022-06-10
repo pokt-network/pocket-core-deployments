@@ -42,7 +42,9 @@ then
     else
         # It's a tag!
         echo "It's a tag!"
-        DOCKER_TAG="$BRANCH_NAME"
+#        DOCKER_TAG="$BRANCH_NAME"
+        DOCKER_TAG="tagged-latest"
+
     fi
 fi
 
