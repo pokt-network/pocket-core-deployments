@@ -62,22 +62,23 @@ jobs:
                         # Login to Docker HUB
                         - run: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
                         # Push the image!
-                        - run: sh docker/push.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
+#                        - run: sh docker/push.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
                         - run: sh docker/multi.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
-                        - run: sh docker-base/push.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
+#                        - run: sh docker-base/push.sh << pipeline.parameters.golang-version >> << pipeline.parameters.branch-name >> "" ""
                         - run: "if echo << pipeline.parameters.branch-name >> | grep -q \"Beta-*\"; then curl -u $API_KEY_IMAGE_: -X POST -H \"Content-Type: application/json\" -d '{\"branch\": \"$IMAGE_BRANCH\",\"parameters\":{\"tag\":\"<< pipeline.parameters.branch-name >>\"}}' https://circleci.com/api/v2/project/github/pokt-network/mainnet-container-private/pipeline; else exit 0; fi"
 workflows:
         version: 2
         # Workflow that builds, tests and pushes docker images based on parameters
         build-test-push-docker:
                 jobs:
-                        # Builds the docker image from a branch
-                        - build_docker_image
-                        # Tests the docker image from a branch
-                        - docker_image_anchore_scan:
-                                  requires:
-                                          - build_docker_image
-                        # Pushes the docker image from a branch
-                        - push_docker_image:
-                                  requires:
-                                          - docker_image_anchore_scan
+                        - push_docker_image
+#                        # Builds the docker image from a branch
+#                        - build_docker_image
+#                        # Tests the docker image from a branch
+#                        - docker_image_anchore_scan:
+#                                  requires:
+#                                          - build_docker_image
+#                        # Pushes the docker image from a branch
+#                        - push_docker_image:
+#                                  requires:
+#                                          - docker_image_anchore_scan
