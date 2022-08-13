@@ -62,7 +62,8 @@ echo "Docker tag: $DOCKER_TAG"
 echo "Docker image name: $DOCKER_IMAGE_NAME"
 
 # Run docker build!
-
+PREPARE_BUILDER_COMMAND="docker buildx create --use"
+eval $PREPARE_BUILDER_COMMAND
 BUILD_COMMAND="docker buildx build --build-arg GOLANG_IMAGE_VERSION=golang:$GOLANG_VERSION-alpine --build-arg BRANCH_NAME=$BRANCH_NAME --push --platform linux/arm64/v8,linux/amd64 --tag $DOCKER_IMAGE_NAME:$DOCKER_TAG -f docker/Dockerfile docker/."
 eval $BUILD_COMMAND
 
