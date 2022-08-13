@@ -37,22 +37,14 @@ then
     if [ "$BRANCH_NAME" = "$STAGING_BRANCH" ]
     then
         # Handle staging branch
-        echo "It's devnet!"
-        DOCKER_TAG="devnet-latest"
-    elif echo "$BRANCH_NAME" | grep -q "RC-"*
-    then
-        # Handle master branch
         echo "It's stagenet!"
-        DOCKER_TAG="stagenet-latest"
-    elif echo "$BRANCH_NAME" | grep -q "BETA-"*
-    then
-        # Handle master branch
-        echo "It's beta!"
-        DOCKER_TAG="beta-latest"
+        DOCKER_TAG="stagenet-latestMulti"
     else
         # It's a tag!
         echo "It's a tag!"
-        DOCKER_TAG="$BRANCH_NAME"
+#        DOCKER_TAG="$BRANCH_NAME"
+        DOCKER_TAG="tagged-latestMulti"
+
     fi
 fi
 
@@ -66,10 +58,11 @@ fi
 # Echo all the params!
 echo "Golang version: $GOLANG_VERSION"
 echo "Branch name: $BRANCH_NAME"
-echo "Docker image name: $DOCKER_IMAGE_NAME"
 echo "Docker tag: $DOCKER_TAG"
-
-COMMAND="docker build --no-cache --build-arg GOLANG_IMAGE_VERSION=golang:$GOLANG_VERSION-alpine --build-arg BRANCH_NAME=$BRANCH_NAME -t pocket-core-$DOCKER_TAG -f docker/Dockerfile docker/."
+echo "Docker image name: $DOCKER_IMAGE_NAME"
 
 # Run docker build!
-eval $COMMAND
+
+BUILD_COMMAND="docker buildx build --build-arg GOLANG_IMAGE_VERSION=golang:$GOLANG_VERSION-alpine --build-arg BRANCH_NAME=$BRANCH_NAME --push --platform linux/arm64/v8,linux/amd64 --tag $DOCKER_IMAGE_NAME:$DOCKER_TAG -f docker/Dockerfile docker/."
+eval $BUILD_COMMAND
+
