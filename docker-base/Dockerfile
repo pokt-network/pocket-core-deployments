@@ -9,7 +9,7 @@ ARG DOCKER_TAG
 FROM poktnetwork/pocket-core:$DOCKER_TAG AS builder
 
 # Second build step: reduce image size to only use app binary
-FROM alpine:3.13
+FROM alpine
 
 COPY --from=builder /bin/pocket /bin/pocket
 COPY entrypoint.sh entrypoint.sh
