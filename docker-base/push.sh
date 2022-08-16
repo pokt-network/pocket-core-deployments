@@ -88,7 +88,7 @@ RC-*)
     eval "docker push $DOCKER_IMAGE_NAME:$BRANCH_NAME"
     echo RC
     ;;
-Beta-*)
+BETA-*)
     eval "docker tag pocket-core-$DOCKER_TAG:latest $DOCKER_IMAGE_NAME:$BRANCH_NAME"
     eval "docker push $DOCKER_IMAGE_NAME:$BRANCH_NAME"
     echo Beta
