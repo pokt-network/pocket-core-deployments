@@ -10,7 +10,7 @@ orbs:
 parameters:
         branch-name:
                 type: string
-                default: "staging"
+                default: "RC-0.9.1.2"
         golang-version:
                 type: string
                 default: "1.17"
