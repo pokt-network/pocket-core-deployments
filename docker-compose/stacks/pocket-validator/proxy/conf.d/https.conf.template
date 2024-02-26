@@ -33,7 +33,7 @@ server {
      ssl_stapling on;
      ssl_stapling_verify on;
 
-     location /v1 {
+     location ~ ^/v1/?$ {
        set $node1 node1:8081;
        proxy_pass http://$node1;
        proxy_set_header X-Real-IP $remote_addr;
